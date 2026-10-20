@@ -1,0 +1,9 @@
+* text=auto eol=lf
+*.sql text eol=lf
+*.pks text eol=lf
+*.pkb text eol=lf
+*.apx text eol=lf
+*.png binary
+*.jpg binary
+*.mp4 binary
+*.zip binary

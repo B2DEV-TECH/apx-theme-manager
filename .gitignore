@@ -1,0 +1,17 @@
+.local/
+.superpowers/
+.worktrees/
+node_modules/
+coverage/
+test-results/
+playwright-report/
+*.log
+*.tmp
+*.dmp
+*.wallet
+*.p12
+*.jks
+.env
+.env.*
+!.env.example
+dist/
