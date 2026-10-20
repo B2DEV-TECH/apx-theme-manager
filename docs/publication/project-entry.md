@@ -46,8 +46,9 @@ checks passing. The corrected two-page fixture has 14 differences: 12 eligible
 and two omitted row flags. Actual captures show both
 pages at baseline, changed, eligible-recovered and restored states. Browser
 checks verified three ZIP hashes, operation binding across tabs and no JavaScript
-errors. A separate clean workspace exercised different destination IDs. Release
-and edited video publication remain pending. These results do not establish
+errors. A separate clean workspace exercised different destination IDs. The
+beta includes a real four-minute demonstration with English captions and
+identified synthetic narration. These results do not establish
 compatibility with APEX 24.2 or other versions. The sample demonstrates
 controlled APEXlang-authored layout edits, not an observed theme-switch defect.
 Actual item parents are compared with live metadata; inherited Universal Theme

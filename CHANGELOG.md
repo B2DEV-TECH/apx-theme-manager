@@ -1,10 +1,11 @@
 # Changelog
 
-## v0.1.0-beta — release candidate
+## v0.1.0-beta — 2026-10-20
 
-Prepared on 2026-10-20. Publication and final verification are pending. This
-entry describes the intended initial beta scope; it does not announce a live
-tag, downloadable release, article or video.
+Initial experimental community beta. Tested only on exact APEX 26.2.0.
+The recorded synthetic demonstration is available with English subtitles,
+synthetic narration and an explicit editing disclosure. Article publication is
+tracked separately from the source release.
 
 ### Added
 

@@ -1,17 +1,21 @@
 # APEX Theme Manager
 
-**Snapshot → Change → Compare → Review → Recover → Verify**
+**Snapshot. Compare. Recover.**
 
 An original native Oracle APEX and PL/SQL application for definition snapshots,
 semantic layout comparisons and controlled recovery of compatible attributes.
 It applies selected values to the current application definition, with a preview,
 validated backup and independent verification.
 
-> **Development snapshot — beta release pending.** The database engine has
-> laboratory results on exact APEX 26.2.0, and the native browser workflow passed
-> all 16 checks. Release/media review and the release tag are pending. Wait for
-> the tagged beta before evaluating installation. The public
-> source is work in progress; no release, article or video is announced here.
+> **v0.1.0-beta · Tested on exact APEX 26.2.0 · Recovery starts disabled.**
+> Evaluate this bounded, experimental recovery engine on disposable applications.
+> Template/options recovery and arbitrary mixed item/BODY-button rows require
+> manual review. Read the supported scope and authority model before installation.
+
+[Install](docs/installation/README.md) ·
+[Watch the real demo](https://b2dev.tech/media/videos/apxtm/v0.1.0-beta/apex-theme-manager-demo.mp4) ·
+[Test evidence](docs/testing/verification.md) ·
+[Beta release](https://github.com/B2DEV-TECH/apx-theme-manager/releases/tag/v0.1.0-beta)
 
 [![Authenticated native APEX Theme Manager overview with synthetic laboratory history.](apex/screenshots/overview-desktop.png)](apex/screenshots/overview-desktop.png)
 
@@ -25,6 +29,15 @@ installation starts with an empty registry and recovery disabled.*
 Click a capture to inspect it at full resolution. The
 [runtime gallery](apex/screenshots/README.md) also shows both sample pages before
 change, after change, after eligible recovery and after full-definition restore.
+
+## The experiment in four minutes
+
+[![Play the actual APEX Theme Manager laboratory demonstration.](media/demo-thumbnail.png)](https://b2dev.tech/media/videos/apxtm/v0.1.0-beta/apex-theme-manager-demo.mp4)
+
+Actual APEX execution, edited with labeled reading pauses and synthetic English
+narration; 239.685 seconds, with English subtitles. The controlled layout edits
+are synthetic. [Caption files and production evidence](media/recording-script.md)
+are included so you can inspect what was recorded.
 
 ## What it does
 
