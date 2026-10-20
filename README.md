@@ -13,7 +13,8 @@ validated backup and independent verification.
 > manual review. Read the supported scope and authority model before installation.
 
 [Install](docs/installation/README.md) ·
-[Watch the real demo](https://b2dev.tech/media/videos/apxtm/v0.1.0-beta/apex-theme-manager-demo.mp4) ·
+[Engineering article](https://b2dev.tech/blog/oracle-apex-theme-manager-layout-recovery) ·
+[Watch the real demo](https://b2dev.tech/engineering/videos/apex-theme-manager-layout-recovery-demo) ·
 [Test evidence](docs/testing/verification.md) ·
 [Beta release](https://github.com/B2DEV-TECH/apx-theme-manager/releases/tag/v0.1.0-beta)
 
@@ -32,7 +33,7 @@ change, after change, after eligible recovery and after full-definition restore.
 
 ## The experiment in four minutes
 
-[![Play the actual APEX Theme Manager laboratory demonstration.](media/demo-thumbnail.png)](https://b2dev.tech/media/videos/apxtm/v0.1.0-beta/apex-theme-manager-demo.mp4)
+[![Play the actual APEX Theme Manager laboratory demonstration.](media/demo-thumbnail.png)](https://b2dev.tech/engineering/videos/apex-theme-manager-layout-recovery-demo)
 
 Actual APEX execution, edited with labeled reading pauses and synthetic English
 narration; 239.685 seconds, with English subtitles. The controlled layout edits
@@ -170,6 +171,7 @@ Developer browser helpers have a narrower original-laboratory scope.
 - [Native application and page map](apex/README.md)
 - [Synthetic fixture and reproduction](samples/layout-lab/README.md)
 - [Upgrades, failed imports, retention and uninstall](docs/installation/maintenance.md)
+- [Release and publication report](docs/releases/final-report.md)
 - [Changelog](CHANGELOG.md), [contributing](CONTRIBUTING.md) and [private security reporting](SECURITY.md)
 
 The completed native browser run passed **16/16 checks in 162.316 seconds**,

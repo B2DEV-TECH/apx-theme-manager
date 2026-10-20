@@ -1,0 +1,27 @@
+{
+  "checked": "2026-10-20T13:59:34.170Z",
+  "labs": [
+    {
+      "workspace": "APXTM_LAB",
+      "managerId": 104,
+      "baselineRestoration": {
+        "snapshotId": 126,
+        "operationId": 71,
+        "status": "VERIFIED",
+        "backupSnapshotId": 137
+      },
+      "policy": "DISABLED",
+      "enabledRecoveryTargets": 0,
+      "applyingOperations": 0,
+      "invalidProjectObjects": 0
+    },
+    {
+      "workspace": "APXTM_VERIFY",
+      "managerId": 106,
+      "policy": "DISABLED",
+      "enabledRecoveryTargets": 0,
+      "applyingOperations": 0,
+      "invalidProjectObjects": 0
+    }
+  ]
+}

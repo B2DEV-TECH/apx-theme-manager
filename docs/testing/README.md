@@ -7,15 +7,15 @@ change principal/registry state and deliberately create invalid artifacts. A
 discovery or permission to test unrelated work.
 
 Final release counts and outcomes belong in the
-[verification report](verification.md). Its final reconciliation is pending;
-this guide deliberately does not infer PASS from a source file or a prior run.
+[verification report](verification.md). Its final reconciliation and exact source hashes are recorded;
+this guide does not infer PASS from a source file or a prior run.
 An unavailable dependency/environment is a blocked check, not a passing test.
 
 The latest completed runs passed 26 real SQL blocks (16 parser, nine semantic,
 one security), 20 engine integration checks and 12 negative checks after reviewer
 fixes. Recorded history/browser evidence has 20 independent
 history checks, 16 main native browser checks and 10 browser history checks.
-Release/media publication remains pending. The main browser run took 162.316
+Release/media publication is verified in the [publication report](../releases/final-report.md). The main browser run took 162.316
 seconds for the whole automated scenario; that is not an API-only benchmark.
 
 ## Setup

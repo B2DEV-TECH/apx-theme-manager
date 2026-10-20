@@ -1,9 +1,9 @@
 # Verification record — initial beta
 
 Recorded on 2026-10-20 using synthetic applications created for this project.
-These results describe the beta candidate. Runtime and authorization checks
-passed; final media/publication verification and the release tag are tracked
-separately. The machine-readable [test report](test-results.json) includes the
+These results describe the tested beta scope. Runtime and authorization checks
+passed. The release tag, downloads, video and deployed article have separate
+independent [publication evidence](../publication/publication-evidence.json). The machine-readable [test report](test-results.json) includes the
 exact source hashes and confirms all six compiled package sources match Git.
 
 ## Environment and completed checks

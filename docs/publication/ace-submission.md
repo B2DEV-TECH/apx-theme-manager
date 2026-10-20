@@ -11,10 +11,10 @@ suggested labels below are descriptive, not claims about its present form.
 
 **Author:** Geraldo Viana Jr.  
 **Language:** English  
-**Planned publication date:** October 20, 2026  
+**Publication date:** October 20, 2026  
 **Publisher:** B2DEV TECH  
 **Topic:** Oracle APEX / PL/SQL / application layout recovery  
-**Intended URL, not yet verified live:**
+**Public article URL (verified live):**
 `https://b2dev.tech/blog/oracle-apex-theme-manager-layout-recovery`
 
 **Suggested summary:**
@@ -35,20 +35,19 @@ Recorded evidence also has 20 independent history checks,
 were captured at four workflow states; browser checks verified three ZIP hashes,
 two-tab operation binding and zero JavaScript errors.
 A separate clean workspace exercised installation, selected recovery and removal
-consent with different destination IDs. Article publication and the beta release
-tag remain pending; the demonstration MP4 is public. The article makes no other-version compatibility claim or
+consent with different destination IDs. The article, beta release and demonstration video are published and independently
+verified. The article makes no other-version compatibility claim or
 reproduced theme-switch defect claim. It states explicitly that public APIs do
 not make modified generated SQL an Oracle-supported transformation contract.
 
 ## Open-source project
 
 **Name:** APEX Theme Manager  
-**Public development repository (beta release pending):**
+**Public repository:**
 `https://github.com/B2DEV-TECH/apx-theme-manager`  
 **License for original source:** Apache-2.0  
 **Technologies:** Oracle APEX, PL/SQL, Oracle Database; APEXlang/SQLcl for sample authoring  
-**Release:** Pending final gates; intended initial label `v0.1.0-beta` only if
-the tag and distributable are actually published.
+**Release:** [v0.1.0-beta](https://github.com/B2DEV-TECH/apx-theme-manager/releases/tag/v0.1.0-beta), published with nine independently downloaded and hash-verified assets.
 
 **Suggested summary:**
 
@@ -75,10 +74,12 @@ equivalence when inherited Universal Theme bodies are absent.
 
 ## Video
 
-**Proposed title:** APEX Theme Manager: A Verified Layout Recovery Workflow  
+**Title:** APEX Theme Manager: Snapshot, Compare and Recover a Synthetic Layout  
 **Language:** English captions; synthetic English narration  
 **Status:** Public MP4 verified anonymously; Chrome playback passed  
-**URL:**
+**Public video page:**
+`https://b2dev.tech/engineering/videos/apex-theme-manager-layout-recovery-demo`  
+**MP4:**
 `https://b2dev.tech/media/videos/apxtm/v0.1.0-beta/apex-theme-manager-demo.mp4`  
 **English captions:**
 `https://b2dev.tech/media/videos/apxtm/v0.1.0-beta/demo.en.vtt`  

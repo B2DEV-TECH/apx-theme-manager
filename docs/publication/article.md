@@ -63,7 +63,7 @@ references:
     url: "https://docs.oracle.com/en/database/oracle/apex/26.2/htmdb/managing-theme-subscriptions.html"
     accessed: "2026-10-20"
 related: ["voice-driven-ai-agent-oracle-apex", "apex-deep-data-security-entra-zero-trust-lab"]
-draft: true
+draft: false
 ---
 
 A page layout can be described in a few small values: a region spans six columns,

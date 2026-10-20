@@ -9,8 +9,10 @@ license: "Apache 2.0"
 repository: "https://github.com/B2DEV-TECH/apx-theme-manager"
 docs: "https://github.com/B2DEV-TECH/apx-theme-manager/tree/main/docs"
 related: ["oracle-apex-theme-manager-layout-recovery"]
-draft: true
+draft: false
 featured: false
+latestRelease: "v0.1.0-beta"
+screenshot: "/images/articles/apxtm/manager-overview.png"
 ---
 
 APEX Theme Manager is an independent B2DEV TECH community application for
@@ -70,11 +72,3 @@ independent beta, and public APIs do not confer Oracle support on edited SQL.
 
 The original source is Apache-2.0; generated Oracle components retain their
 applicable terms and notices. Node.js and browser tooling are development-only.
-
-<!-- Publication gate: copy to content/projects/apx-theme-manager.md only after
-public source/release checks. Keep draft:true until approved for publication.
-Optional screenshot, after the actual native capture is copied and verified on the site:
-screenshot: "/images/articles/apxtm/manager-overview.png"
-Set latestRelease only after the actual beta tag is published and verified.
-Do not create a duplicate lab entry for this same project.
--->

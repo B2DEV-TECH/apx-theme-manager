@@ -91,5 +91,5 @@ tracked separately from the source release.
 - Latest corrected-fixture engine integration: 20/20 checks; final negative
   rerun: 12/12; independent history/access coverage: 20 checks. Another 10 native browser
   history checks verified six ZIP downloads after alias change/target removal and
-  exact owner restoration. Release/media publication remains pending. The public
-  repository is a development snapshot until the exact beta tag is created.
+  exact owner restoration. The beta release, article and captioned video are
+  publicly available with independently verified downloads and URLs.

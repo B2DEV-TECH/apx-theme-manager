@@ -6,7 +6,7 @@ publishedAt: "2026-10-20"
 category: "oracle-apex"
 tags: ["Oracle APEX", "PL/SQL", "Open Source", "Layout Recovery"]
 author: "geraldo-viana"
-draft: true
+draft: false
 videoUrl: "https://b2dev.tech/media/videos/apxtm/v0.1.0-beta/apex-theme-manager-demo.mp4"
 poster: "/images/articles/apxtm/demo-thumbnail.png"
 duration: "03:59"

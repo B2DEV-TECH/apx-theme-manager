@@ -1,0 +1,75 @@
+{
+  "checked": "2026-10-20T13:49:13.085Z",
+  "releaseUrl": "https://github.com/B2DEV-TECH/apx-theme-manager/releases/tag/v0.1.0-beta",
+  "version": "v0.1.0-beta",
+  "tagCommit": "d9ad9b3dee4a3bd865202289ed75a49302f4a90a",
+  "publicAnonymousApi": true,
+  "prerelease": true,
+  "draft": false,
+  "publishedAt": "2026-10-20T13:47:38Z",
+  "assets": [
+    {
+      "filename": "apex-theme-manager-demo.mp4",
+      "url": "https://github.com/B2DEV-TECH/apx-theme-manager/releases/download/v0.1.0-beta/apex-theme-manager-demo.mp4",
+      "status": 200,
+      "bytes": 8547836,
+      "sha256": "72c5c3cf243e15c9e2dbd5dbd4f942b953c2298ddb573c09bd19c50065d2baf1"
+    },
+    {
+      "filename": "APEX-Theme-Manager-v0.1.0-beta.zip",
+      "url": "https://github.com/B2DEV-TECH/apx-theme-manager/releases/download/v0.1.0-beta/APEX-Theme-Manager-v0.1.0-beta.zip",
+      "status": 200,
+      "bytes": 2531902,
+      "sha256": "cb262f10a9522e2a2fab499245e112838e050ca79bc9fa98d33b88fd5fbb763f"
+    },
+    {
+      "filename": "apex-theme-manager.sql",
+      "url": "https://github.com/B2DEV-TECH/apx-theme-manager/releases/download/v0.1.0-beta/apex-theme-manager.sql",
+      "status": 200,
+      "bytes": 201222,
+      "sha256": "f6372ef3339f616a2bc2f5649027757ce45411d380392a969d8b4bae4bc6f8a3"
+    },
+    {
+      "filename": "demo.en.srt",
+      "url": "https://github.com/B2DEV-TECH/apx-theme-manager/releases/download/v0.1.0-beta/demo.en.srt",
+      "status": 200,
+      "bytes": 3939,
+      "sha256": "c9a6c4499f3598d21d7abd23881a9dc3475a99c3343ce7e845e7a6d52fcb503f"
+    },
+    {
+      "filename": "demo.en.vtt",
+      "url": "https://github.com/B2DEV-TECH/apx-theme-manager/releases/download/v0.1.0-beta/demo.en.vtt",
+      "status": 200,
+      "bytes": 3947,
+      "sha256": "2b26567e0dbc8100800916e586e2e174e2b4e395c1a9d76fc7ba10dd63c45766"
+    },
+    {
+      "filename": "release-manifest.json",
+      "url": "https://github.com/B2DEV-TECH/apx-theme-manager/releases/download/v0.1.0-beta/release-manifest.json",
+      "status": 200,
+      "bytes": 1296,
+      "sha256": "ce34e96f5fc9cc5f7351a76874bbbc1ecdfc410d30ce06bc5348665af28a50f1"
+    },
+    {
+      "filename": "sample-baseline.sql",
+      "url": "https://github.com/B2DEV-TECH/apx-theme-manager/releases/download/v0.1.0-beta/sample-baseline.sql",
+      "status": 200,
+      "bytes": 112311,
+      "sha256": "505c5d3a5a356db8a24da08f761096db6aada3df342a67dd812c6e80c62b9148"
+    },
+    {
+      "filename": "sample-changed.sql",
+      "url": "https://github.com/B2DEV-TECH/apx-theme-manager/releases/download/v0.1.0-beta/sample-changed.sql",
+      "status": 200,
+      "bytes": 112262,
+      "sha256": "09324e2e25c5543cfdd6fc6ff1488121d5aedf7c6d5eb1fc539a9139086b0dfa"
+    },
+    {
+      "filename": "SHA256SUMS.txt",
+      "url": "https://github.com/B2DEV-TECH/apx-theme-manager/releases/download/v0.1.0-beta/SHA256SUMS.txt",
+      "status": 200,
+      "bytes": 699,
+      "sha256": "aea969ddd638f94b9a8475899060d4c663e02b016eb928170a46e8abf4a572a3"
+    }
+  ]
+}

@@ -1,0 +1,186 @@
+{
+  "verified": "2026-10-20T14:03:44.640Z",
+  "sourceReleaseCommit": "d9ad9b3dee4a3bd865202289ed75a49302f4a90a",
+  "websiteCommit": "9b58a65e09596c006ae8a1031aa1046dd48b0770",
+  "cloudflareVersion": "0fbdd447-4537-4666-835f-0c4cb04783d5",
+  "websiteChecks": {
+    "lintErrors": 0,
+    "preexistingIgnoredScratchLintWarnings": 1,
+    "typecheck": "PASS",
+    "workerTypecheck": "PASS",
+    "testsPassed": 44,
+    "staticBuild": "PASS",
+    "staticPages": 87
+  },
+  "publicBrowser": {
+    "checked": "2026-10-20T13:54:32.139Z",
+    "mode": "public deployed site",
+    "checks": [
+      {
+        "kind": "article",
+        "route": "/blog/oracle-apex-theme-manager-layout-recovery",
+        "mobile": false,
+        "status": 200,
+        "canonical": "https://b2dev.tech/blog/oracle-apex-theme-manager-layout-recovery",
+        "images": 10,
+        "viewport": 1440,
+        "scroll": 1440,
+        "description": "Application snapshots, semantic differences and controlled layout recovery in an original Oracle APEX and PL/SQL lab.",
+        "diagrams": 1
+      },
+      {
+        "kind": "project",
+        "route": "/open-source/apx-theme-manager",
+        "mobile": false,
+        "status": 200,
+        "canonical": "https://b2dev.tech/open-source/apx-theme-manager",
+        "images": 3,
+        "viewport": 1440,
+        "scroll": 1440
+      },
+      {
+        "kind": "video",
+        "route": "/engineering/videos/apex-theme-manager-layout-recovery-demo",
+        "mobile": false,
+        "status": 200,
+        "canonical": "https://b2dev.tech/engineering/videos/apex-theme-manager-layout-recovery-demo",
+        "images": 2,
+        "viewport": 1440,
+        "scroll": 1440,
+        "playback": {
+          "duration": 239.685384,
+          "width": 1600,
+          "height": 1200
+        }
+      },
+      {
+        "kind": "article",
+        "route": "/blog/oracle-apex-theme-manager-layout-recovery",
+        "mobile": true,
+        "status": 200,
+        "canonical": "https://b2dev.tech/blog/oracle-apex-theme-manager-layout-recovery",
+        "images": 10,
+        "viewport": 390,
+        "scroll": 390,
+        "description": "Application snapshots, semantic differences and controlled layout recovery in an original Oracle APEX and PL/SQL lab.",
+        "diagrams": 1
+      },
+      {
+        "kind": "project",
+        "route": "/open-source/apx-theme-manager",
+        "mobile": true,
+        "status": 200,
+        "canonical": "https://b2dev.tech/open-source/apx-theme-manager",
+        "images": 3,
+        "viewport": 390,
+        "scroll": 390
+      },
+      {
+        "kind": "video",
+        "route": "/engineering/videos/apex-theme-manager-layout-recovery-demo",
+        "mobile": true,
+        "status": 200,
+        "canonical": "https://b2dev.tech/engineering/videos/apex-theme-manager-layout-recovery-demo",
+        "images": 2,
+        "viewport": 390,
+        "scroll": 390,
+        "playback": {
+          "duration": 239.685384,
+          "width": 1600,
+          "height": 1200
+        }
+      },
+      {
+        "kind": "discovery",
+        "route": "/blog",
+        "status": 200,
+        "targetPresent": true
+      },
+      {
+        "kind": "discovery",
+        "route": "/open-source",
+        "status": 200,
+        "targetPresent": true
+      },
+      {
+        "kind": "discovery",
+        "route": "/engineering/videos",
+        "status": 200,
+        "targetPresent": true
+      },
+      {
+        "kind": "discovery",
+        "route": "/sitemap.xml",
+        "status": 200,
+        "targetPresent": true
+      },
+      {
+        "kind": "discovery",
+        "route": "/search-index.json",
+        "status": 200,
+        "targetPresent": true
+      }
+    ],
+    "pageErrors": []
+  },
+  "mediaAndMetadata": {
+    "checked": "2026-10-20T13:59:46.744Z",
+    "results": [
+      {
+        "url": "https://b2dev.tech/images/articles/apxtm/manager-overview.png",
+        "status": 200,
+        "sha256": "fdcf29bc1f40e65ff9a7966c3c36380f82f97802776e937f1c10451e167f6678"
+      },
+      {
+        "url": "https://b2dev.tech/images/articles/apxtm/sample-baseline.png",
+        "status": 200,
+        "sha256": "e0c5d90d7e7b5a19d3f785ed1063e41b6457d288427a0f28655ad5f6b611cb06"
+      },
+      {
+        "url": "https://b2dev.tech/images/articles/apxtm/sample-changed.png",
+        "status": 200,
+        "sha256": "1e27bcad802a3810e99d1fad4a55665d0f5f0622d72763a30b7bebcf1f416fb8"
+      },
+      {
+        "url": "https://b2dev.tech/images/articles/apxtm/comparison.png",
+        "status": 200,
+        "sha256": "829b0e8a328725c243854c112e7257c493683f3fb7a036ac8e44995a6db2de36"
+      },
+      {
+        "url": "https://b2dev.tech/images/articles/apxtm/recovery-preview.png",
+        "status": 200,
+        "sha256": "fa9e9fa8da4ec762186e76ee4e6cce320630586861e32729c1f5dd93fc5e02f2"
+      },
+      {
+        "url": "https://b2dev.tech/images/articles/apxtm/recovery-verified.png",
+        "status": 200,
+        "sha256": "5c96cc8476d1f66704dbc3efaf2ad15b9d87710f047a6634ffa5dc081479265c"
+      },
+      {
+        "url": "https://b2dev.tech/images/articles/apxtm/demo-thumbnail.png",
+        "status": 200,
+        "sha256": "f493adfbe924b0b39322df765f23a65399109c216a02dce60b94a6db764df2f5"
+      }
+    ],
+    "metadata": {
+      "articleStatus": 200,
+      "authorPresent": true,
+      "publicationDatePresent": true,
+      "ogImage": "https://b2dev.tech/blog/oracle-apex-theme-manager-layout-recovery/opengraph-image?8774cff29e76b00a",
+      "ogStatus": 200,
+      "ogType": "image/png",
+      "ogBytes": 99349,
+      "ogSha256": "72890535a76dcf7665334b0ceeb9e3c7d51439b902aafb6509bb1f7033422d2b"
+    }
+  },
+  "publicCaptions": {
+    "checked": "2026-10-20T14:01:26.643Z",
+    "language": "en",
+    "cues": 23,
+    "firstCue": "APEX Theme Manager captures application definitions, compares layout properties, and recovers a tested subset of compatible values.",
+    "lastCueEnd": 239.664,
+    "videoDuration": 239.685384
+  },
+  "releaseEvidence": "../releases/release-evidence.json",
+  "videoEvidence": "../../media/publication-evidence.json"
+}
