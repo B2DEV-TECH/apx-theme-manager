@@ -11,13 +11,33 @@ create or replace package body apxtm_diff as
     k varchar2(512); p varchar2(128); bv varchar2(4000); cv varchar2(4000);
     status varchar2(20); eligibility varchar2(1); reason varchar2(500);
     identity_conflict boolean;
+    theme_context_changed boolean;
 
     function is_layout(p_kind varchar2,p_name varchar2) return boolean is
     begin
-      if p_name in ('p_id','p_name','p_plug_name','p_button_name','p_plug_id','p_button_plug_id',
-        'p_parent_plug_id','p_theme_id','p_theme_class_id','p_internal_name','p_reference_id',
+      if p_kind in ('APPLICATION','USER_INTERFACE') then return p_name='p_theme_id';end if;
+      if p_kind='THEME' and p_name in ('p_theme_id','p_theme_internal_name','p_reference_id','p_theme_version') then return true;end if;
+      if p_name in ('p_id','p_name','p_files_version','p_plug_name','p_button_name','p_plug_id','p_button_plug_id',
+        'p_parent_plug_id','p_theme_id','p_theme_name','p_theme_version','p_theme_class_id','p_internal_name','p_reference_id',
         'p_template_id','p_css_classes','p_theme_internal_name') then return false; end if;
-      return p_kind in ('PAGE','REGION','ITEM','BUTTON','THEME');
+      return p_kind in ('PAGE','REGION','ITEM','BUTTON','THEME','USER_INTERFACE');
+    end;
+
+    function theme_context(p_components t_components) return varchar2 is
+      key varchar2(512);h varchar2(64):='#';t json_object_t;v varchar2(2000);
+    begin
+      key:=p_components.first;
+      while key is not null loop
+        t:=p_components(key);
+        if t.get_string('kind') in ('APPLICATION','THEME','USER_INTERFACE') then
+          if t.get_string('kind')='APPLICATION' then
+            v:=key||':'||t.get_object('attrs').get_string('p_theme_id');
+          else v:=key||':'||t.get_string('definition_hash');end if;
+          h:=rawtohex(dbms_crypto.hash(utl_i18n.string_to_raw(h||v,'AL32UTF8'),dbms_crypto.hash_sh256));
+        end if;
+        key:=p_components.next(key);
+      end loop;
+      return h;
     end;
 
     function option_set(p_value varchar2) return varchar2 is
@@ -40,7 +60,7 @@ create or replace package body apxtm_diff as
 
     procedure template_mapping(p_property varchar2,p_old_id varchar2,p_new_id varchar2,
       p_status out varchar2,p_reason out varchar2) is
-      old_template json_object_t; t json_object_t; old_attrs json_object_t; ta json_object_t;
+      old_template json_object_t;new_template json_object_t; t json_object_t; old_attrs json_object_t; ta json_object_t;
       expected_kind varchar2(30); n number:=0; old_count number:=0;
     begin
       expected_kind:=case
@@ -53,6 +73,20 @@ create or replace package body apxtm_diff as
         t:=treat(b.get(i) as json_object_t);
         if t.get_string('kind')=expected_kind and t.get_string('id')=p_old_id then old_template:=t;old_count:=old_count+1;end if;
       end loop;
+      for i in 0..c.get_size-1 loop
+        t:=treat(c.get(i) as json_object_t);
+        if t.get_string('kind')=expected_kind and t.get_string('id')=p_new_id then new_template:=t;end if;
+      end loop;
+      if p_old_id=p_new_id then
+        if old_template is not null and new_template is not null then
+          if old_template.get_string('definition_hash')=new_template.get_string('definition_hash') then
+            p_status:='UNCHANGED';p_reason:='Referenced template definition and identifier are unchanged.';
+          else p_status:='CHANGED';p_reason:='Template definition changed under the same identifier; detection-only review is required.';end if;
+        elsif theme_context_changed then
+          p_status:='CONFLICT';p_reason:='Template reference stayed the same but exported theme/subscription context changed; equivalence is unproven.';
+        else p_status:='UNCHANGED';p_reason:='Reference and exported theme context unchanged; inherited template bodies are outside this export.';end if;
+        return;
+      end if;
       if old_count!=1 then
         p_status:='NO_MATCH'; p_reason:='Baseline template definition is not embedded; inherited theme references require manual review.'; return;
       end if;
@@ -71,10 +105,11 @@ create or replace package body apxtm_diff as
   begin
     for i in 0..b.get_size-1 loop bc:=treat(b.get(i) as json_object_t);bm(bc.get_string('key')):=bc;end loop;
     for i in 0..c.get_size-1 loop cc:=treat(c.get(i) as json_object_t);cm(cc.get_string('key')):=cc;end loop;
+    theme_context_changed:=theme_context(bm)!=theme_context(cm);
     k:=bm.first;
     while k is not null loop
       bc:=bm(k);
-      if bc.get_string('kind') in ('PAGE','REGION','ITEM','BUTTON','THEME') then
+      if bc.get_string('kind') in ('APPLICATION','PAGE','REGION','ITEM','BUTTON','THEME','USER_INTERFACE') then
         ba:=bc.get_object('attrs');
         if not cm.exists(k) then
           emit(bc,'__component__',bc.get_string('name'),null,'DROPPED','N','Component is absent or has a different ID; no identity is guessed.');
@@ -95,10 +130,12 @@ create or replace package body apxtm_diff as
               elsif bv is null then status:='ADDED';reason:='Property was not explicit in the baseline; no default is guessed.';
               elsif cv is null then status:='DROPPED';reason:='Property is no longer explicit; insertion is unsupported.';
               elsif bv='#EXPR#' or cv='#EXPR#' then status:='UNSUPPORTED';reason:='Export expression is outside the recognized scalar subset.';
+              elsif instr(p,'template')>0 and instr(p,'options')=0 then template_mapping(p,bv,cv,status,reason);
+              elsif instr(p,'options')>0 and theme_context_changed then
+                status:='CONFLICT';reason:='Exported theme context changed; option tokens require manual review even if their text is identical.';
               elsif bv=cv or (instr(p,'options')>0 and option_set(bv)=option_set(cv)) then
                 status:='UNCHANGED';reason:='Recognized property has the same value or option set.';
               elsif instr(p,'options')>0 then status:='UNSUPPORTED';reason:='Template options are template-dependent CSS tokens; cross-template recovery is detection-only.';
-              elsif instr(p,'template')>0 then template_mapping(p,bv,cv,status,reason);
               else
                 status:='CHANGED';reason:='Detected change; this property requires manual review.';
                 if apxtm_parse.is_recoverable(bc.get_string('kind'),p,bv)
@@ -117,7 +154,7 @@ create or replace package body apxtm_diff as
     k:=cm.first;
     while k is not null loop
       cc:=cm(k);
-      if not bm.exists(k) and cc.get_string('kind') in ('PAGE','REGION','ITEM','BUTTON','THEME') then
+      if not bm.exists(k) and cc.get_string('kind') in ('APPLICATION','PAGE','REGION','ITEM','BUTTON','THEME','USER_INTERFACE') then
         emit(cc,'__component__',null,cc.get_string('name'),'ADDED','N','New component; the baseline has no corresponding identity.');
         ca:=cc.get_object('attrs');keys:=ca.get_keys;
         for j in 1..keys.count loop if is_layout(cc.get_string('kind'),keys(j)) then

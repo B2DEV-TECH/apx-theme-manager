@@ -1,0 +1,31 @@
+name: Bug report
+description: Report a reproducible issue using synthetic applications.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For vulnerabilities, use Security → Report a vulnerability. Do not attach credentials, private application exports or employer/client artifacts.
+  - type: input
+    id: version
+    attributes:
+      label: Project release or commit
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Exact APEX, database and SQL client versions
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Synthetic reproduction
+      description: Include configuration, steps, expected behavior and actual result. Redact secrets and session tokens.
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Operation status and relevant safe error codes
+      description: State whether a validated backup exists and whether the target changed. Keep application source and private audit records out of this issue.

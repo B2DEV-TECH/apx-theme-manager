@@ -1,0 +1,706 @@
+page 20 (
+    name: Compare layout definitions
+    alias: COMPARISON
+    title: Compare layout definitions | APEX Theme Manager
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        warnOnUnsavedChanges: false
+    }
+    security {
+        authentication: required
+        pageAccessProtection: argumentsMustHaveChecksum
+    }
+    advanced {
+        reloadOnSubmit: always
+    }
+
+    region request-message (
+        name: Request result
+        type: staticContent
+        layout {
+            sequence: 5
+            slot: body
+            columnSpan: 12
+            startNewRow: true
+        }
+        appearance {
+            template: @/alert
+            templateOptions: #DEFAULT#
+    
+        }
+        source {
+            htmlCode: ```html
+    <p>&P20_NOTICE!HTML.</p>
+    ```
+        }
+        serverSideCondition {
+            type: itemIsNotNull
+            item: P20_NOTICE
+        }
+    
+    
+    )
+
+    pageItem P20_NOTICE (
+        type: hidden
+    
+        layout {
+            sequence: 10
+            region: @request-message
+            slot: regionBody
+    
+        }
+    
+        security {
+            sessionStateProtection: restricted
+            encryptSessionState: true
+        }
+    
+    )
+
+    region review (
+        name: Review the observed changes
+        type: staticContent
+        layout {
+            sequence: 10
+            slot: body
+            columnSpan: 12
+            startNewRow: true
+        }
+        appearance {
+            template: @/standard
+            templateOptions: #DEFAULT#
+    
+        }
+        source {
+            htmlCode: ```html
+    <p>Only changes explicitly marked eligible can be selected. Unsupported or ambiguous values remain visible so you can inspect them in App Builder.</p><p class="apxtm-note">Select rows on the displayed report page, or preview all eligible differences across the complete comparison. The target application changes only after the separate confirmation step.</p>
+    ```
+        }
+    
+    
+    )
+
+    pageItem P20_COMPARISON_ID (
+        type: hidden
+    
+        layout {
+            sequence: 90
+            region: @review
+            slot: regionBody
+    
+        }
+    
+        security {
+            sessionStateProtection: checksumRequiredSessionLevel
+            encryptSessionState: true
+        }
+    
+    )
+
+    pageItem P20_CLASSIFICATION (
+        type: selectList
+        label {
+            label: Classification
+        }
+        layout {
+            sequence: 10
+            region: @review
+            slot: regionBody
+            columnSpan: 12
+        }
+        appearance {
+            template: @/optional-floating
+    
+        }
+        validation {
+            valueRequired: false
+    
+        }
+        security {
+            sessionStateProtection: unrestricted
+            encryptSessionState: true
+        }
+        lov {
+            type: sqlQuery
+            sqlQuery: ```sql
+    select distinct classification d,classification r from apxtm_differences where comparison_id=:P20_COMPARISON_ID order by classification
+    ```
+            displayNullValue: true
+            nullDisplayValue: - Choose -
+        }
+    
+    )
+
+    pageItem P20_ELIGIBLE (
+        type: selectList
+        label {
+            label: Eligibility
+        }
+        layout {
+            sequence: 20
+            region: @review
+            slot: regionBody
+            columnSpan: 12
+        }
+        appearance {
+            template: @/optional-floating
+    
+        }
+        validation {
+            valueRequired: false
+    
+        }
+        security {
+            sessionStateProtection: unrestricted
+            encryptSessionState: true
+        }
+        lov {
+            type: sqlQuery
+            sqlQuery: ```sql
+    select 'Eligible for automatic recovery' d,'Y' r from dual union all select 'Detection only','N' from dual
+    ```
+            displayNullValue: true
+            nullDisplayValue: - Choose -
+        }
+    
+    )
+
+    button filter (
+        buttonName: FILTER
+        label: Filter report
+        layout {
+            sequence: 10
+            region: @review
+            slot: change
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: false
+        }
+        behavior {
+            action: submitPage
+            showProcessing: true
+        }
+    
+    )
+
+    region comparison (
+        name: Comparison summary
+        type: classicReport
+        layout {
+            sequence: 20
+            slot: body
+            columnSpan: 12
+            startNewRow: true
+        }
+        appearance {
+            template: @/standard
+            templateOptions: #DEFAULT#
+    
+        }
+        source {
+            type: sqlQuery
+            sqlQuery: ```sql
+    select c.comparison_id,c.application_id,a.application_name,b.snapshot_name baseline,c.status,to_char(c.created_at,'YYYY-MM-DD HH24:MI') compared_at from apxtm_comparisons c join apxtm_applications a on a.application_id=c.application_id join apxtm_snapshots b on b.snapshot_id=c.baseline_snapshot_id where c.comparison_id=:P20_COMPARISON_ID and apxtm_engine.allowed(c.application_id)=1
+    ```
+        }
+        componentAppearance {
+            templateType: theme
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Report--altRowsDefault
+                t-Report--rowHighlight
+            ]
+        }
+        pagination {
+            type: setPaginationSearchEngine
+            partialPageRefresh: false
+        }
+        messages {
+            whenNoDataFound: No records yet. Use the steps above to begin.
+        }
+        headerAndFooter {
+            headerText: <p class="apxtm-table-hint">Scroll the table horizontally to view every column.</p>
+        }
+    
+        column COMPARISON_ID (
+            type: plainText
+            layout {
+                sequence: 10
+            }
+            heading {
+                heading: ID
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column APPLICATION_ID (
+            type: plainText
+            layout {
+                sequence: 20
+            }
+            heading {
+                heading: App
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column APPLICATION_NAME (
+            type: plainText
+            layout {
+                sequence: 30
+            }
+            heading {
+                heading: Application
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column BASELINE (
+            type: plainText
+            layout {
+                sequence: 40
+            }
+            heading {
+                heading: Baseline
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column STATUS (
+            type: plainText
+            layout {
+                sequence: 50
+            }
+            heading {
+                heading: Status
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column COMPARED_AT (
+            type: plainText
+            layout {
+                sequence: 60
+            }
+            heading {
+                heading: Compared
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+    )
+
+    region differences (
+        name: Observed differences
+        type: classicReport
+        layout {
+            sequence: 30
+            slot: body
+            columnSpan: 12
+            startNewRow: true
+        }
+        appearance {
+            template: @/standard
+            templateOptions: #DEFAULT#
+    
+        }
+        source {
+            type: sqlQuery
+            sqlQuery: ```sql
+    select case when d.eligible='Y' and d.outcome='PENDING' then apex_item.checkbox2(p_idx=>1,p_value=>d.difference_id,p_attributes=>'class="apxtm-check" aria-label="Select difference '||to_char(d.difference_id)||'"') else null end selection,
+     d.difference_id,d.page_id,d.component_type,d.component_name,d.property_name,nvl(d.baseline_value,'(absent)') baseline_value,nvl(d.current_value,'(absent)') current_value,d.classification,d.eligible,d.reason,d.outcome
+    from apxtm_differences d join apxtm_comparisons c on c.comparison_id=d.comparison_id
+    where d.comparison_id=:P20_COMPARISON_ID and apxtm_engine.allowed(c.application_id)=1
+     and (:P20_CLASSIFICATION is null or d.classification=:P20_CLASSIFICATION)
+     and (:P20_ELIGIBLE is null or d.eligible=:P20_ELIGIBLE)
+    order by d.page_id,d.component_type,d.component_name,d.property_name
+    ```
+        }
+        componentAppearance {
+            templateType: theme
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Report--altRowsDefault
+                t-Report--rowHighlight
+            ]
+        }
+        pagination {
+            type: setPaginationSearchEngine
+            partialPageRefresh: false
+        }
+        messages {
+            whenNoDataFound: No records yet. Use the steps above to begin.
+        }
+        headerAndFooter {
+            headerText: <p class="apxtm-table-hint">Scroll the table horizontally to view every column.</p>
+        }
+    
+        column SELECTION (
+            type: plainText
+            layout {
+                sequence: 10
+            }
+            heading {
+                heading: Select
+            }
+            security {
+                escapeSpecialChars: false
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column DIFFERENCE_ID (
+            type: plainText
+            layout {
+                sequence: 20
+            }
+            heading {
+                heading: ID
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column PAGE_ID (
+            type: plainText
+            layout {
+                sequence: 30
+            }
+            heading {
+                heading: Page
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column COMPONENT_TYPE (
+            type: plainText
+            layout {
+                sequence: 40
+            }
+            heading {
+                heading: Type
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column COMPONENT_NAME (
+            type: plainText
+            layout {
+                sequence: 50
+            }
+            heading {
+                heading: Component
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column PROPERTY_NAME (
+            type: plainText
+            layout {
+                sequence: 60
+            }
+            heading {
+                heading: Property
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column BASELINE_VALUE (
+            type: plainText
+            layout {
+                sequence: 70
+            }
+            heading {
+                heading: Baseline
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column CURRENT_VALUE (
+            type: plainText
+            layout {
+                sequence: 80
+            }
+            heading {
+                heading: Current
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column CLASSIFICATION (
+            type: plainText
+            layout {
+                sequence: 90
+            }
+            heading {
+                heading: Classification
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column ELIGIBLE (
+            type: plainText
+            layout {
+                sequence: 100
+            }
+            heading {
+                heading: Eligible
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column REASON (
+            type: plainText
+            layout {
+                sequence: 110
+            }
+            heading {
+                heading: Reason
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column OUTCOME (
+            type: plainText
+            layout {
+                sequence: 120
+            }
+            heading {
+                heading: Outcome
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+    )
+
+    button preview-selected (
+        buttonName: PREVIEW_SELECTED
+        label: Preview selected
+        layout {
+            sequence: 10
+            region: @differences
+            slot: change
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: true
+        }
+        behavior {
+            action: submitPage
+            showProcessing: true
+        }
+        security {
+            authorizationScheme: @can-recover
+        }
+    
+    )
+
+    button preview-all (
+        buttonName: PREVIEW_ALL
+        label: Preview all eligible
+        layout {
+            sequence: 20
+            region: @differences
+            slot: change
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: false
+        }
+        behavior {
+            action: submitPage
+            showProcessing: true
+        }
+        security {
+            authorizationScheme: @can-recover
+        }
+    
+    )
+
+    process check-comparison (
+        name: Authorize comparison
+        type: executeCode
+        advanced {
+            executionMappingIdentifier: 203185210705730
+        }
+        execution {
+            sequence: 1
+            point: beforeHeader
+        }
+        source {
+            plsqlCode: ```plsql
+    declare app_id number; begin
+     select application_id into app_id from apxtm_comparisons where comparison_id=:P20_COMPARISON_ID;
+     apxtm_engine.assert_access(app_id,'READ');
+    end;
+    ```
+        }
+    
+    )
+
+    process preview-selected (
+        name: Preview selected differences
+        type: executeCode
+        advanced {
+            executionMappingIdentifier: 234486400865320
+        }
+        execution {
+            sequence: 10
+            point: processing
+        }
+        source {
+            plsqlCode: ```plsql
+    declare request_error varchar2(4000); request_error_code number; begin
+     apex_util.set_session_state('P20_NOTICE',null);
+     declare ids varchar2(32767); op number; token varchar2(4000); begin
+     if apex_application.g_f01.count=0 then raise_application_error(-20040,'Select at least one eligible difference.'); end if;
+     for i in 1..apex_application.g_f01.count loop
+      if not regexp_like(apex_application.g_f01(i),'^[0-9]+$') then raise_application_error(-20040,'Invalid selection.'); end if;
+      ids:=ids||case when i>1 then ':' end||apex_application.g_f01(i);
+     end loop;
+     apxtm_engine.preview(:P20_COMPARISON_ID,ids,op,token);
+     apex_util.set_session_state('P30_OPERATION_ID',op);
+     apex_util.set_session_state('P30_TOKEN',token);
+     apex_util.set_session_state('P30_CONFIRMATION',null);
+     apex_util.set_session_state('P30_NOTICE',null);
+     apex_util.redirect_url(apex_page.get_url(p_page=>30));
+    end;
+     
+     apex_util.redirect_url(apex_page.get_url(p_page=>20));
+    exception
+     when apex_application.e_stop_apex_engine then raise;
+     when others then
+      request_error_code:=sqlcode;
+      request_error:=case when request_error_code between -20999 and -20000 then regexp_replace(sqlerrm,'^ORA-[0-9]+: ','') else 'The request failed. Review Activity or contact the workspace administrator.' end;
+      apex_util.set_session_state('P20_NOTICE','Request failed ('||request_error_code||'): '||substr(request_error,1,3000));
+      apex_util.redirect_url(apex_page.get_url(p_page=>20));
+    end;
+    ```
+        }
+        serverSideCondition {
+            whenButtonPressed: @preview-selected
+        }
+        security {
+            authorizationScheme: @can-recover
+        }
+    
+    )
+
+    process preview-all (
+        name: Preview all eligible differences
+        type: executeCode
+        advanced {
+            executionMappingIdentifier: 170645892866850
+        }
+        execution {
+            sequence: 20
+            point: processing
+        }
+        source {
+            plsqlCode: ```plsql
+    declare request_error varchar2(4000); request_error_code number; begin
+     apex_util.set_session_state('P20_NOTICE',null);
+     declare op number; token varchar2(4000); begin
+     apxtm_engine.preview(:P20_COMPARISON_ID,null,op,token);
+     apex_util.set_session_state('P30_OPERATION_ID',op);
+     apex_util.set_session_state('P30_TOKEN',token);
+     apex_util.set_session_state('P30_CONFIRMATION',null);
+     apex_util.set_session_state('P30_NOTICE',null);
+     apex_util.redirect_url(apex_page.get_url(p_page=>30));
+    end;
+     
+     apex_util.redirect_url(apex_page.get_url(p_page=>20));
+    exception
+     when apex_application.e_stop_apex_engine then raise;
+     when others then
+      request_error_code:=sqlcode;
+      request_error:=case when request_error_code between -20999 and -20000 then regexp_replace(sqlerrm,'^ORA-[0-9]+: ','') else 'The request failed. Review Activity or contact the workspace administrator.' end;
+      apex_util.set_session_state('P20_NOTICE','Request failed ('||request_error_code||'): '||substr(request_error,1,3000));
+      apex_util.redirect_url(apex_page.get_url(p_page=>20));
+    end;
+    ```
+        }
+        serverSideCondition {
+            whenButtonPressed: @preview-all
+        }
+        security {
+            authorizationScheme: @can-recover
+        }
+    
+    )
+)

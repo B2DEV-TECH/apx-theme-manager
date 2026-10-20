@@ -50,6 +50,21 @@ create or replace package body apxtm_parse as
     l_raw varchar2(32767);
     l_id varchar2(256);
     l_expression_tokens pls_integer;
+    l_call_first pls_integer;
+    l_definition clob;
+
+    function at_command_start(p_at pls_integer) return boolean is
+      i pls_integer:=p_at-1;
+      c varchar2(1);
+    begin
+      while i>0 loop
+        c:=dbms_lob.substr(p_source,1,i);
+        if c in (chr(10),chr(13)) then return true;end if;
+        if c not in (' ',chr(9)) then return false;end if;
+        i:=i-1;
+      end loop;
+      return true;
+    end;
 
     function ch(p_at pls_integer) return varchar2 is
     begin
@@ -73,6 +88,8 @@ create or replace package body apxtm_parse as
         c:=ch(l_pos);
         exit when c is null;
         if c in (' ',chr(9),chr(10),chr(13)) then l_pos:=l_pos+1;
+        elsif lower(dbms_lob.substr(p_source,7,l_pos))='prompt ' and at_command_start(l_pos) then
+          while ch(l_pos) is not null and ch(l_pos)!=chr(10) loop l_pos:=l_pos+1;end loop;
         elsif c='-' and ch(l_pos+1)='-' then
           l_pos:=l_pos+2;
           while ch(l_pos) is not null and ch(l_pos)!=chr(10) loop l_pos:=l_pos+1; end loop;
@@ -119,8 +136,8 @@ create or replace package body apxtm_parse as
 
     function wanted(p_name varchar2) return boolean is
     begin
-      return p_name in ('p_id','p_name','p_plug_name','p_button_name','p_plug_id','p_button_plug_id',
-        'p_parent_plug_id','p_theme_id','p_theme_class_id','p_internal_name','p_reference_id',
+      return p_name in ('p_id','p_name','p_static_id','p_users','p_files_version','p_plug_name','p_button_name','p_plug_id','p_button_plug_id',
+        'p_parent_plug_id','p_theme_id','p_theme_name','p_theme_version','p_theme_class_id','p_internal_name','p_reference_id',
         'p_template_id','p_css_classes','p_theme_internal_name','p_template','p_plug_template',
         'p_step_template','p_page_template_options','p_template_options','p_field_template',
         'p_item_template_options','p_button_template','p_button_template_options','p_button_position',
@@ -149,6 +166,12 @@ create or replace package body apxtm_parse as
       if regexp_like(s,'^wwv_flow_imp[.]id\([[:space:]]*[0-9]+[[:space:]]*\)$','i') then
         return regexp_substr(s,'[0-9]+');
       end if;
+      -- Recognize one tested generated-artifact construct as literal metadata.
+      -- This internal export helper is never invoked by application code.
+      if regexp_like(regexp_replace(s,'[[:space:]]',''),
+        q'~^wwv_imp_util[.]get_subscription_id\([0-9]+,[0-9]+,'[A-Za-z0-9_-]+',[0-9]+([.][0-9]+)?\)$~','i') then
+        return 'SUBSCRIPTION:'||regexp_replace(s,'[[:space:]]','');
+      end if;
       if l_expression_tokens=1 and substr(s,1,1)='''' and substr(s,-1)='''' then
         return replace(substr(s,2,length(s)-2),'''''','''');
       end if;
@@ -161,7 +184,8 @@ create or replace package body apxtm_parse as
       return case p_call
         when 'create_page' then 'PAGE' when 'create_page_plug' then 'REGION'
         when 'create_page_item' then 'ITEM' when 'create_page_button' then 'BUTTON'
-        when 'create_theme' then 'THEME' when 'create_template' then 'PAGE_TEMPLATE'
+        when 'create_flow' then 'APPLICATION' when 'create_acl_role' then 'ACL_ROLE'
+        when 'create_theme' then 'THEME' when 'create_user_interface' then 'USER_INTERFACE' when 'create_template' then 'PAGE_TEMPLATE'
         when 'create_plug_template' then 'REGION_TEMPLATE'
         when 'create_field_template' then 'ITEM_TEMPLATE'
         when 'create_button_templates' then 'BUTTON_TEMPLATE'
@@ -171,8 +195,8 @@ create or replace package body apxtm_parse as
     if p_source is null or l_size=0 then reject('Empty application export'); end if;
     loop
       l_token:=token; exit when l_token.txt is null;
-      if l_token.txt in ('wwv_flow_imp_page','wwv_flow_imp_shared','wwv_flow_imp') then
-        l_prefix:=l_token.txt; l_token:=token;
+      if l_token.txt in ('wwv_flow_imp_page','wwv_flow_imp_shared','wwv_flow_imp','wwv_imp_workspace') then
+        l_prefix:=l_token.txt;l_call_first:=l_token.first_pos; l_token:=token;
         if l_token.txt='.' then
           l_token:=token; l_call:=l_token.txt; l_kind:=component_kind(l_call);
           if l_kind is not null then
@@ -208,18 +232,39 @@ create or replace package body apxtm_parse as
             end loop;
             if not l_attrs.has('p_id') then reject('Component ID missing'); end if;
             l_id:=l_attrs.get_string('p_id');
+            if l_kind='APPLICATION' then
+              l_span:=l_spans.get_object('p_id');
+              if l_span.get_string('raw') is null or lower(regexp_replace(l_span.get_string('raw'),'[[:space:]]',''))!='wwv_flow.g_flow_id' then
+                reject('Unsupported generated application identity');end if;
+              -- Singleton context only. GET_INFO separately validates the real app ID.
+              l_id:='0';
+            end if;
             if not regexp_like(l_id,'^[0-9]+$') then reject('Unsupported component ID expression'); end if;
             if l_kind='PAGE' then l_page:=to_number(l_id); end if;
             l_component.put('kind',l_kind); l_component.put('call',l_call);
             l_component.put('id',l_id);
             if l_kind in ('PAGE','REGION','ITEM','BUTTON') then l_component.put('page',l_page);
             else l_component.put('page',0); end if;
-            l_component.put('name',coalesce(l_attrs.get_string('p_name'),l_attrs.get_string('p_plug_name'),l_attrs.get_string('p_button_name'),l_id));
+            l_component.put('name',coalesce(l_attrs.get_string('p_name'),l_attrs.get_string('p_plug_name'),l_attrs.get_string('p_button_name'),l_attrs.get_string('p_theme_name'),l_id));
             l_component.put('parent',coalesce(l_attrs.get_string('p_plug_id'),l_attrs.get_string('p_button_plug_id'),l_attrs.get_string('p_parent_plug_id'),'#NULL#'));
             l_key:=l_kind||':'||l_component.get_number('page')||':'||l_id;
             if l_seen.exists(l_key) then reject('Duplicate component identity'); end if;
             l_seen(l_key):=true;
             l_component.put('key',l_key); l_component.put('attrs',l_attrs); l_component.put('spans',l_spans);
+            if l_kind in ('THEME','USER_INTERFACE','PAGE_TEMPLATE','REGION_TEMPLATE','ITEM_TEMPLATE','BUTTON_TEMPLATE') then
+              dbms_lob.createtemporary(l_definition,true);
+              if l_kind='THEME' and l_spans.has('p_files_version') then
+                -- This generated cache-busting counter changes on an APEXlang
+                -- import without changing theme semantics. Ignore only its span
+                -- in context hashing; full artifact/freshness hashes retain it.
+                l_span:=l_spans.get_object('p_files_version');
+                dbms_lob.copy(l_definition,p_source,l_span.get_number('start')-l_call_first,1,l_call_first);
+                dbms_lob.writeappend(l_definition,1,'0');
+                dbms_lob.copy(l_definition,p_source,l_token.last_pos-l_span.get_number('end'),dbms_lob.getlength(l_definition)+1,l_span.get_number('end')+1);
+              else dbms_lob.copy(l_definition,p_source,l_token.last_pos-l_call_first+1,1,l_call_first);end if;
+              l_component.put('definition_hash',rawtohex(dbms_crypto.hash(l_definition,dbms_crypto.hash_sh256)));
+              dbms_lob.freetemporary(l_definition);
+            end if;
             l_result.append(l_component);
           end if;
         end if;
@@ -227,6 +272,35 @@ create or replace package body apxtm_parse as
     end loop;
     if l_result.get_size=0 then reject('No recognized components in export'); end if;
     return l_result;
+  exception when others then
+    if dbms_lob.istemporary(l_definition)=1 then dbms_lob.freetemporary(l_definition);end if;raise;
+  end;
+
+  function acl_fingerprint(p_source clob) return varchar2 is
+    type t_hashes is table of varchar2(64) index by varchar2(4000);
+    hashes t_hashes;a json_array_t:=parse(p_source);o json_object_t;v json_object_t;
+    spans json_object_t;s json_object_t;key varchar2(4000);piece clob;
+    h varchar2(64):=rawtohex(dbms_crypto.hash(utl_i18n.string_to_raw('APXTM ACL v1','AL32UTF8'),dbms_crypto.hash_sh256));
+  begin
+    for i in 0..a.get_size-1 loop
+      o:=treat(a.get(i) as json_object_t);
+      if o.get_string('kind')='ACL_ROLE' then
+        v:=o.get_object('attrs');spans:=o.get_object('spans');key:=v.get_string('p_static_id');
+        if key is null or key in ('#EXPR#','#NULL#','#EMPTY#') or not spans.has('p_users') then
+          reject('ACL assignment export is outside the supported restore format');end if;
+        if hashes.exists(key) then reject('Duplicate ACL role static identity');end if;
+        s:=spans.get_object('p_users');dbms_lob.createtemporary(piece,true);
+        dbms_lob.copy(piece,p_source,s.get_number('end')-s.get_number('start')+1,1,s.get_number('start'));
+        hashes(key):=rawtohex(dbms_crypto.hash(piece,dbms_crypto.hash_sh256));dbms_lob.freetemporary(piece);
+      end if;
+    end loop;
+    key:=hashes.first;
+    while key is not null loop
+      h:=rawtohex(dbms_crypto.hash(utl_i18n.string_to_raw(h||':'||length(key)||':'||key||':'||hashes(key),'AL32UTF8'),dbms_crypto.hash_sh256));
+      key:=hashes.next(key);
+    end loop;
+    return h;
+  exception when others then if dbms_lob.istemporary(piece)=1 then dbms_lob.freetemporary(piece);end if;raise;
   end;
 
   function patch(p_source clob,p_changes json_array_t) return clob is

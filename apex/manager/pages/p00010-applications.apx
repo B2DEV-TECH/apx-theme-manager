@@ -1,0 +1,913 @@
+page 10 (
+    name: Application & snapshots
+    alias: APPLICATIONS
+    title: Application & snapshots | APEX Theme Manager
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        warnOnUnsavedChanges: false
+    }
+    security {
+        authentication: required
+        pageAccessProtection: argumentsMustHaveChecksum
+    }
+    advanced {
+        reloadOnSubmit: always
+    }
+
+    region request-message (
+        name: Request result
+        type: staticContent
+        layout {
+            sequence: 5
+            slot: body
+            columnSpan: 12
+            startNewRow: true
+        }
+        appearance {
+            template: @/alert
+            templateOptions: #DEFAULT#
+    
+        }
+        source {
+            htmlCode: ```html
+    <p>&P10_NOTICE!HTML.</p>
+    ```
+        }
+        serverSideCondition {
+            type: itemIsNotNull
+            item: P10_NOTICE
+        }
+    
+    
+    )
+
+    pageItem P10_NOTICE (
+        type: hidden
+    
+        layout {
+            sequence: 10
+            region: @request-message
+            slot: regionBody
+    
+        }
+    
+        security {
+            sessionStateProtection: restricted
+            encryptSessionState: true
+        }
+    
+    )
+
+    region choose (
+        name: Choose an application
+        type: staticContent
+        layout {
+            sequence: 10
+            slot: body
+            columnSpan: 12
+            startNewRow: true
+        }
+        appearance {
+            template: @/standard
+            templateOptions: #DEFAULT#
+    
+        }
+        source {
+            htmlCode: ```html
+    <p>Select a registered application to inspect its definition history.</p>
+    ```
+        }
+    
+    
+    )
+
+    pageItem P10_APPLICATION_ID (
+        type: selectList
+        label {
+            label: Application
+        }
+        layout {
+            sequence: 10
+            region: @choose
+            slot: regionBody
+            columnSpan: 12
+        }
+        appearance {
+            template: @/optional-floating
+    
+        }
+        validation {
+            valueRequired: false
+    
+        }
+        security {
+            sessionStateProtection: unrestricted
+            encryptSessionState: true
+        }
+        lov {
+            type: sqlQuery
+            sqlQuery: ```sql
+    select application_name||' ('||application_id||')' d, application_id r from apxtm_applications a where apxtm_engine.allowed(a.application_id)=1 order by application_name
+    ```
+            displayNullValue: true
+            nullDisplayValue: - Choose -
+        }
+    
+    )
+
+    button open (
+        buttonName: OPEN
+        label: Open application
+        layout {
+            sequence: 10
+            region: @choose
+            slot: change
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: true
+        }
+        behavior {
+            action: submitPage
+            showProcessing: true
+        }
+    
+    )
+
+    region application (
+        name: Application details
+        type: classicReport
+        layout {
+            sequence: 20
+            slot: body
+            columnSpan: 12
+            startNewRow: true
+        }
+        appearance {
+            template: @/standard
+            templateOptions: #DEFAULT#
+    
+        }
+        source {
+            type: sqlQuery
+            sqlQuery: ```sql
+    select application_id,application_name,application_alias,parsing_schema,allow_recovery,enabled from apxtm_applications a where application_id=:P10_APPLICATION_ID and apxtm_engine.allowed(a.application_id)=1
+    ```
+        }
+        componentAppearance {
+            templateType: theme
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Report--altRowsDefault
+                t-Report--rowHighlight
+            ]
+        }
+        pagination {
+            type: setPaginationSearchEngine
+            partialPageRefresh: false
+        }
+        messages {
+            whenNoDataFound: No records yet. Use the steps above to begin.
+        }
+        headerAndFooter {
+            headerText: <p class="apxtm-table-hint">Scroll the table horizontally to view every column.</p>
+        }
+    
+        column APPLICATION_ID (
+            type: plainText
+            layout {
+                sequence: 10
+            }
+            heading {
+                heading: App
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column APPLICATION_NAME (
+            type: plainText
+            layout {
+                sequence: 20
+            }
+            heading {
+                heading: Name
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column APPLICATION_ALIAS (
+            type: plainText
+            layout {
+                sequence: 30
+            }
+            heading {
+                heading: Alias
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column PARSING_SCHEMA (
+            type: plainText
+            layout {
+                sequence: 40
+            }
+            heading {
+                heading: Schema
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column ALLOW_RECOVERY (
+            type: plainText
+            layout {
+                sequence: 50
+            }
+            heading {
+                heading: Registry recovery
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column ENABLED (
+            type: plainText
+            layout {
+                sequence: 60
+            }
+            heading {
+                heading: Enabled
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+    )
+
+    region recent-state (
+        name: Theme & recent analysis
+        type: classicReport
+        layout {
+            sequence: 25
+            slot: body
+            columnSpan: 12
+            startNewRow: true
+        }
+        appearance {
+            template: @/standard
+            templateOptions: #DEFAULT#
+    
+        }
+        source {
+            type: sqlQuery
+            sqlQuery: ```sql
+    select a.theme_number,t.theme_name,
+     case when t.reference_id is not null then 'Subscription reference present (refresh not verified)' else 'No subscription reference recorded' end subscription_reference,
+     (select to_char(max(s.created_at),'YYYY-MM-DD HH24:MI') from apxtm_snapshots s join apxtm_artifacts f on f.artifact_id=s.artifact_id where f.application_id=a.application_id and s.snapshot_kind='BASELINE') latest_baseline,
+     (select case when max(c.comparison_id) is null then 'Not run yet' else '#'||max(c.comparison_id)||' - '||max(c.status) keep(dense_rank last order by c.comparison_id) end from apxtm_comparisons c where c.application_id=a.application_id) latest_comparison,
+     (select case when max(o.operation_id) is null then 'No operations yet' else '#'||max(o.operation_id)||' - '||max(o.status) keep(dense_rank last order by o.operation_id) end from apxtm_operations o where o.application_id=a.application_id) latest_operation,
+     'Freshness is checked when an operation runs. This report does not re-export the application.' freshness_boundary
+    from apex_applications a join apex_application_themes t on t.application_id=a.application_id and t.theme_number=a.theme_number
+    where a.application_id=:P10_APPLICATION_ID and apxtm_engine.allowed(a.application_id)=1
+    ```
+        }
+        componentAppearance {
+            templateType: theme
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Report--altRowsDefault
+                t-Report--rowHighlight
+            ]
+        }
+        pagination {
+            type: setPaginationSearchEngine
+            partialPageRefresh: false
+        }
+        messages {
+            whenNoDataFound: No records yet. Use the steps above to begin.
+        }
+        headerAndFooter {
+            headerText: <p class="apxtm-table-hint">Scroll the table horizontally to view every column.</p>
+        }
+    
+        column THEME_NUMBER (
+            type: plainText
+            layout {
+                sequence: 10
+            }
+            heading {
+                heading: Theme
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column THEME_NAME (
+            type: plainText
+            layout {
+                sequence: 20
+            }
+            heading {
+                heading: Theme name
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column SUBSCRIPTION_REFERENCE (
+            type: plainText
+            layout {
+                sequence: 30
+            }
+            heading {
+                heading: Subscription
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column LATEST_BASELINE (
+            type: plainText
+            layout {
+                sequence: 40
+            }
+            heading {
+                heading: Latest baseline
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column LATEST_COMPARISON (
+            type: plainText
+            layout {
+                sequence: 50
+            }
+            heading {
+                heading: Last analysis
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column LATEST_OPERATION (
+            type: plainText
+            layout {
+                sequence: 60
+            }
+            heading {
+                heading: Last operation
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column FRESHNESS_BOUNDARY (
+            type: plainText
+            layout {
+                sequence: 70
+            }
+            heading {
+                heading: Observation boundary
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+    )
+
+    region capture (
+        name: Capture a trusted baseline
+        type: staticContent
+        layout {
+            sequence: 30
+            slot: body
+            columnSpan: 12
+            startNewRow: true
+        }
+        appearance {
+            template: @/standard
+            templateOptions: #DEFAULT#
+    
+        }
+        source {
+            htmlCode: ```html
+    <p>A snapshot stores a complete, immutable definition export. Use a meaningful name so your team can identify the intended layout later.</p>
+    ```
+        }
+    
+    
+    )
+
+    pageItem P10_SNAPSHOT_NAME (
+        type: textField
+        label {
+            label: Baseline name
+        }
+        layout {
+            sequence: 10
+            region: @capture
+            slot: regionBody
+            columnSpan: 12
+        }
+        appearance {
+            template: @/optional-floating
+            width: 60
+        }
+        validation {
+            valueRequired: false
+            maxLength: 255
+        }
+        security {
+            sessionStateProtection: unrestricted
+            encryptSessionState: true
+        }
+        help {
+            inlineHelpText: Optional. For example: Before the navigation redesign.
+        }
+    
+    )
+
+    button capture (
+        buttonName: CAPTURE
+        label: Capture baseline
+        layout {
+            sequence: 10
+            region: @capture
+            slot: change
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: true
+        }
+        behavior {
+            action: submitPage
+            showProcessing: true
+        }
+        security {
+            authorizationScheme: @can-read
+        }
+    
+    )
+
+    region snapshots (
+        name: Definition snapshots
+        type: classicReport
+        layout {
+            sequence: 40
+            slot: body
+            columnSpan: 12
+            startNewRow: true
+        }
+        appearance {
+            template: @/standard
+            templateOptions: #DEFAULT#
+    
+        }
+        source {
+            type: sqlQuery
+            sqlQuery: ```sql
+    select s.snapshot_id,s.snapshot_name,s.snapshot_kind,to_char(s.created_at,'YYYY-MM-DD HH24:MI TZH:TZM') captured_at,s.created_by,a.component_count,substr(a.source_hash,1,16)||'...' fingerprint,
+     '<a href="'||apex_escape.html_attribute(apex_page.get_url(p_page=>60,p_items=>'P60_SNAPSHOT_ID',p_values=>s.snapshot_id))||'">Download ZIP</a>' download
+    from apxtm_snapshots s join apxtm_artifacts a on a.artifact_id=s.artifact_id
+    where a.application_id=:P10_APPLICATION_ID and apxtm_engine.allowed(a.application_id)=1 order by s.snapshot_id desc
+    ```
+        }
+        componentAppearance {
+            templateType: theme
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Report--altRowsDefault
+                t-Report--rowHighlight
+            ]
+        }
+        pagination {
+            type: setPaginationSearchEngine
+            partialPageRefresh: false
+        }
+        messages {
+            whenNoDataFound: No records yet. Use the steps above to begin.
+        }
+        headerAndFooter {
+            headerText: <p class="apxtm-table-hint">Scroll the table horizontally to view every column.</p>
+        }
+    
+        column SNAPSHOT_ID (
+            type: plainText
+            layout {
+                sequence: 10
+            }
+            heading {
+                heading: ID
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column SNAPSHOT_NAME (
+            type: plainText
+            layout {
+                sequence: 20
+            }
+            heading {
+                heading: Name
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column SNAPSHOT_KIND (
+            type: plainText
+            layout {
+                sequence: 30
+            }
+            heading {
+                heading: Kind
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column CAPTURED_AT (
+            type: plainText
+            layout {
+                sequence: 40
+            }
+            heading {
+                heading: Captured
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column CREATED_BY (
+            type: plainText
+            layout {
+                sequence: 50
+            }
+            heading {
+                heading: Actor
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column COMPONENT_COUNT (
+            type: plainText
+            layout {
+                sequence: 60
+            }
+            heading {
+                heading: Components
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column FINGERPRINT (
+            type: plainText
+            layout {
+                sequence: 70
+            }
+            heading {
+                heading: SHA-256
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column DOWNLOAD (
+            type: plainText
+            layout {
+                sequence: 80
+            }
+            heading {
+                heading: Export
+            }
+            security {
+                escapeSpecialChars: false
+            }
+            sorting {
+                sortable: false
+            }
+        )
+    )
+
+    region compare (
+        name: Compare against a baseline
+        type: staticContent
+        layout {
+            sequence: 50
+            slot: body
+            columnSpan: 12
+            startNewRow: true
+        }
+        appearance {
+            template: @/standard
+            templateOptions: #DEFAULT#
+    
+        }
+        source {
+            htmlCode: ```html
+    <p>Choose a snapshot. Comparison captures the current definition and classifies each observed change before recovery is offered.</p>
+    ```
+        }
+    
+    
+    )
+
+    pageItem P10_BASELINE_ID (
+        type: selectList
+        label {
+            label: Baseline snapshot
+        }
+        layout {
+            sequence: 10
+            region: @compare
+            slot: regionBody
+            columnSpan: 12
+        }
+        appearance {
+            template: @/optional-floating
+    
+        }
+        validation {
+            valueRequired: false
+    
+        }
+        security {
+            sessionStateProtection: unrestricted
+            encryptSessionState: true
+        }
+        lov {
+            type: sqlQuery
+            sqlQuery: ```sql
+    select s.snapshot_name||' - #'||s.snapshot_id d,s.snapshot_id r from apxtm_snapshots s join apxtm_artifacts a on a.artifact_id=s.artifact_id where a.application_id=:P10_APPLICATION_ID and apxtm_engine.allowed(a.application_id)=1 order by s.snapshot_id desc
+    ```
+            displayNullValue: true
+            nullDisplayValue: - Choose -
+        }
+    
+    )
+
+    button compare (
+        buttonName: COMPARE
+        label: Compare with current
+        layout {
+            sequence: 10
+            region: @compare
+            slot: change
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: true
+        }
+        behavior {
+            action: submitPage
+            showProcessing: true
+        }
+        security {
+            authorizationScheme: @can-read
+        }
+    
+    )
+
+    button restore (
+        buttonName: RESTORE
+        label: Preview definition restore
+        layout {
+            sequence: 20
+            region: @compare
+            slot: change
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: false
+        }
+        behavior {
+            action: submitPage
+            showProcessing: true
+        }
+        security {
+            authorizationScheme: @can-restore
+        }
+    
+    )
+
+    pageItem P10_COMPARISON_ID (
+        type: hidden
+    
+        layout {
+            sequence: 90
+            region: @choose
+            slot: regionBody
+    
+        }
+    
+        security {
+            sessionStateProtection: restricted
+            encryptSessionState: true
+        }
+    
+    )
+
+    process capture (
+        name: Capture baseline
+        type: executeCode
+        advanced {
+            executionMappingIdentifier: 41414109301744
+        }
+        execution {
+            sequence: 10
+            point: processing
+        }
+        source {
+            plsqlCode: ```plsql
+    declare request_error varchar2(4000); request_error_code number; begin
+     apex_util.set_session_state('P10_NOTICE',null);
+     declare n number; begin
+     apxtm_engine.assert_access(:P10_APPLICATION_ID,'READ');
+     n:=apxtm_engine.take_snapshot(:P10_APPLICATION_ID,:P10_SNAPSHOT_NAME,'BASELINE');
+     apex_util.set_session_state('P10_BASELINE_ID',n);
+     apex_util.set_session_state('P10_SNAPSHOT_NAME',null);
+    end;
+     apex_util.set_session_state('P10_NOTICE','Baseline captured. The definition archive is available below.');
+     apex_util.redirect_url(apex_page.get_url(p_page=>10));
+    exception
+     when apex_application.e_stop_apex_engine then raise;
+     when others then
+      request_error_code:=sqlcode;
+      request_error:=case when request_error_code between -20999 and -20000 then regexp_replace(sqlerrm,'^ORA-[0-9]+: ','') else 'The request failed. Review Activity or contact the workspace administrator.' end;
+      apex_util.set_session_state('P10_NOTICE','Request failed ('||request_error_code||'): '||substr(request_error,1,3000));
+      apex_util.redirect_url(apex_page.get_url(p_page=>10));
+    end;
+    ```
+        }
+        serverSideCondition {
+            whenButtonPressed: @capture
+        }
+        security {
+            authorizationScheme: @can-read
+        }
+    
+    )
+
+    process compare (
+        name: Compare baseline
+        type: executeCode
+        advanced {
+            executionMappingIdentifier: 147664493740296
+        }
+        execution {
+            sequence: 20
+            point: processing
+        }
+        source {
+            plsqlCode: ```plsql
+    declare request_error varchar2(4000); request_error_code number; begin
+     apex_util.set_session_state('P10_NOTICE',null);
+     declare app_id number; begin
+     select a.application_id into app_id from apxtm_snapshots s join apxtm_artifacts a on a.artifact_id=s.artifact_id where s.snapshot_id=:P10_BASELINE_ID;
+     if app_id<>:P10_APPLICATION_ID then raise_application_error(-20040,'Choose a snapshot from this application.'); end if;
+     apxtm_engine.assert_access(app_id,'READ');
+     :P10_COMPARISON_ID:=apxtm_engine.compare(:P10_BASELINE_ID);
+     apex_util.set_session_state('P20_CLASSIFICATION',null);
+     apex_util.set_session_state('P20_ELIGIBLE',null);
+     apex_util.redirect_url(apex_page.get_url(p_page=>20,p_items=>'P20_COMPARISON_ID',p_values=>:P10_COMPARISON_ID));
+    end;
+     
+     apex_util.redirect_url(apex_page.get_url(p_page=>10));
+    exception
+     when apex_application.e_stop_apex_engine then raise;
+     when others then
+      request_error_code:=sqlcode;
+      request_error:=case when request_error_code between -20999 and -20000 then regexp_replace(sqlerrm,'^ORA-[0-9]+: ','') else 'The request failed. Review Activity or contact the workspace administrator.' end;
+      apex_util.set_session_state('P10_NOTICE','Request failed ('||request_error_code||'): '||substr(request_error,1,3000));
+      apex_util.redirect_url(apex_page.get_url(p_page=>10));
+    end;
+    ```
+        }
+        serverSideCondition {
+            whenButtonPressed: @compare
+        }
+        security {
+            authorizationScheme: @can-read
+        }
+    
+    )
+
+    process restore (
+        name: Preview definition restore
+        type: executeCode
+        advanced {
+            executionMappingIdentifier: 239454457842881
+        }
+        execution {
+            sequence: 30
+            point: processing
+        }
+        source {
+            plsqlCode: ```plsql
+    declare request_error varchar2(4000); request_error_code number; begin
+     apex_util.set_session_state('P10_NOTICE',null);
+     declare app_id number; op number; token varchar2(4000); begin
+     select a.application_id into app_id from apxtm_snapshots s join apxtm_artifacts a on a.artifact_id=s.artifact_id where s.snapshot_id=:P10_BASELINE_ID;
+     if app_id<>:P10_APPLICATION_ID then raise_application_error(-20040,'Choose a snapshot from this application.'); end if;
+     apxtm_engine.assert_access(app_id,'RESTORE');
+     apxtm_engine.preview_restore(:P10_BASELINE_ID,op,token);
+     apex_util.set_session_state('P30_OPERATION_ID',op);
+     apex_util.set_session_state('P30_TOKEN',token);
+     apex_util.set_session_state('P30_CONFIRMATION',null);
+     apex_util.set_session_state('P30_NOTICE',null);
+     apex_util.redirect_url(apex_page.get_url(p_page=>30));
+    end;
+     
+     apex_util.redirect_url(apex_page.get_url(p_page=>10));
+    exception
+     when apex_application.e_stop_apex_engine then raise;
+     when others then
+      request_error_code:=sqlcode;
+      request_error:=case when request_error_code between -20999 and -20000 then regexp_replace(sqlerrm,'^ORA-[0-9]+: ','') else 'The request failed. Review Activity or contact the workspace administrator.' end;
+      apex_util.set_session_state('P10_NOTICE','Request failed ('||request_error_code||'): '||substr(request_error,1,3000));
+      apex_util.redirect_url(apex_page.get_url(p_page=>10));
+    end;
+    ```
+        }
+        serverSideCondition {
+            whenButtonPressed: @restore
+        }
+        security {
+            authorizationScheme: @can-restore
+        }
+    
+    )
+)

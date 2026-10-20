@@ -62,10 +62,27 @@ try{
  });
  await test('baseline snapshot is durable and its ZIP/source integrity validates',async()=>{
   await importSource('samples/layout-lab/exports/baseline/f105.sql');
+  await db.execute(`begin
+   if not apex_acl.has_user_role(p_application_id=>:app,p_user_name=>'APXTM_SYNTHETIC_READER',p_role_static_id=>'DEMO_VIEWER') then
+    apex_acl.add_user_role(p_application_id=>:app,p_user_name=>'APXTM_SYNTHETIC_READER',p_role_static_id=>'DEMO_VIEWER');
+   end if;end;`,{app:appId});await db.commit();
   baselineId=await callNumber("apxtm_engine.take_snapshot(:app,'Integration baseline')",{app:appId});
   assert.equal(await callNumber('case when apxtm_engine.validate_snapshot(:id) then 1 else 0 end',{id:baselineId}),1);
   const row=(await db.execute('select a.source_characters,dbms_lob.getlength(a.archive) archive_bytes,a.component_count from apxtm_snapshots s join apxtm_artifacts a on a.artifact_id=s.artifact_id where snapshot_id=:id',{id:baselineId})).rows[0];
   assert(row.SOURCE_CHARACTERS>10000&&row.ARCHIVE_BYTES>1000&&row.COMPONENT_COUNT>10);evidence.baseline=row;
+  const zip=await db.execute("declare f apex_t_export_files;begin f:=apex_export.unzip(apxtm_engine.snapshot_zip(:id));:found:=case when dbms_lob.instr(f(1).contents,'APXTM_SYNTHETIC_READER')>0 then 1 else 0 end;end;",{id:baselineId,found:{dir:oracledb.BIND_OUT,type:oracledb.NUMBER}});
+  assert.equal(zip.outBinds.found,1);
+ });
+ await test('actual generated application export detects an active theme switch',async()=>{
+  const baseline=await fs.readFile('samples/layout-lab/exports/baseline/f105.sql','utf8');
+  const start=baseline.indexOf('wwv_imp_workspace.create_flow('),end=baseline.indexOf('\n);',start);
+  assert(start>0&&end>start);const segment=baseline.slice(start,end);assert(segment.includes(',p_theme_id=>42'));
+  const current=baseline.slice(0,start)+segment.replace(',p_theme_id=>42',',p_theme_id=>43')+baseline.slice(end);
+  const r=await db.execute('declare a json_array_t;begin a:=apxtm_diff.compare_sources(:b,:c);:result:=a.to_clob;end;',{
+   b:{val:baseline,type:oracledb.CLOB},c:{val:current,type:oracledb.CLOB},result:{dir:oracledb.BIND_OUT,type:oracledb.CLOB}});
+  const clob=r.outBinds.result;const json=typeof clob==='string'?clob:await clob.getData();if(typeof clob!=='string')await clob.close();
+  const differences=JSON.parse(json).filter(x=>x.kind==='APPLICATION'&&x.property==='p_theme_id');
+  assert.equal(differences.length,1);assert.equal(differences[0].classification,'CHANGED');assert.equal(differences[0].eligible,'N');
  });
  await test('snapshot does not commit the caller transaction and identical exports deduplicate',async()=>{
   const observer=await connect();
@@ -85,9 +102,15 @@ try{
  });
  await test('independent APEXlang-authored modifications produce the expected semantic differences',async()=>{
   await importSource('samples/layout-lab/exports/changed/f105.sql');
+  await db.execute(`begin
+   if not apex_acl.has_user_role(p_application_id=>:app,p_user_name=>'APXTM_SYNTHETIC_READER',p_role_static_id=>'DEMO_VIEWER') then
+    apex_acl.add_user_role(p_application_id=>:app,p_user_name=>'APXTM_SYNTHETIC_READER',p_role_static_id=>'DEMO_VIEWER');
+   end if;end;`,{app:appId});await db.commit();
   comparisonId=await callNumber('apxtm_engine.compare(:baseline)',{baseline:baselineId});
   const rows=(await db.execute("select component_name,property_name,baseline_value,current_value,classification,eligible from apxtm_differences where comparison_id=:id and classification!='UNCHANGED' order by page_id,component_type,component_name,property_name",{id:comparisonId})).rows;
   evidence.observedDifferences=rows;
+  assert.equal(rows.length,12,'Only the controlled layout edits should differ semantically');
+  assert.equal(rows.filter(x=>x.ELIGIBLE==='Y').length,10);
   const span=rows.find(x=>x.COMPONENT_NAME==='P1_PROJECT'&&x.PROPERTY_NAME==='p_colspan');
   assert.deepEqual([span.BASELINE_VALUE,span.CURRENT_VALUE,span.CLASSIFICATION,span.ELIGIBLE],['6','12','CHANGED','Y']);
   const region=rows.find(x=>x.COMPONENT_NAME==='Project brief'&&x.PROPERTY_NAME==='p_plug_grid_column_span');
@@ -112,6 +135,7 @@ try{
   assert.equal(op.STATUS,'VERIFIED');assert(op.BACKUP_SNAPSHOT_ID);
   assert.equal(await callNumber('case when apxtm_engine.validate_snapshot(:id) then 1 else 0 end',{id:op.BACKUP_SNAPSHOT_ID}),1);
   assert.equal(await scalar("select grid_column_span from apex_application_page_items where application_id=:app and item_name='P1_PROJECT'",{app:appId}),6);
+  assert.equal(await callNumber("case when apex_acl.has_user_role(p_application_id=>:app,p_user_name=>'APXTM_SYNTHETIC_READER',p_role_static_id=>'DEMO_VIEWER') then 1 else 0 end",{app:appId}),1);
   evidence.selectedRecovery={operationId:selectedOp.id,status:op.STATUS,backupSnapshotId:op.BACKUP_SNAPSHOT_ID};
  });
  await test('consumed recovery token cannot be replayed',async()=>{await reject(()=>apply(selectedOp),20028);});
@@ -120,11 +144,32 @@ try{
   assert.equal(await scalar('select status from apxtm_operations where operation_id=:id',{id:op.id}),'VERIFIED');
   const checked=await callNumber('apxtm_engine.compare(:baseline)',{baseline:baselineId});
   assert.equal(await scalar("select count(*) from apxtm_differences where comparison_id=:id and eligible='Y'",{id:checked}),0);
+  assert.equal(await callNumber("case when apex_acl.has_user_role(p_application_id=>:app,p_user_name=>'APXTM_SYNTHETIC_READER',p_role_static_id=>'DEMO_VIEWER') then 1 else 0 end",{app:appId}),1);
+ });
+ await test('a stale second preview preserves the first verified repair outcome',async()=>{
+  await importSource('samples/layout-lab/exports/changed/f105.sql');
+  const id=await callNumber('apxtm_engine.compare(:baseline)',{baseline:baselineId});
+  const difference=await scalar("select difference_id from apxtm_differences where comparison_id=:id and component_name='P1_PROJECT' and property_name='p_colspan'",{id});
+  const first=await preview(id,String(difference));const second=await preview(id,String(difference));
+  await apply(first);await reject(()=>apply(second),20024);
+  assert.equal(await scalar('select outcome from apxtm_differences where difference_id=:id',{id:difference}),'FIXED');
+  assert.equal(await scalar('select status from apxtm_comparisons where comparison_id=:id',{id}),'RECOVERED');
  });
  await test('full restore requires its separate confirmation and verifies the complete definition',async()=>{
   const r=await db.execute('begin apxtm_engine.preview_restore(:snap,:op,:token);end;',{snap:baselineId,op:{dir:oracledb.BIND_OUT,type:oracledb.NUMBER},token:{dir:oracledb.BIND_OUT,type:oracledb.STRING,maxSize:128}});
   const op={id:r.outBinds.op,token:r.outBinds.token};await reject(()=>apply(op),20028);await apply(op,`RESTORE ${appId}`);
   assert.equal(await scalar('select status from apxtm_operations where operation_id=:id',{id:op.id}),'VERIFIED');
+ });
+ await test('full restore rejects changed ACL assignments before creating a request or importing',async()=>{
+  const before=await scalar('select count(*) from apxtm_operations');
+  try{
+   await db.execute("begin apex_acl.add_user_role(p_application_id=>:app,p_user_name=>'APXTM_RESTORE_CONFLICT',p_role_static_id=>'DEMO_VIEWER');end;",{app:appId});await db.commit();
+   await reject(()=>db.execute('begin apxtm_engine.preview_restore(:snap,:op,:token);end;',{snap:baselineId,op:{dir:oracledb.BIND_OUT,type:oracledb.NUMBER},token:{dir:oracledb.BIND_OUT,type:oracledb.STRING,maxSize:128}}),20031);
+   assert.equal(await scalar('select count(*) from apxtm_operations'),before);
+   assert.equal(await callNumber("case when apex_acl.has_user_role(p_application_id=>:app,p_user_name=>'APXTM_RESTORE_CONFLICT',p_role_static_id=>'DEMO_VIEWER') then 1 else 0 end",{app:appId}),1);
+  }finally{
+   await db.execute("begin apex_acl.remove_user_role(p_application_id=>:app,p_user_name=>'APXTM_RESTORE_CONFLICT',p_role_static_id=>'DEMO_VIEWER');end;",{app:appId});await db.commit();
+  }
  });
  await test('stale comparison rejects preview after an independent application edit',async()=>{
   const id=await callNumber('apxtm_engine.compare(:baseline)',{baseline:baselineId});await importSource('samples/layout-lab/exports/changed/f105.sql');

@@ -1,0 +1,6 @@
+role DEMO_VIEWER (
+    name: Demo Viewer
+    description {
+        description: Original synthetic role for verifying that definition recovery preserves runtime ACL assignments.
+    }
+)

@@ -7,3 +7,10 @@
 *.jpg binary
 *.mp4 binary
 *.zip binary
+# Markdown uses intentional two-space hard line breaks.
+*.md whitespace=-blank-at-eol
+# Preserve Oracle-generated export/APEXlang whitespace as emitted by the tools.
+apex/**/*.apx -whitespace
+samples/**/*.apx -whitespace
+apex/*.sql -whitespace
+samples/layout-lab/exports/**/*.sql -whitespace

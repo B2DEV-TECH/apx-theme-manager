@@ -1,0 +1,168 @@
+page 1 (
+    name: Project Desk
+    alias: HOME
+    title: Project Desk · APXTM Layout Lab
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    region project (
+        name: Project brief
+        type: staticContent
+        layout {
+            sequence: 10
+            slot: body
+            column: 1
+            columnSpan: 8
+            startNewRow: true
+        }
+        appearance {
+            template: @/standard
+            templateOptions: #DEFAULT#
+        }
+        source {
+            htmlCode: ```html
+<p>An original synthetic application for layout recovery tests. All names and values are invented.</p>
+```
+        }
+    )
+
+    region contact (
+        name: Contact details
+        type: staticContent
+        layout {
+            sequence: 20
+            slot: body
+            column: 7
+            columnSpan: 4
+            startNewRow: false
+        }
+        appearance {
+            template: @/standard
+            templateOptions: #DEFAULT#
+        }
+
+    )
+
+    pageItem P1_PROJECT (
+        type: textField
+        label {
+            label: Project name
+        }
+        layout {
+            sequence: 10
+            region: @project
+            slot: regionBody
+            column: 1
+            columnSpan: 12
+            labelColumnSpan: 2
+            startNewRow: true
+
+        }
+        appearance {
+            template: @/optional-floating
+            width: 30
+        }
+        default {
+            type: static
+            staticValue: Orion Field Notes
+        }
+    )
+
+    pageItem P1_OWNER (
+        type: textField
+        label {
+            label: Coordinator
+        }
+        layout {
+            sequence: 20
+            region: @project
+            slot: regionBody
+            column: 1
+            columnSpan: 6
+            labelColumnSpan: 2
+            startNewRow: true
+
+        }
+        appearance {
+            template: @/optional-floating
+            width: 30
+        }
+        default {
+            type: static
+            staticValue: Avery Example
+        }
+    )
+
+    pageItem P1_CITY (
+        type: textField
+        label {
+            label: City
+        }
+        layout {
+            sequence: 10
+            region: @contact
+            slot: regionBody
+            column: 1
+            columnSpan: 6
+            labelColumnSpan: 2
+            startNewRow: true
+
+        }
+        appearance {
+            template: @/optional-floating
+            width: 30
+        }
+        default {
+            type: static
+            staticValue: Curitiba
+        }
+    )
+
+    pageItem P1_EMAIL (
+        type: textField
+        label {
+            label: Contact email
+        }
+        layout {
+            sequence: 20
+            region: @contact
+            slot: regionBody
+            column: 1
+            columnSpan: 12
+            labelColumnSpan: 2
+            startNewRow: true
+
+        }
+        appearance {
+            template: @/optional-floating
+            width: 30
+        }
+        default {
+            type: static
+            staticValue: avery@example.invalid
+        }
+    )
+
+    button open_review (
+        buttonName: OPEN_REVIEW
+        label: Open review
+        layout {
+            sequence: 30
+            region: @project
+            slot: regionBody
+            column: 1
+            columnSpan: 4
+            startNewRow: true
+        }
+        appearance {
+            buttonTemplate: @/text
+        }
+        behavior {
+            action: redirectThisApp
+            target: {
+                page: 2
+            }
+        }
+    )
+)

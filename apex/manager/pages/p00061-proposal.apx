@@ -1,0 +1,87 @@
+page 61 (
+    name: Download proposed definition
+    alias: PROPOSAL
+    title: Download proposed definition | APEX Theme Manager
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        warnOnUnsavedChanges: false
+    }
+    security {
+        authentication: required
+        pageAccessProtection: argumentsMustHaveChecksum
+    }
+
+
+    region proposal (
+        name: Proposed definition archive
+        type: staticContent
+        layout {
+            sequence: 10
+            slot: body
+            columnSpan: 12
+            startNewRow: true
+        }
+        appearance {
+            template: @/standard
+            templateOptions: #DEFAULT#
+    
+        }
+        source {
+            htmlCode: ```html
+    <p>The archive is delivered only after the server verifies access to its application.</p>
+    ```
+        }
+    
+    
+    )
+
+    pageItem P61_OPERATION_ID (
+        type: hidden
+    
+        layout {
+            sequence: 10
+            region: @proposal
+            slot: regionBody
+    
+        }
+    
+        security {
+            sessionStateProtection: checksumRequiredSessionLevel
+            encryptSessionState: true
+        }
+    
+    )
+
+    process download-proposal (
+        name: Download authorized proposal
+        type: executeCode
+        advanced {
+            executionMappingIdentifier: 256705821390509
+        }
+        execution {
+            sequence: 10
+            point: beforeHeader
+        }
+        source {
+            plsqlCode: ```plsql
+    declare archive blob; app_id number; begin
+     select application_id into app_id from apxtm_operations where operation_id=:P61_OPERATION_ID;
+     apxtm_engine.assert_access(app_id,'READ');
+     archive:=apxtm_engine.operation_zip(:P61_OPERATION_ID);
+     sys.htp.init;
+     sys.owa_util.mime_header('application/zip',false);
+     sys.htp.p('Content-Length: '||dbms_lob.getlength(archive));
+     sys.htp.p('Content-Disposition: attachment; filename="apxtm-app-'||to_char(app_id)||'-operation-'||to_char(to_number(:P61_OPERATION_ID))||'.zip"');
+     sys.htp.p('Cache-Control: no-store');
+     sys.owa_util.http_header_close;
+     sys.wpg_docload.download_file(archive);
+     apex_application.stop_apex_engine;
+    end;
+    ```
+        }
+    
+    )
+)

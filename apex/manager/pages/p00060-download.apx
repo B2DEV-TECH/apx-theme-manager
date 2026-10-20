@@ -1,0 +1,87 @@
+page 60 (
+    name: Download definition archive
+    alias: DOWNLOAD
+    title: Download definition archive | APEX Theme Manager
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        warnOnUnsavedChanges: false
+    }
+    security {
+        authentication: required
+        pageAccessProtection: argumentsMustHaveChecksum
+    }
+
+
+    region download (
+        name: Definition archive
+        type: staticContent
+        layout {
+            sequence: 10
+            slot: body
+            columnSpan: 12
+            startNewRow: true
+        }
+        appearance {
+            template: @/standard
+            templateOptions: #DEFAULT#
+    
+        }
+        source {
+            htmlCode: ```html
+    <p>The archive is delivered only after the server verifies access to its application.</p>
+    ```
+        }
+    
+    
+    )
+
+    pageItem P60_SNAPSHOT_ID (
+        type: hidden
+    
+        layout {
+            sequence: 10
+            region: @download
+            slot: regionBody
+    
+        }
+    
+        security {
+            sessionStateProtection: checksumRequiredSessionLevel
+            encryptSessionState: true
+        }
+    
+    )
+
+    process download (
+        name: Download authorized snapshot
+        type: executeCode
+        advanced {
+            executionMappingIdentifier: 195031361473483
+        }
+        execution {
+            sequence: 10
+            point: beforeHeader
+        }
+        source {
+            plsqlCode: ```plsql
+    declare archive blob; app_id number; begin
+     select a.application_id into app_id from apxtm_snapshots s join apxtm_artifacts a on a.artifact_id=s.artifact_id where s.snapshot_id=:P60_SNAPSHOT_ID;
+     apxtm_engine.assert_access(app_id,'READ');
+     archive:=apxtm_engine.snapshot_zip(:P60_SNAPSHOT_ID);
+     sys.htp.init;
+     sys.owa_util.mime_header('application/zip',false);
+     sys.htp.p('Content-Length: '||dbms_lob.getlength(archive));
+     sys.htp.p('Content-Disposition: attachment; filename="apxtm-app-'||to_char(app_id)||'-snapshot-'||to_char(to_number(:P60_SNAPSHOT_ID))||'.zip"');
+     sys.htp.p('Cache-Control: no-store');
+     sys.owa_util.http_header_close;
+     sys.wpg_docload.download_file(archive);
+     apex_application.stop_apex_engine;
+    end;
+    ```
+        }
+    
+    )
+)

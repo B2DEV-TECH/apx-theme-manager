@@ -1,0 +1,155 @@
+page 50 (
+    name: Guide & safety boundary
+    alias: GUIDE
+    title: Guide & safety boundary | APEX Theme Manager
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        warnOnUnsavedChanges: false
+    }
+    security {
+        authentication: required
+        pageAccessProtection: argumentsMustHaveChecksum
+    }
+
+
+    region guide (
+        name: A deliberate recovery workflow
+        type: staticContent
+        layout {
+            sequence: 10
+            slot: body
+            columnSpan: 12
+            startNewRow: true
+        }
+        appearance {
+            template: @/hero
+            templateOptions: #DEFAULT#
+            icon: fa-clone
+        }
+        source {
+            htmlCode: ```html
+    <p class="apxtm-eyebrow">A COMMUNITY TOOL FOR DEVELOPMENT WORKSPACES</p><p class="apxtm-lead">Definitions are immutable evidence. A preview is an exact proposal. A verified operation is an independently checked result.</p>
+    ```
+        }
+    
+    
+    )
+
+    region workflow (
+        name: From baseline to verified result
+        type: staticContent
+        layout {
+            sequence: 20
+            slot: body
+            columnSpan: 12
+            startNewRow: true
+        }
+        appearance {
+            template: @/standard
+            templateOptions: #DEFAULT#
+    
+        }
+        source {
+            htmlCode: ```html
+    <ol><li><strong>Register.</strong> Your database owner explicitly registers a development application and grants named actors access.</li><li><strong>Capture.</strong> Save a definition baseline before changing a layout.</li><li><strong>Compare.</strong> Capture the current definition and inspect classifications and eligibility.</li><li><strong>Select.</strong> Choose eligible properties or preview all eligible differences.</li><li><strong>Preview.</strong> Check the target, selected values, expiry and exact confirmation phrase.</li><li><strong>Apply.</strong> Submit the phrase. The engine reauthorizes, checks freshness, backs up, imports and verifies.</li></ol>
+    ```
+        }
+    
+    
+    )
+
+    region boundary (
+        name: What can be recovered
+        type: staticContent
+        layout {
+            sequence: 30
+            slot: body
+            columnSpan: 12
+            startNewRow: true
+        }
+        appearance {
+            template: @/standard
+            templateOptions: #DEFAULT#
+    
+        }
+        source {
+            htmlCode: ```html
+    <p>The initial automatic scope covers recognized grid spans, positions and row or field booleans that are explicitly present in both exports. Matching requires stable application and component identity.</p><p>Template changes, cross-theme mappings, unknown expressions, absent properties and ambiguous matches are detection only. Review their reasons and use App Builder for deliberate edits.</p>
+    ```
+        }
+    
+    
+    )
+
+    region states (
+        name: Read the report correctly
+        type: staticContent
+        layout {
+            sequence: 40
+            slot: body
+            columnSpan: 12
+            startNewRow: true
+        }
+        appearance {
+            template: @/standard
+            templateOptions: #DEFAULT#
+    
+        }
+        source {
+            htmlCode: ```html
+    <p><strong>Classification</strong> describes the observed change: unchanged, changed, added, dropped, no match, ambiguous, unsupported or conflict.</p><p><strong>Eligibility</strong> says whether an independently validated rule allows automatic recovery. <strong>Outcome</strong> records whether a selected property was fixed or failed.</p><p>A successful import return alone is not success. Only an operation marked <strong>VERIFIED</strong> passed the independent export check.</p>
+    ```
+        }
+    
+    
+    )
+
+    region recovery-policy (
+        name: Access, backups and restores
+        type: staticContent
+        layout {
+            sequence: 50
+            slot: body
+            columnSpan: 12
+            startNewRow: true
+        }
+        appearance {
+            template: @/standard
+            templateOptions: #DEFAULT#
+    
+        }
+        source {
+            htmlCode: ```html
+    <p>The default modification policy is disabled. The manager itself is excluded. READ, RECOVER and RESTORE rights are checked by the server for the authenticated account.</p><p>Snapshot ZIP downloads contain application definitions and may include embedded application code. Keep them within your authorized workspace and access policy.</p><p>Definition restore is a separate preview with RESTORE authority and a separate typed confirmation. The snapshot and current application must have identical ACL assignment state; a difference is rejected for explicit manual review. The tool does not reset ACL assignments or restore database table data.</p><p>Import can commit or fail partially; inspect the operation and its backup after any failure.</p>
+    ```
+        }
+    
+    
+    )
+
+    region about (
+        name: Original, source available and honest about scope
+        type: staticContent
+        layout {
+            sequence: 60
+            slot: body
+            columnSpan: 12
+            startNewRow: true
+        }
+        appearance {
+            template: @/standard
+            templateOptions: #DEFAULT#
+    
+        }
+        source {
+            htmlCode: ```html
+    <p>APEX Theme Manager is an independent B2DEV TECH community project. It uses native Oracle APEX Universal Theme components and public Oracle APIs. Oracle-generated exports warn that editing their SQL is unsupported. These APIs do not make transformed exports an Oracle-supported authoring contract; this beta is not Oracle-certified. The bundled Layout Lab is original synthetic content.</p><p>This beta has been exercised locally on APEX 26.2. Treat other releases as unverified until their parser, installation and browser gates have been run.</p>
+    ```
+        }
+    
+    
+    )
+)

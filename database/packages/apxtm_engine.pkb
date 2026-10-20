@@ -84,6 +84,30 @@ create or replace package body apxtm_engine as
   function token_hash(p_token varchar2) return varchar2 is
   begin return rawtohex(dbms_crypto.hash(utl_i18n.string_to_raw(p_token,'AL32UTF8'),dbms_crypto.hash_sh256)); end;
 
+  procedure canonicalize_exporter(p_source in out nocopy clob) is
+    header varchar2(32767);first_pos pls_integer;last_pos pls_integer;marker pls_integer;
+    result clob;replacement varchar2(100):='--   Exported By:     APXTM';
+  begin
+    -- Only this generated, non-executable metadata line is actor-dependent on
+    -- the tested format. The real actor is retained in immutable snapshot/audit rows.
+    header:=dbms_lob.substr(p_source,7000,1);
+    marker:=instr(header,'prompt --application/delete_application');
+    if marker=0 or instr(header,'-- Application Export:')=0 then
+      raise_application_error(-20026,'Unrecognized application export header');end if;
+    header:=substr(header,1,marker-1);
+    if regexp_count(header,'^--   Exported By:[^'||chr(10)||']*',1,'m')!=1 then
+      raise_application_error(-20026,'Unrecognized exporter metadata');end if;
+    first_pos:=regexp_instr(header,'^--   Exported By:[^'||chr(10)||']*',1,1,0,'m');
+    last_pos:=regexp_instr(header,'^--   Exported By:[^'||chr(10)||']*',1,1,1,'m');
+    dbms_lob.createtemporary(result,true);
+    if first_pos>1 then dbms_lob.copy(result,p_source,first_pos-1,1,1);end if;
+    dbms_lob.writeappend(result,length(replacement),replacement);
+    dbms_lob.copy(result,p_source,dbms_lob.getlength(p_source)-last_pos+1,first_pos+length(replacement),last_pos);
+    if dbms_lob.istemporary(p_source)=1 then dbms_lob.freetemporary(p_source);end if;
+    p_source:=result;
+  exception when others then if dbms_lob.istemporary(result)=1 then dbms_lob.freetemporary(result);end if;raise;
+  end;
+
   function live_export(p_app number) return apex_t_export_files is
     pragma autonomous_transaction;
     f apex_t_export_files;
@@ -96,7 +120,11 @@ create or replace package body apxtm_engine as
     apex_util.set_security_group_id(ws);
     f:=apex_export.get_application(p_application_id=>p_app,p_type=>'SQL',p_split=>false,
       p_with_date=>false,p_with_original_ids=>false,p_with_no_subscriptions=>false,
-      p_with_audit_info=>null,p_with_supporting_objects=>'N',p_with_acl_assignments=>false);
+      p_with_audit_info=>null,p_with_supporting_objects=>'N',p_with_acl_assignments=>true,
+      p_with_ir_public_reports=>true,p_with_ir_private_reports=>true,
+      p_with_ir_notifications=>true,p_with_translations=>true);
+    if f.count!=1 then raise_application_error(-20026,'Expected one SQL export');end if;
+    canonicalize_exporter(f(1).contents);
     rollback;
     return f;
   exception when others then rollback;free_files(f);raise;
@@ -176,14 +204,38 @@ create or replace package body apxtm_engine as
   end;
 
   function save_snapshot(p_app number,p_files apex_t_export_files,p_name varchar2,p_kind varchar2) return number is
-    art number; id number;
+    art number; id number;parsed json_array_t;identities clob;missing number;actual number;expected number;
   begin
     if p_kind is null or p_kind not in ('BASELINE','CURRENT','BACKUP') then raise_application_error(-20026,'Invalid snapshot kind');end if;
+    -- Every call here captures a current live export (including pre-import
+    -- backups). Compare identity sets with public metadata before recording a
+    -- complete snapshot. Historical artifact validation intentionally does not
+    -- compare against a later application's component count.
+    parsed:=apxtm_parse.parse(p_files(1).contents);identities:=parsed.to_clob;
+    select count(*) into missing from (
+      select kind,page_id,component_id from (
+        select 'PAGE' kind,page_id,page_id component_id from apex_application_pages where application_id=p_app
+        union all select 'REGION',page_id,region_id from apex_application_page_regions where application_id=p_app
+        union all select 'ITEM',page_id,item_id from apex_application_page_items where application_id=p_app
+        union all select 'BUTTON',page_id,button_id from apex_application_page_buttons where application_id=p_app)
+      minus
+      select kind,page_id,component_id from json_table(identities,'$[*]' columns(
+        kind varchar2(30) path '$.kind',page_id number path '$.page',component_id number path '$.id'))
+    );
+    select count(*) into actual from json_table(identities,'$[*]' columns(kind varchar2(30) path '$.kind'))
+      where kind in ('PAGE','REGION','ITEM','BUTTON');
+    select (select count(*) from apex_application_pages where application_id=p_app)
+      +(select count(*) from apex_application_page_regions where application_id=p_app)
+      +(select count(*) from apex_application_page_items where application_id=p_app)
+      +(select count(*) from apex_application_page_buttons where application_id=p_app) into expected from dual;
+    if missing!=0 or actual!=expected then raise_application_error(-20026,'Export component identities do not match live metadata; snapshot is incomplete or the application changed');end if;
+    if dbms_lob.istemporary(identities)=1 then dbms_lob.freetemporary(identities);end if;
     art:=put_artifact(p_app,p_files);
     insert into apxtm_snapshots(artifact_id,snapshot_name,snapshot_kind,created_by)
     values(art,substr(nvl(p_name,p_kind||' '||to_char(systimestamp,'YYYY-MM-DD HH24:MI:SS TZH:TZM')),1,255),p_kind,actor)
     returning snapshot_id into id;
     return id;
+  exception when others then if dbms_lob.istemporary(identities)=1 then dbms_lob.freetemporary(identities);end if;raise;
   end;
 
   procedure register_application(p_application_id number) is
@@ -293,7 +345,10 @@ create or replace package body apxtm_engine as
     app number;proposed number;expected number;f apex_t_export_files;b apex_t_export_files;code number;h varchar2(64);
   begin
     select a.application_id,s.artifact_id into app,proposed from apxtm_snapshots s join apxtm_artifacts a on a.artifact_id=s.artifact_id where s.snapshot_id=p_snapshot_id;
-    assert_access(app,'RESTORE');b:=artifact_files(proposed);f:=live_export(app);expected:=put_artifact(app,f);
+    assert_access(app,'RESTORE');b:=artifact_files(proposed);f:=live_export(app);
+    if apxtm_parse.acl_fingerprint(b(1).contents)!=apxtm_parse.acl_fingerprint(f(1).contents) then
+      raise_application_error(-20031,'Full restore requires identical exported ACL role assignments; review changed ACL state manually');end if;
+    expected:=put_artifact(app,f);
     p_token:=rawtohex(dbms_crypto.randombytes(32));h:=token_hash(p_token);
     insert into apxtm_operations(application_id,operation_kind,expected_artifact_id,proposed_artifact_id,selection,token_hash,selected_count,created_by)
     values(app,'RESTORE',expected,proposed,'[]',h,0,actor) returning operation_id into p_operation_id;
@@ -326,6 +381,10 @@ create or replace package body apxtm_engine as
       or p_confirmation is null then raise_application_error(-20028,'Typed application confirmation does not match');end if;
     select * into c from apxtm_config where config_id=1;
     select * into a from apxtm_applications where application_id=r.application_id;
+    -- A direct-owner apply may arrive on a new database connection, without a
+    -- previous export having initialized APEX package context. Authorization
+    -- and live identity checks above must precede selecting this workspace.
+    apex_util.set_security_group_id(a.workspace_id);
     update apxtm_operations set status='APPLYING',updated_at=systimestamp where operation_id=p_operation_id and status='PREVIEW';
     if sql%rowcount!=1 then raise_application_error(-20028,'Operation has already been claimed');end if;
     commit;claimed:=true;
@@ -340,7 +399,7 @@ create or replace package body apxtm_engine as
     current_files:=live_export(r.application_id);
     if source_hash(current_files(1).contents)!=expected_hash then
       update apxtm_operations set status='INVALIDATED',result_message='Application changed; compare again.' where operation_id=p_operation_id;
-      update apxtm_comparisons set status='STALE' where comparison_id=r.comparison_id;commit;
+      update apxtm_comparisons set status='STALE' where comparison_id=r.comparison_id and status='READY';commit;
       raise_application_error(-20024,'Application changed after preview; compare again');end if;
     backup:=save_snapshot(r.application_id,current_files,'Before operation '||p_operation_id,'BACKUP');
     update apxtm_operations set backup_snapshot_id=backup,result_message='Verified backup persisted before import.',updated_at=systimestamp where operation_id=p_operation_id;
@@ -350,6 +409,8 @@ create or replace package body apxtm_engine as
       regenerated:=apxtm_parse.patch(current_files(1).contents,changes);
       if source_hash(regenerated)!=proposed_hash then raise_application_error(-20027,'Proposed artifact is not the approved allowlisted patch');end if;
       dbms_lob.freetemporary(regenerated);
+    elsif apxtm_parse.acl_fingerprint(proposed_files(1).contents)!=apxtm_parse.acl_fingerprint(current_files(1).contents) then
+      raise_application_error(-20031,'Full restore requires identical exported ACL role assignments');
     end if;
     free_files(current_files);current_files:=live_export(r.application_id);
     if source_hash(current_files(1).contents)!=expected_hash then raise_application_error(-20024,'Application changed during recovery preparation');end if;
@@ -384,8 +445,8 @@ create or replace package body apxtm_engine as
       update apxtm_operations set status='FAILED',error_code=code,updated_at=systimestamp,
         result_message='Operation failed. Import may be partial; inspect the verified backup and application.'
       where operation_id=p_operation_id and status='APPLYING';
-      if r.operation_kind='RECOVER' then update apxtm_differences set outcome='FAILED' where comparison_id=r.comparison_id
-        and difference_id in(select difference_id from json_table(r.selection,'$[*]' columns(difference_id number path '$.difference_id')));end if;
+      -- Failed/stale requests have their own operation outcome. They must not
+      -- overwrite historical FIXED results from a previously verified request.
       commit;
     end if;
     event(r.application_id,'APPLY','FAILED','Request rejected or recovery failed; no atomic rollback is promised.',case when claimed then p_operation_id end,code);commit;

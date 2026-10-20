@@ -1,0 +1,101 @@
+page 2 (
+    name: Review Board
+    alias: REVIEW
+    title: Review Board · APXTM Layout Lab
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    region review (
+        name: Review notes
+        type: staticContent
+        layout {
+            sequence: 10
+            slot: body
+            column: 1
+            columnSpan: 12
+            startNewRow: true
+        }
+        appearance {
+            template: @/standard
+            templateOptions: #DEFAULT#
+        }
+        source {
+            htmlCode: ```html
+<p>This second page keeps independently testable region, item and button layout attributes.</p>
+```
+        }
+    )
+
+    pageItem P2_SUMMARY (
+        type: textField
+        label {
+            label: Summary
+        }
+        layout {
+            sequence: 10
+            region: @review
+            slot: regionBody
+            column: 1
+            columnSpan: 6
+            labelColumnSpan: 2
+            startNewRow: true
+
+        }
+        appearance {
+            template: @/optional-floating
+            width: 30
+        }
+        default {
+            type: static
+            staticValue: Synthetic layout verification
+        }
+    )
+
+    pageItem P2_STATUS (
+        type: textField
+        label {
+            label: Review status
+        }
+        layout {
+            sequence: 20
+            region: @review
+            slot: regionBody
+            column: 7
+            columnSpan: 6
+            labelColumnSpan: 2
+            startNewRow: false
+            newColumn: true
+        }
+        appearance {
+            template: @/optional-floating
+            width: 30
+        }
+        default {
+            type: static
+            staticValue: Ready for comparison
+        }
+    )
+
+    button back_to_desk (
+        buttonName: BACK_TO_DESK
+        label: Back to desk
+        layout {
+            sequence: 30
+            region: @review
+            slot: regionBody
+            column: 1
+            columnSpan: 3
+            startNewRow: true
+        }
+        appearance {
+            buttonTemplate: @/text
+        }
+        behavior {
+            action: redirectThisApp
+            target: {
+                page: 1
+            }
+        }
+    )
+)

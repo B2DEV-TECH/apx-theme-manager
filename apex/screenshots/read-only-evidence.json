@@ -1,0 +1,73 @@
+{
+  "captured": "2026-10-20T11:59:06.613Z",
+  "apexVersion": "26.2.0",
+  "browser": "Google Chrome via Playwright",
+  "stages": [
+    {
+      "name": "overview-desktop",
+      "title": "Overview | APEX Theme Manager",
+      "tables": 1,
+      "width": {
+        "viewport": 1440,
+        "document": 1440
+      },
+      "scrollableTables": 0
+    },
+    {
+      "name": "applications-empty",
+      "title": "Application & snapshots | APEX Theme Manager",
+      "tables": 0,
+      "width": {
+        "viewport": 1440,
+        "document": 1440
+      },
+      "scrollableTables": 0
+    },
+    {
+      "name": "application-detail",
+      "title": "Application & snapshots | APEX Theme Manager",
+      "tables": 2,
+      "width": {
+        "viewport": 1440,
+        "document": 1440
+      },
+      "scrollableTables": 0
+    },
+    {
+      "name": "application-mobile",
+      "title": "Application & snapshots | APEX Theme Manager",
+      "tables": 2,
+      "width": {
+        "viewport": 390,
+        "document": 390
+      },
+      "scrollableTables": 2
+    },
+    {
+      "name": "guide-desktop",
+      "title": "Guide & safety boundary | APEX Theme Manager",
+      "tables": 0,
+      "width": {
+        "viewport": 1440,
+        "document": 1440
+      },
+      "scrollableTables": 0
+    },
+    {
+      "name": "guide-mobile",
+      "title": "Guide & safety boundary | APEX Theme Manager",
+      "tables": 0,
+      "width": {
+        "viewport": 390,
+        "document": 390
+      },
+      "scrollableTables": 0
+    },
+    {
+      "name": "anonymous-download-denied",
+      "downloadReceived": false,
+      "authenticationRequired": true
+    }
+  ],
+  "pageErrors": []
+}

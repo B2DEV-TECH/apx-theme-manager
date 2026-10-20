@@ -39,10 +39,13 @@ Packages:
 
 - `APXTM_PARSE`: bounded SQL-export lexer, supported component extraction,
   semantic values and source positions; never executes parsed expressions.
+- `APXTM_DIFF`: semantic property comparison, template context and eligibility.
 - `APXTM_ENGINE`: authorization, export, immutable snapshots, comparisons,
   preview, backup, import, independent verification and failure records.
-- `APXTM_UI`: native report queries and page processes use engine entry points;
-  output is escaped and all modifying actions have server-side authorization.
+
+Native report queries and page processes use engine entry points; output is
+escaped and all modifying actions have server-side authorization. There is no
+separate UI database package.
 
 Tables cover configuration, principals, registered applications, deduplicated
 export artifacts, snapshots, comparisons, differences, operations and audit.

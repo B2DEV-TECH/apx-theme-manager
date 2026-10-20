@@ -22,6 +22,46 @@ begin
 end;
 /
 declare
+ s clob;a json_array_t;rejected boolean:=false;
+begin
+ s:='wwv_imp_workspace.create_flow(p_id=>some_unrecognized_call('||rpad('1',4100,'1')||'),p_theme_id=>42);';
+ begin a:=apxtm_parse.parse(s);exception when others then if sqlcode=-20001 then rejected:=true;else raise;end if;end;
+ if not rejected then raise_application_error(-20999,'Oversized unknown application identity accepted');end if;
+end;
+/
+declare
+ a json_array_t;c json_object_t;v json_object_t;
+begin
+ a:=apxtm_parse.parse(q'~wwv_flow_imp_shared.create_theme(p_id=>wwv_flow_imp.id(42),p_theme_id=>42,
+ p_reference_id=>wwv_imp_util.get_subscription_id(123,2000,'universal-theme',8842.262));~');
+ c:=treat(a.get(0) as json_object_t);v:=c.get_object('attrs');
+ if v.get_string('p_reference_id')!='SUBSCRIPTION:wwv_imp_util.get_subscription_id(123,2000,''universal-theme'',8842.262)' then
+  raise_application_error(-20999,'Generated subscription identity was not captured as data');end if;
+end;
+/
+declare
+ a json_array_t;c json_object_t;
+begin
+ a:=apxtm_parse.parse(q'~set define off
+prompt APPLICATION 100 - Bob's App
+begin
+wwv_flow_imp_page.create_page(p_id=>1,p_name=>'Bob''s App');
+end;
+~');
+ c:=treat(a.get(0) as json_object_t);
+ if a.get_size!=1 or c.get_string('name')!='Bob''s App' then raise_application_error(-20999,'PROMPT text interpreted as SQL');end if;
+end;
+/
+declare
+ a varchar2(64);b varchar2(64);c varchar2(64);
+begin
+ a:=apxtm_parse.acl_fingerprint(q'~wwv_flow_imp_shared.create_acl_role(p_id=>wwv_flow_imp.id(90),p_static_id=>'VIEWER',p_name=>'Viewer',p_users=>wwv_flow_t_varchar2());~');
+ b:=apxtm_parse.acl_fingerprint(q'~wwv_flow_imp_shared.create_acl_role(p_id=>wwv_flow_imp.id(90),p_static_id=>'VIEWER',p_name=>'Viewer',p_users=>wwv_flow_t_varchar2('LAB_READER'));~');
+ c:=apxtm_parse.acl_fingerprint(q'~wwv_flow_imp_shared.create_acl_role(p_id=>wwv_flow_imp.id(90),p_static_id=>'VIEWER',p_name=>'Renamed Viewer',p_users=>wwv_flow_t_varchar2());~');
+ if a=b or a!=c then raise_application_error(-20999,'ACL assignment identity was not separated from display name');end if;
+end;
+/
+declare
  a json_array_t; c json_object_t;v json_object_t;s clob;patched clob;
 begin
  s:=q'~wwv_flow_imp_page.create_page(p_id=>1,p_name=>'Test');

@@ -1,0 +1,18 @@
+APEX Theme Manager
+Copyright 2026 B2DEV TECH
+
+Original project source is licensed under Apache License 2.0.
+
+The administrative application and synthetic sample were created independently
+in this project's laboratory using Oracle APEX. Oracle-generated application
+exports retain their original notices and contain generated installation calls
+and Universal Theme references. Oracle APEX itself is an external prerequisite,
+is not distributed by this project, and remains subject to Oracle's terms.
+
+Oracle and Oracle APEX are trademarks of Oracle and/or its affiliates.
+This is an independent B2DEV TECH community project, not an official Oracle
+product. It is not endorsed, certified or supported by Oracle.
+
+Development-only dependencies retain their own licenses, identified in their
+package metadata. No external JavaScript framework or Node service is required
+by the installed APEX application.

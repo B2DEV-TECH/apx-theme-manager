@@ -1,0 +1,411 @@
+page 40 (
+    name: Activity & audit
+    alias: ACTIVITY
+    title: Activity & audit | APEX Theme Manager
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        warnOnUnsavedChanges: false
+    }
+    security {
+        authentication: required
+        pageAccessProtection: argumentsMustHaveChecksum
+    }
+
+
+    region activity-intro (
+        name: An inspectable history
+        type: staticContent
+        layout {
+            sequence: 10
+            slot: body
+            columnSpan: 12
+            startNewRow: true
+        }
+        appearance {
+            template: @/standard
+            templateOptions: #DEFAULT#
+    
+        }
+        source {
+            htmlCode: ```html
+    <p>Every snapshot, comparison, preview and apply records its actor and result. Use operation IDs when investigating a result.</p>
+    ```
+        }
+    
+    
+    )
+
+    region operations (
+        name: Recovery operations
+        type: classicReport
+        layout {
+            sequence: 20
+            slot: body
+            columnSpan: 12
+            startNewRow: true
+        }
+        appearance {
+            template: @/standard
+            templateOptions: #DEFAULT#
+    
+        }
+        source {
+            type: sqlQuery
+            sqlQuery: ```sql
+    select o.operation_id,o.application_id,o.operation_kind,o.selected_count,o.status,o.created_by,to_char(o.created_at,'YYYY-MM-DD HH24:MI:SS') created_at,o.error_code,o.result_message,
+     case when o.backup_snapshot_id is not null then '<a href="'||apex_escape.html_attribute(apex_page.get_url(p_page=>60,p_items=>'P60_SNAPSHOT_ID',p_values=>o.backup_snapshot_id))||'">Backup ZIP</a>' end backup
+    from apxtm_operations o where apxtm_engine.allowed(o.application_id)=1 order by o.operation_id desc
+    ```
+        }
+        componentAppearance {
+            templateType: theme
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Report--altRowsDefault
+                t-Report--rowHighlight
+            ]
+        }
+        pagination {
+            type: setPaginationSearchEngine
+            partialPageRefresh: false
+        }
+        messages {
+            whenNoDataFound: No records yet. Use the steps above to begin.
+        }
+        headerAndFooter {
+            headerText: <p class="apxtm-table-hint">Scroll the table horizontally to view every column.</p>
+        }
+    
+        column OPERATION_ID (
+            type: plainText
+            layout {
+                sequence: 10
+            }
+            heading {
+                heading: Operation
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column APPLICATION_ID (
+            type: plainText
+            layout {
+                sequence: 20
+            }
+            heading {
+                heading: App
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column OPERATION_KIND (
+            type: plainText
+            layout {
+                sequence: 30
+            }
+            heading {
+                heading: Kind
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column SELECTED_COUNT (
+            type: plainText
+            layout {
+                sequence: 40
+            }
+            heading {
+                heading: Selected
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column STATUS (
+            type: plainText
+            layout {
+                sequence: 50
+            }
+            heading {
+                heading: Status
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column CREATED_BY (
+            type: plainText
+            layout {
+                sequence: 60
+            }
+            heading {
+                heading: Actor
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column CREATED_AT (
+            type: plainText
+            layout {
+                sequence: 70
+            }
+            heading {
+                heading: Created
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column ERROR_CODE (
+            type: plainText
+            layout {
+                sequence: 80
+            }
+            heading {
+                heading: Error code
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column RESULT_MESSAGE (
+            type: plainText
+            layout {
+                sequence: 90
+            }
+            heading {
+                heading: Result
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column BACKUP (
+            type: plainText
+            layout {
+                sequence: 100
+            }
+            heading {
+                heading: Definition backup
+            }
+            security {
+                escapeSpecialChars: false
+            }
+            sorting {
+                sortable: false
+            }
+        )
+    )
+
+    region audit (
+        name: Audit events
+        type: classicReport
+        layout {
+            sequence: 30
+            slot: body
+            columnSpan: 12
+            startNewRow: true
+        }
+        appearance {
+            template: @/standard
+            templateOptions: #DEFAULT#
+    
+        }
+        source {
+            type: sqlQuery
+            sqlQuery: ```sql
+    select event_id,application_id,operation_id,actor,action,outcome,error_code,detail,to_char(created_at,'YYYY-MM-DD HH24:MI:SS TZH:TZM') event_time from apxtm_audit where application_id is not null and apxtm_engine.allowed(application_id)=1 order by event_id desc
+    ```
+        }
+        componentAppearance {
+            templateType: theme
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Report--altRowsDefault
+                t-Report--rowHighlight
+            ]
+        }
+        pagination {
+            type: setPaginationSearchEngine
+            partialPageRefresh: false
+        }
+        messages {
+            whenNoDataFound: No records yet. Use the steps above to begin.
+        }
+        headerAndFooter {
+            headerText: <p class="apxtm-table-hint">Scroll the table horizontally to view every column.</p>
+        }
+    
+        column EVENT_ID (
+            type: plainText
+            layout {
+                sequence: 10
+            }
+            heading {
+                heading: Event
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column APPLICATION_ID (
+            type: plainText
+            layout {
+                sequence: 20
+            }
+            heading {
+                heading: App
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column OPERATION_ID (
+            type: plainText
+            layout {
+                sequence: 30
+            }
+            heading {
+                heading: Operation
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column ACTOR (
+            type: plainText
+            layout {
+                sequence: 40
+            }
+            heading {
+                heading: Actor
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column ACTION (
+            type: plainText
+            layout {
+                sequence: 50
+            }
+            heading {
+                heading: Action
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column OUTCOME (
+            type: plainText
+            layout {
+                sequence: 60
+            }
+            heading {
+                heading: Outcome
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column ERROR_CODE (
+            type: plainText
+            layout {
+                sequence: 70
+            }
+            heading {
+                heading: Error code
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column DETAIL (
+            type: plainText
+            layout {
+                sequence: 80
+            }
+            heading {
+                heading: Detail
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column EVENT_TIME (
+            type: plainText
+            layout {
+                sequence: 90
+            }
+            heading {
+                heading: Time
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+    )
+)

@@ -1,0 +1,72 @@
+app APEX-THEME-MANAGER (
+    name: APEX Theme Manager
+    version: 0.1.0-beta
+    logo {
+        type: text
+        text: APEX Theme Manager
+    }
+    navigation {
+        homeUrl: {
+            page: 1
+        }
+        loginUrl: {
+            page: LOGIN
+        }
+    }
+    navigationMenu {
+        listTemplate: @/side-navigation-menu
+        templateOptions: [
+            #DEFAULT#
+            t-TreeNav--styleA
+        ]
+        list: @navigation-menu
+    }
+    navigationBar {
+        list: @navigation-bar
+        listTemplate: @/navigation-bar
+        templateOptions: #DEFAULT#
+    }
+    userInterface {
+        currentTheme: @universal-theme
+        globalPage: 0
+        addBuiltWithApexToFooter: false
+    }
+    appFormatMasks {
+        date: DS
+        timestamp: DS
+        timestampTimeZone: DS
+    }
+    authentication {
+        scheme: @oracle-apex-accounts
+    }
+    authorization {
+        scheme: @can-read
+        runOnPublicPages: false
+    }
+    sessionStateProtection {
+        enabled: true
+    }
+    security {
+        browserCache: false
+        embedInFrames: deny
+        runtimeApiUsage: modifyOtherApps
+    }
+    sessionManagement {
+        maxSessionIdleTime: 1800
+        maxSessionLength: 28800
+    }
+    css {
+        fileUrls: #APP_FILES#apxtm.css
+    }
+    runtime {
+        allowFeedback: true
+    }
+
+    substitution APP_NAME (
+        value {
+            staticValue: APEX Theme Manager
+        }
+    )
+
+)
+

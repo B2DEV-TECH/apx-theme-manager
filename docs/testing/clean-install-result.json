@@ -1,0 +1,854 @@
+{
+  "reportVersion": 1,
+  "evidenceKind": "Independent initial clean-install/recovery evidence plus separately verified final core; working-tree hashes, not final release certification",
+  "executedUtc": {
+    "started": "2026-10-20T11:52:42.796Z",
+    "lastDatabaseCheck": "2026-10-20T12:01:25.946Z",
+    "finalCoreVerificationFinished": "2026-10-20T12:12:39.207Z",
+    "portableSampleVerificationFinished": "2026-10-20T12:28:17.016Z"
+  },
+  "codeUnderTest": {
+    "headAtTest": "d4fabb0e8beb04ed8f954ed5ad1a1b587c367ebd",
+    "workingTreeModified": true,
+    "qualification": "Initial installation/recovery phases and the later final core phase used different working-tree bytes. Each recorded phase has its own hashes. The final phase recompiled all six package units and ran the final SQL/probe checks below; no release commit or final full import is certified by this reviewer.",
+    "initialCoreSources": {
+      "database/packages/apxtm_parse.pks": {
+        "sha256": "16c765ae14a6595565390ef1097207061e1baa8653efe813f1ab63b90332763d",
+        "modified": "2026-10-20T11:12:40.979Z"
+      },
+      "database/packages/apxtm_parse.pkb": {
+        "sha256": "b2b01b0c38d61e227bdf1a0aae32cfe49a674b392104fa758431d38988683c82",
+        "modified": "2026-10-20T11:47:32.813Z"
+      },
+      "database/packages/apxtm_diff.pks": {
+        "sha256": "c3af6d6df29f018b3c86820bcf85838b8b72d04352a1417ffc63dfa05b6a25a8",
+        "modified": "2026-10-20T11:24:29.604Z"
+      },
+      "database/packages/apxtm_diff.pkb": {
+        "sha256": "6a6351969ead3a6b44d599bb4d6dacf17dd5409ac5d34158c93f825376ef9ff2",
+        "modified": "2026-10-20T11:47:33.738Z"
+      },
+      "database/packages/apxtm_engine.pks": {
+        "sha256": "3b47f8d1843fcd1798fee60aa224ef49ab3607dc55e4fb92556e451d365d132c",
+        "modified": "2026-10-20T11:20:20.727Z"
+      },
+      "database/packages/apxtm_engine.pkb": {
+        "sha256": "91c5f744dfe872f6b99da29033c90fca8604954c6fd40f874bdd1bb9809778fe",
+        "modified": "2026-10-20T11:47:34.664Z"
+      }
+    },
+    "reinstalledCoreSources": {
+      "database/packages/apxtm_parse.pks": {
+        "sha256": "16c765ae14a6595565390ef1097207061e1baa8653efe813f1ab63b90332763d",
+        "modified": "2026-10-20T11:12:40.979Z"
+      },
+      "database/packages/apxtm_parse.pkb": {
+        "sha256": "f650e40c607e0e0076190b90824e69d80a973c308639850daf0926516e312975",
+        "modified": "2026-10-20T11:53:24.026Z"
+      },
+      "database/packages/apxtm_diff.pks": {
+        "sha256": "c3af6d6df29f018b3c86820bcf85838b8b72d04352a1417ffc63dfa05b6a25a8",
+        "modified": "2026-10-20T11:24:29.604Z"
+      },
+      "database/packages/apxtm_diff.pkb": {
+        "sha256": "6a6351969ead3a6b44d599bb4d6dacf17dd5409ac5d34158c93f825376ef9ff2",
+        "modified": "2026-10-20T11:47:33.738Z"
+      },
+      "database/packages/apxtm_engine.pks": {
+        "sha256": "3b47f8d1843fcd1798fee60aa224ef49ab3607dc55e4fb92556e451d365d132c",
+        "modified": "2026-10-20T11:20:20.727Z"
+      },
+      "database/packages/apxtm_engine.pkb": {
+        "sha256": "91c5f744dfe872f6b99da29033c90fca8604954c6fd40f874bdd1bb9809778fe",
+        "modified": "2026-10-20T11:47:34.664Z"
+      }
+    },
+    "installationScripts": {
+      "database/migrations/001_initial.sql": {
+        "sha256": "dce3791f536bc4df54c25924fcfcd4b962a0deb0b86645ca289c5aafcfee9dbf",
+        "modified": "2026-10-20T11:19:02.597Z"
+      },
+      "installer/install.sql": {
+        "sha256": "f30a11cac9d2d90f18c6320cdad6c7642af9de202103ea13c26106feb641e30c",
+        "modified": "2026-10-20T11:33:11.969Z"
+      },
+      "installer/preflight.sql": {
+        "sha256": "8a07991d902ba7ea3615d7ef79eb0e33ba598a5ebdc9f2da4ce1fa79e402d1e0",
+        "modified": "2026-10-20T11:34:29.806Z"
+      },
+      "installer/verify.sql": {
+        "sha256": "f13db1db8a2ec2f66279b7563470a3157e82044447c3a1ca5d9374967e4c1bbf",
+        "modified": "2026-10-20T11:33:11.973Z"
+      },
+      "installer/install_apex.sql": {
+        "sha256": "6a7e887b7de027eabbab2dad5e52ccc77f1a53055b9eb06aea8ba5651315df80",
+        "modified": "2026-10-20T11:33:11.970Z"
+      },
+      "installer/configure.sql": {
+        "sha256": "7bbf43a2a6cd04ce176959ad7ca688b990c9bacd4eb26d757030a76b76f46b2b",
+        "modified": "2026-10-20T11:33:11.967Z"
+      },
+      "installer/uninstall.sql": {
+        "sha256": "695427ff6b285b70b5b0139fa1a9d5396b92f13160d86a23e772e111b8eef188",
+        "modified": "2026-10-20T11:33:11.972Z"
+      }
+    },
+    "importedManagerExport": {
+      "sha256": "512707ad2032ffe5beeaa8c6f0d09d66af655a6a452e25efc245f4a87b428fbe",
+      "modified": "2026-10-20T11:51:27.136Z"
+    }
+  },
+  "environment": {
+    "apex": "26.2.0",
+    "database": "Oracle AI Database 26ai Free 23.26.3.0.0",
+    "sqlplus": "23.26.3.0.0",
+    "sqlcl": "26.3.0.0 Production Build 26.3.0.260.1620",
+    "browser": "Installed Google Chrome, headless through Playwright 1.56.1",
+    "os": "Windows"
+  },
+  "isolation": {
+    "schema": "APXTM_VERIFY",
+    "workspace": "APXTM_VERIFY",
+    "workspaceId": 7473848173202335,
+    "managerApplicationId": 106,
+    "targetApplicationId": 107,
+    "absenceBeforeProvision": {
+      "schemaCount": 0,
+      "workspaceCount": 0
+    },
+    "provisioning": "OS-authenticated SQLPlus SYSDBA changed container to FREEPDB1, checked absence, created this schema/workspace and one synthetic administrator only.",
+    "grants": [
+      "CREATE SESSION",
+      "CREATE TABLE",
+      "CREATE PROCEDURE",
+      "CREATE SEQUENCE",
+      "CREATE TRIGGER",
+      "CREATE VIEW",
+      "EXECUTE on SYS.DBMS_CRYPTO"
+    ],
+    "quota": "300M on USERS",
+    "applicationIds": "Both IDs were newly allocated through public APEX_APPLICATION_INSTALL APIs; source export IDs were overridden with target workspace/schema/ID and a generated offset.",
+    "scope": "Database/browser mutations were restricted to this new schema/workspace and applications 106/107. Existing applications 104/105 were not accessed or modified by these verification runs.",
+    "secrets": "Random credentials remained in an ignored local configuration file and were supplied to clients through stdin. This report contains no credentials, session IDs or operation tokens."
+  },
+  "portableCommands": {
+    "clients": [
+      "sqlplus -s /nolog",
+      "sql -thin -s -nolog"
+    ],
+    "core": "@installer/install.sql",
+    "manager": "@installer/install_apex.sql",
+    "configure": "@installer/configure.sql",
+    "register": "@installer/register_application.sql",
+    "enable": "@installer/enable_recovery.sql",
+    "disable": "@installer/disable_recovery.sql",
+    "uninstall": "@installer/uninstall.sql",
+    "bindUse": "Workspace/application IDs were NUMBER binds; account and consent values were VARCHAR2 binds. No SQL text substitution supplied values.",
+    "independentChange": [
+      "APEX_EXPORT.GET_APPLICATION with APEXLANG for application 107",
+      "Edit only P1_PROJECT layout columnSpan from 6 to 12 in the exported APEXlang",
+      "apex validate -input <own-export-directory> -workspace APXTM_VERIFY",
+      "apex import -input <own-export-directory> -workspace APXTM_VERIFY -id 107 -schema APXTM_VERIFY"
+    ]
+  },
+  "cleanInstallation": {
+    "status": "PASS using SQLcl core/manager import and SQLPlus configuration/uninstall",
+    "firstInstall": {
+      "tables": 9,
+      "packageUnits": 6,
+      "triggers": 3,
+      "invalid": 0,
+      "policy": "DISABLED",
+      "principals": 0,
+      "targets": 0
+    },
+    "secondInstall": {
+      "tables": 9,
+      "packageUnits": 6,
+      "triggers": 3,
+      "invalid": 0,
+      "policy": "DISABLED",
+      "principals": 0,
+      "targets": 0
+    },
+    "purePlsqlTests": {
+      "status": "PASS",
+      "blocks": 16,
+      "files": [
+        "tests/parser.sql",
+        "tests/semantic.sql",
+        "tests/security.sql"
+      ]
+    },
+    "configuredState": {
+      "tables": 9,
+      "packageUnits": 6,
+      "triggers": 3,
+      "invalid": 0,
+      "policy": "DISABLED",
+      "principals": 2,
+      "targets": 0
+    },
+    "targetImport": {
+      "APPLICATION_ID": 107,
+      "APPLICATION_NAME": "APXTM Layout Lab",
+      "WORKSPACE_ID": 7473848173202335,
+      "OWNER": "APXTM_VERIFY"
+    },
+    "registration": {
+      "ALLOW_RECOVERY": "N",
+      "ENABLED": "Y"
+    },
+    "actualSnapshot": {
+      "snapshotId": 1,
+      "SOURCE_HASH": "6695D0A3863E7329B68E9A333DA9BA72744A822FB0AECFBD37BA9FD0099FCF95",
+      "ARCHIVE_HASH": "F393AD8549F149D8249E46D942C9F23D3A18C6C7CEB63132654D239910927C28",
+      "SOURCE_CHARACTERS": 112537,
+      "COMPONENT_COUNT": 21
+    },
+    "snapshotQualification": "This initial snapshot was deliberately removed during the subsequent authorized uninstall test; its hashes are historical evidence.",
+    "browser": {
+      "status": "PASS",
+      "checks": [
+        {
+          "name": "native APEX Accounts login renders",
+          "status": "PASS"
+        },
+        {
+          "name": "synthetic administrator signs into imported manager",
+          "status": "PASS"
+        },
+        {
+          "name": "native application detail renders own registered target",
+          "status": "PASS"
+        },
+        {
+          "name": "no browser JavaScript errors",
+          "status": "PASS"
+        }
+      ],
+      "pageErrors": []
+    }
+  },
+  "uninstall": {
+    "client": "SQLPlus",
+    "nullConsent": {
+      "status": "PASS",
+      "expectedError": "ORA-20060",
+      "observed": {
+        "exit": 1,
+        "structure": {
+          "tables": 9,
+          "packageUnits": 6,
+          "triggers": 3,
+          "invalid": 0,
+          "policy": "DISABLED",
+          "principals": 2,
+          "targets": 1
+        }
+      }
+    },
+    "wrongConsent": {
+      "status": "PASS",
+      "expectedError": "ORA-20060",
+      "observed": {
+        "exit": 1,
+        "structure": {
+          "tables": 9,
+          "packageUnits": 6,
+          "triggers": 3,
+          "invalid": 0,
+          "policy": "DISABLED",
+          "principals": 2,
+          "targets": 1
+        }
+      }
+    },
+    "exactConsent": {
+      "status": "PASS",
+      "consent": "DROP APXTM DATA IN APXTM_VERIFY",
+      "observed": {
+        "exit": 0,
+        "apxtmObjects": 0,
+        "sentinel": "preserve unrelated own test data",
+        "applicationsRetained": 2
+      }
+    },
+    "restoredInstallation": {
+      "status": "PASS",
+      "observed": {
+        "tables": 9,
+        "packageUnits": 6,
+        "triggers": 3,
+        "invalid": 0,
+        "policy": "DISABLED",
+        "principals": 2,
+        "targets": 1
+      }
+    }
+  },
+  "independentRecovery": {
+    "status": "PASS",
+    "started": "2026-10-20T12:00:09.891Z",
+    "finished": "2026-10-20T12:00:37.915Z",
+    "checks": [
+      {
+        "name": "guard current target identity and read-only policy",
+        "status": "PASS",
+        "detail": {
+          "APPLICATION_ID": 107,
+          "WORKSPACE_ID": 7473848173202335,
+          "OWNER": "APXTM_VERIFY",
+          "APPLICATION_NAME": "APXTM Layout Lab"
+        }
+      },
+      {
+        "name": "fresh original baseline captured before independent APEXlang edit",
+        "status": "PASS",
+        "detail": {
+          "snapshotId": 1
+        }
+      },
+      {
+        "name": "original APEXlang item edit imports only target107",
+        "status": "PASS",
+        "detail": {
+          "file": ".local/verify-target/pages/p00001-home.apx",
+          "from": 6,
+          "to": 12
+        }
+      },
+      {
+        "name": "portable explicit development enablement for target107",
+        "status": "PASS",
+        "detail": {
+          "applicationId": 107
+        }
+      },
+      {
+        "name": "comparison detects the independent scalar change under migrated IDs",
+        "status": "PASS",
+        "detail": {
+          "comparisonId": 1,
+          "difference": {
+            "DIFFERENCE_ID": 10,
+            "COMPONENT_KEY": "ITEM:1:14901575325261549",
+            "COMPONENT_NAME": "P1_PROJECT",
+            "PROPERTY_NAME": "p_colspan",
+            "BASELINE_VALUE": "6",
+            "CURRENT_VALUE": "12",
+            "CLASSIFICATION": "CHANGED",
+            "ELIGIBLE": "Y"
+          }
+        }
+      },
+      {
+        "name": "two previews bind the same exact eligible selection",
+        "status": "PASS",
+        "detail": {
+          "operationIds": [
+            1,
+            2
+          ]
+        }
+      },
+      {
+        "name": "selected recovery verifies backup scalar and exact full-source fingerprint",
+        "status": "PASS",
+        "detail": {
+          "STATUS": "VERIFIED",
+          "BACKUP_SNAPSHOT_ID": 3,
+          "PROPOSED_ARTIFACT_ID": 3,
+          "independentSourceHash": "624B8BFC058AB4D49128F8F003E1FC6878087419331921077A2B5D182D978614"
+        }
+      },
+      {
+        "name": "stale second preview preserves first successful shared outcomes",
+        "status": "PASS",
+        "detail": {
+          "first": "VERIFIED",
+          "second": "INVALIDATED",
+          "comparison": "RECOVERED",
+          "difference": "FIXED"
+        }
+      },
+      {
+        "name": "public application lock survives public INSTALL transaction",
+        "status": "PASS",
+        "detail": {
+          "before": "VERIFY_ADMIN",
+          "after": "VERIFY_ADMIN"
+        }
+      }
+    ],
+    "finalPolicy": "DISABLED"
+  },
+  "confirmedIssues": {
+    "sqlclConfigure": {
+      "status": "REPRODUCED; SQLPlus workaround verified",
+      "observed": "Exact configure.sql with typed binds returned SQLcl exit code 0 but printed Error report - WHENEVER help and left configuration unchanged. Repeated against valid configuration. The same unmodified file passed in SQLPlus. A diagnostic copy removing only its two WHENEVER lines passed in SQLcl with SQLERROR CONTINUE NONE.",
+      "impact": "SQLcl exit code alone is not proof of configuration. Query actual configuration/principals; use the verified SQLPlus path for these bind scripts pending further client diagnosis."
+    },
+    "crossActorExportFingerprint": {
+      "status": "RESOLVED and independently verified in final core",
+      "started": "2026-10-20T12:01:25.712Z",
+      "database": {
+        "hash": "624B8BFC058AB4D49128F8F003E1FC6878087419331921077A2B5D182D978614",
+        "exportedBy": "Exported By:     APXTM_VERIFY"
+      },
+      "apex": {
+        "hash": "10BC1D4A42E4FD81E14CE6F4425A3E000F84E0E198F9A243E0F80B10E9CF5A0E",
+        "exportedBy": "Exported By:     VERIFY_ADMIN"
+      },
+      "impact": "Historical failure preserved above: raw public exports differ in Exported By between database and APEX actors. The final engine normalizes exactly that bounded generated comment. Independent final captures matched source hash and artifact ID across both actors, and all source outside that comment matched the raw public export exactly.",
+      "resolution": {
+        "verifiedAt": "2026-10-20T12:12:39.207Z",
+        "sourceHash": "7A70BBB77CFD6C8A243A0FC35A220AC197EF33A1D9BC9B7B563C14A3DB4FE71B",
+        "databaseSnapshotId": 4,
+        "apexSnapshotId": 5,
+        "sameArtifactId": 21
+      }
+    },
+    "activeThemeFormat": {
+      "status": "RESOLVED and independently verified in final core",
+      "observed": "The actual 26.2.0 SQL exports place active p_theme_id in wwv_imp_workspace.create_flow and contain no create_user_interface call. The earlier synthetic USER_INTERFACE test did not prove support for this real format. No internal export construct was invoked by reviewer code.",
+      "resolution": {
+        "exportCharacters": 112522,
+        "generatedConstruct": "wwv_imp_workspace.create_flow",
+        "applicationContexts": 1,
+        "baselineTheme": 42,
+        "textOnlyChangedTheme": 43,
+        "classification": "CHANGED",
+        "eligible": "N",
+        "importsPerformed": 0
+      }
+    }
+  },
+  "limits": [
+    "Initial clean-install/recovery evidence and final-core verification are separately hash-bound. This report does not certify a release commit or a complete import suite against the final core.",
+    "APEX versions other than exact 26.2.0 were not tested.",
+    "The independent recovery checked one scalar and exact complete exported source on a newly allocated application using migrated component IDs.",
+    "Public lock persistence was measured through INSTALL and COMMIT; protection against the same lock owner, DBAs and independent writers is not claimed.",
+    "The two-preview state regression was exercised successfully; two-tab browser preview binding was not exercised by this reviewer.",
+    "Actual ACL assignment, translation, saved-report and notification preservation were not exercised by this reviewer; the coordinator owns those additional tests.",
+    "No injected partial-import or process-kill test was performed in this clean lab. No atomic rollback claim is made.",
+    "An initial SQLPlus diagnostic used an invalid test-driver -nolog option and was discarded after database-state checks failed; the corrected /nolog invocation performed the reported SQLPlus tests."
+  ],
+  "finalObservedLabState": {
+    "observedAt": "2026-10-20T12:12:39.207Z",
+    "schemaRetained": true,
+    "workspaceRetained": true,
+    "managerApplicationId": 106,
+    "targetApplicationId": 107,
+    "policy": "DISABLED",
+    "targetAllowRecovery": "N",
+    "principals": 2,
+    "targets": 1,
+    "sentinelRows": 1,
+    "targetProjectColumnSpan": 6,
+    "applicationLockReleased": true,
+    "coreValidUnits": 6,
+    "invalidObjects": 0
+  },
+  "finalAssessment": "Clean installation, idempotent reinstall, consent-protected uninstall, native authentication/rendering and historical controlled recovery passed. The final core independently compiled and passed 21 SQL blocks, actual-export theme detection, exact exporter-comment normalization and cross-actor snapshot deduplication. The previously identified format and actor-fingerprint defects are resolved for these recorded bytes. SQLcl configuration retains a documented client limitation with a verified SQLPlus path. The later portable-sample phase also verified actual SQLPlus core installation twice, new manager/sample imports, exact saved-offset reuse, preserved component IDs, three non-destructive refusals and an actual ten-eligible/two-dropped comparison. The repository-root include-path issue is resolved for the recorded scripts.",
+  "finalCoreVerification": {
+    "started": "2026-10-20T12:12:26.334Z",
+    "headAtTest": "d4fabb0e8beb04ed8f954ed5ad1a1b587c367ebd",
+    "workingTreeModified": true,
+    "schema": "APXTM_VERIFY",
+    "applicationIds": [
+      106,
+      107
+    ],
+    "checks": [
+      {
+        "name": "compile exact current three package specs and three bodies in verification schema only",
+        "status": "PASS",
+        "detail": {
+          "units": 6,
+          "errors": 0
+        }
+      },
+      {
+        "name": "all final parser semantic and security SQL blocks",
+        "status": "PASS",
+        "detail": {
+          "total": 21,
+          "perFile": {
+            "tests/parser.sql": 13,
+            "tests/semantic.sql": 7,
+            "tests/security.sql": 1
+          }
+        }
+      },
+      {
+        "name": "actual public SQL export APPLICATION context and active-theme change detected without import",
+        "status": "PASS",
+        "detail": {
+          "exportCharacters": 112522,
+          "generatedConstruct": "wwv_imp_workspace.create_flow",
+          "applicationContexts": 1,
+          "baselineTheme": 42,
+          "textOnlyChangedTheme": 43,
+          "classification": "CHANGED",
+          "eligible": "N",
+          "importsPerformed": 0
+        }
+      },
+      {
+        "name": "normalization changes only the single generated exporter comment",
+        "status": "PASS",
+        "detail": {
+          "rawSourceHash": "624B8BFC058AB4D49128F8F003E1FC6878087419331921077A2B5D182D978614",
+          "storedSourceHash": "7A70BBB77CFD6C8A243A0FC35A220AC197EF33A1D9BC9B7B563C14A3DB4FE71B",
+          "sourceOutsideGeneratedCommentIdentical": true
+        }
+      },
+      {
+        "name": "canonical engine snapshot fingerprint stable across DB and authenticated APEX actors",
+        "status": "PASS",
+        "detail": {
+          "database": {
+            "snapshotId": 4,
+            "artifactId": 21,
+            "sourceHash": "7A70BBB77CFD6C8A243A0FC35A220AC197EF33A1D9BC9B7B563C14A3DB4FE71B",
+            "createdBy": "DB:APXTM_VERIFY"
+          },
+          "apex": {
+            "snapshotId": 5,
+            "artifactId": 21,
+            "sourceHash": "7A70BBB77CFD6C8A243A0FC35A220AC197EF33A1D9BC9B7B563C14A3DB4FE71B",
+            "createdBy": "APEX:VERIFY_ADMIN"
+          },
+          "sameArtifact": true
+        }
+      },
+      {
+        "name": "final lab state remains valid and recovery disabled with no target lock",
+        "status": "PASS",
+        "detail": {
+          "validUnits": 6,
+          "invalidObjects": 0,
+          "policy": "DISABLED",
+          "targetAllowRecovery": "N",
+          "lockedBy": null,
+          "sentinelRows": 1
+        }
+      }
+    ],
+    "sourceFiles": {
+      "database/packages/apxtm_parse.pks": {
+        "sha256": "8768a76cc0901b5821eb8fa11b1aa122c3c2103deafbd2ecea0c645be94ba2c9",
+        "modified": "2026-10-20T12:04:14.282Z"
+      },
+      "database/packages/apxtm_parse.pkb": {
+        "sha256": "c69e8874c7e0a6005028a350e0e8ae88f1f74e7ffc3c6f087543d720630d1685",
+        "modified": "2026-10-20T12:11:03.369Z"
+      },
+      "database/packages/apxtm_diff.pks": {
+        "sha256": "c3af6d6df29f018b3c86820bcf85838b8b72d04352a1417ffc63dfa05b6a25a8",
+        "modified": "2026-10-20T11:24:29.604Z"
+      },
+      "database/packages/apxtm_diff.pkb": {
+        "sha256": "daac1037742a4b6baec3cbe41bcdb613899eac93318d6bd601a8811440d2665a",
+        "modified": "2026-10-20T12:11:04.198Z"
+      },
+      "database/packages/apxtm_engine.pks": {
+        "sha256": "3b47f8d1843fcd1798fee60aa224ef49ab3607dc55e4fb92556e451d365d132c",
+        "modified": "2026-10-20T11:20:20.727Z"
+      },
+      "database/packages/apxtm_engine.pkb": {
+        "sha256": "007a12b5751250e4115a3c94d6cd5db914aff36a497f5cc30f4e41e582845480",
+        "modified": "2026-10-20T12:11:05.027Z"
+      },
+      "tests/parser.sql": {
+        "sha256": "a71e3b73a9d642cc2c1a1424747ee92984232d62bd6dafff56414d02719accb9",
+        "modified": "2026-10-20T12:10:43.108Z"
+      },
+      "tests/semantic.sql": {
+        "sha256": "8081a74743b5df073edf516954e57b6883649d7e2ad67d87dc9c4464ca878494",
+        "modified": "2026-10-20T12:10:42.208Z"
+      },
+      "tests/security.sql": {
+        "sha256": "1ad6d62c8dcb5dee8d17728ca0d13b166981c2a636980cb48e6c84f365b5179d",
+        "modified": "2026-10-20T11:18:33.503Z"
+      }
+    },
+    "pureSqlProbeFindings": [],
+    "databaseCapture": {
+      "snapshotId": 4,
+      "artifactId": 21,
+      "sourceHash": "7A70BBB77CFD6C8A243A0FC35A220AC197EF33A1D9BC9B7B563C14A3DB4FE71B",
+      "createdBy": "DB:APXTM_VERIFY"
+    },
+    "apexCapture": {
+      "snapshotId": 5,
+      "artifactId": 21,
+      "sourceHash": "7A70BBB77CFD6C8A243A0FC35A220AC197EF33A1D9BC9B7B563C14A3DB4FE71B",
+      "createdBy": "APEX:VERIFY_ADMIN"
+    },
+    "finished": "2026-10-20T12:12:39.207Z",
+    "qualification": "Recompiled only APXTM_VERIFY. Application 107 was exported and parsed; the theme change was applied to in-memory text only. Two authorized snapshots and one temporary authenticated APEX session exercised actor normalization. No application import was performed in this final phase."
+  },
+  "finalGuardReview": {
+    "status": "No additional important security/correctness finding in reviewed final guards within the tested generated-export scope",
+    "checked": [
+      "Exporter normalization requires the tested Application Export envelope and exactly one generated Exported By comment before the delete-application marker, within the first 7000 characters. The 32767-byte local buffer accommodates that UTF-8 character slice. The complete remaining source is copied unchanged.",
+      "APPLICATION context requires non-null raw p_id text equal to the recognized generated wwv_flow.g_flow_id literal; unknown and oversized expressions are rejected. Public GET_INFO separately validates actual application/workspace/schema identity.",
+      "THEME context normalization removes only the parsed p_files_version span from the semantic definition hash. Artifact and freshness hashes retain that value. Final SQL tests cover the cache-counter-only case and real active-theme changes.",
+      "ACL restore preflight fingerprints unique role static identities and exact exported p_users expression spans without executing them. Missing or unsupported role identity/assignment metadata is rejected. Preview and apply both check baseline/current ACL equality before installation.",
+      "Fresh-connection workspace initialization uses the trusted registry workspace only after authorization and live target-identity checks, before operation claim and public application locking.",
+      "Rejected operations retain separate operation outcomes and do not overwrite a prior verified shared FIXED result. The independent two-preview regression remains recorded in the earlier recovery phase."
+    ],
+    "limits": "Final guard review used source inspection and the recorded SQL/capture probes. Actual assignment-preservation and negative concurrency integration evidence are owned by the coordinator; this reviewer did not repeat the full import suite after the final guard changes."
+  },
+  "portableSampleAndSqlPlusIncludes": {
+    "status": "PASS",
+    "started": "2026-10-20T12:19:40.268Z",
+    "finished": "2026-10-20T12:28:17.016Z",
+    "client": "SQLPlus 23.26.3.0.0",
+    "schema": "APXTM_VERIFY",
+    "workspaceId": 7473848173202335,
+    "scope": "New sample application108 and new manager application109 only. Existing manager configuration remained application106. No application105/106/107 import or target change was performed in this phase.",
+    "sampleApplicationId": 108,
+    "sampleAlias": "APXTM-LAYOUT-LAB-108",
+    "generatedOffset": {
+      "exactDecimal": "7546744074413528",
+      "source": "APEX_APPLICATION_INSTALL.GENERATE_OFFSET followed by public GET_OFFSET, captured in NUMBER bind before baseline import",
+      "reuse": "Exact saved NUMBER bind supplied to SET_OFFSET for changed import; no inferred or regenerated offset"
+    },
+    "commands": [
+      "@installer/install.sql (twice)",
+      "@installer/install_apex.sql with new public applicationID109",
+      "@installer/install_sample.sql with new public applicationID108",
+      "@installer/register_application.sql for108",
+      "APXTM_ENGINE.TAKE_SNAPSHOT(108,...)",
+      "@samples/layout-lab/apply_changed.sql with CHANGE SAMPLE108 confirmation and original offset",
+      "APXTM_ENGINE.COMPARE(saved_baseline_snapshot)"
+    ],
+    "checks": [
+      {
+        "name": "actual SQLPlus core install pass 1 resolves root-relative includes",
+        "status": "PASS",
+        "detail": {
+          "exit": 0,
+          "validUnits": 6,
+          "errors": 0,
+          "policy": "DISABLED"
+        }
+      },
+      {
+        "name": "actual SQLPlus core install pass 2 resolves root-relative includes",
+        "status": "PASS",
+        "detail": {
+          "exit": 0,
+          "validUnits": 6,
+          "errors": 0,
+          "policy": "DISABLED"
+        }
+      },
+      {
+        "name": "actual SQLPlus manager import under another new public application ID",
+        "status": "PASS",
+        "detail": {
+          "exit": 0,
+          "manager": {
+            "APPLICATION_ID": 109,
+            "WORKSPACE_ID": 7473848173202335,
+            "OWNER": "APXTM_VERIFY",
+            "APPLICATION_NAME": "APEX Theme Manager",
+            "ALIAS": "APEX-THEME-MANAGER109"
+          },
+          "configuredManagerIdUnchanged": 106
+        }
+      },
+      {
+        "name": "portable new sample install returns explicit generated offset and correct IDs",
+        "status": "PASS",
+        "detail": {
+          "exit": 0,
+          "offset": "7546744074413528",
+          "app": {
+            "APPLICATION_ID": 108,
+            "WORKSPACE_ID": 7473848173202335,
+            "OWNER": "APXTM_VERIFY",
+            "APPLICATION_NAME": "APXTM Layout Lab",
+            "ALIAS": "APXTM-LAYOUT-LAB-108"
+          },
+          "items": [
+            {
+              "ITEM_NAME": "P1_PROJECT",
+              "ITEM_ID": "14952264653456229",
+              "GRID_COLUMN_SPAN": 6
+            },
+            {
+              "ITEM_NAME": "P2_SUMMARY",
+              "ITEM_ID": "14952972544456232",
+              "GRID_COLUMN_SPAN": 6
+            }
+          ]
+        }
+      },
+      {
+        "name": "read-only registration and baseline capture before changed sample",
+        "status": "PASS",
+        "detail": {
+          "snapshotId": 6,
+          "allowRecovery": "N",
+          "policy": "DISABLED"
+        }
+      },
+      {
+        "name": "reinstall collision is refused without changing existing sample",
+        "status": "PASS",
+        "detail": {
+          "expectedError": "ORA-20060",
+          "exit": 1,
+          "sourceUnchanged": true
+        }
+      },
+      {
+        "name": "incorrect changed-sample consent is refused without changing sample",
+        "status": "PASS",
+        "detail": {
+          "expectedError": "ORA-20060",
+          "exit": 1,
+          "sourceUnchanged": true
+        }
+      },
+      {
+        "name": "incorrect saved offset is refused before overwrite",
+        "status": "PASS",
+        "detail": {
+          "expectedError": "ORA-20060",
+          "exit": 1,
+          "sourceUnchanged": true
+        }
+      },
+      {
+        "name": "portable changed-sample script preserves explicit item identities",
+        "status": "PASS",
+        "detail": {
+          "exit": 0,
+          "offset": "7546744074413528",
+          "items": [
+            {
+              "ITEM_NAME": "P1_PROJECT",
+              "ITEM_ID": "14952264653456229",
+              "GRID_COLUMN_SPAN": 12
+            },
+            {
+              "ITEM_NAME": "P2_SUMMARY",
+              "ITEM_ID": "14952972544456232",
+              "GRID_COLUMN_SPAN": 9
+            }
+          ]
+        }
+      },
+      {
+        "name": "actual baseline comparison reports ten eligible and two dropped properties",
+        "status": "PASS",
+        "detail": {
+          "comparisonId": 21,
+          "eligible": 10,
+          "dropped": 2,
+          "allowRecovery": "N",
+          "policy": "DISABLED"
+        }
+      }
+    ],
+    "includePathIssue": {
+      "status": "RESOLVED and verified using actual SQLPlus scripts",
+      "historicalObservation": "From the documented repository-root client directory, SQLPlus failed to open @@../database and @@../samples relative includes. No-op probes showed caller-relative @@sibling.sql works, while @@subdirectory/file.sql was sought as its supplied path from the client directory.",
+      "resolution": "Public wrappers now use explicit single-@ repository-root-relative include paths. Start SQLPlus in the repository root. Generated Oracle export files remain unchanged."
+    },
+    "latestCompiledCoreSources": {
+      "database/packages/apxtm_parse.pks": {
+        "sha256": "8768a76cc0901b5821eb8fa11b1aa122c3c2103deafbd2ecea0c645be94ba2c9",
+        "modified": "2026-10-20T12:04:14.282Z"
+      },
+      "database/packages/apxtm_parse.pkb": {
+        "sha256": "c69e8874c7e0a6005028a350e0e8ae88f1f74e7ffc3c6f087543d720630d1685",
+        "modified": "2026-10-20T12:11:03.369Z"
+      },
+      "database/packages/apxtm_diff.pks": {
+        "sha256": "c3af6d6df29f018b3c86820bcf85838b8b72d04352a1417ffc63dfa05b6a25a8",
+        "modified": "2026-10-20T11:24:29.604Z"
+      },
+      "database/packages/apxtm_diff.pkb": {
+        "sha256": "daac1037742a4b6baec3cbe41bcdb613899eac93318d6bd601a8811440d2665a",
+        "modified": "2026-10-20T12:11:04.198Z"
+      },
+      "database/packages/apxtm_engine.pks": {
+        "sha256": "3b47f8d1843fcd1798fee60aa224ef49ab3607dc55e4fb92556e451d365d132c",
+        "modified": "2026-10-20T11:20:20.727Z"
+      },
+      "database/packages/apxtm_engine.pkb": {
+        "sha256": "b67361e2911bd5f60c965e26a32e81312dfc15b8ac592da7bcf338803bf96a11",
+        "modified": "2026-10-20T12:25:43.303Z"
+      },
+      "installer/install.sql": {
+        "sha256": "4a1d64ecddb49ed38666cd525543f787a3fd9fd1b31feec52b5accd4a73c87d6",
+        "modified": "2026-10-20T12:26:59.652Z"
+      },
+      "installer/install_apex.sql": {
+        "sha256": "3647273d079b622d1b4b593162d24bb4b92b4cd784469ca8041acc8a89b4eac9",
+        "modified": "2026-10-20T12:27:00.485Z"
+      },
+      "installer/upgrade.sql": {
+        "sha256": "efb404e82bbf6769ffa49acae843e29cb6b69b1bd0095ad9459d678cea37dee1",
+        "modified": "2026-10-20T12:27:01.319Z"
+      }
+    },
+    "sourceFiles": {
+      "installer/install.sql": {
+        "sha256": "4a1d64ecddb49ed38666cd525543f787a3fd9fd1b31feec52b5accd4a73c87d6",
+        "modified": "2026-10-20T12:26:59.652Z"
+      },
+      "installer/install_apex.sql": {
+        "sha256": "3647273d079b622d1b4b593162d24bb4b92b4cd784469ca8041acc8a89b4eac9",
+        "modified": "2026-10-20T12:27:00.485Z"
+      },
+      "installer/upgrade.sql": {
+        "sha256": "efb404e82bbf6769ffa49acae843e29cb6b69b1bd0095ad9459d678cea37dee1",
+        "modified": "2026-10-20T12:27:01.319Z"
+      },
+      "installer/install_sample.sql": {
+        "sha256": "8e681d9a2cd3a8cd30fbebc32f1acb63a646bce8f0d4bb6fbfc51d3b93960230",
+        "modified": "2026-10-20T12:27:02.153Z"
+      },
+      "samples/layout-lab/apply_changed.sql": {
+        "sha256": "36e1b4bccd47ea17a05e2d7469690cc5f1b5843457b07b9e03b9bd58eac9a2fe",
+        "modified": "2026-10-20T12:27:03.000Z"
+      },
+      "samples/layout-lab/README.md": {
+        "sha256": "f7f4c565bab24b68109a270b7ced226f0e9b62097206ff86c30a55a966160cbb",
+        "modified": "2026-10-20T12:29:57.949Z"
+      }
+    },
+    "originalGeneratedArtifacts": {
+      "status": "UNCHANGED across tests",
+      "sha256": {
+        "samples/layout-lab/exports/baseline/f105.sql": "505c5d3a5a356db8a24da08f761096db6aada3df342a67dd812c6e80c62b9148",
+        "samples/layout-lab/exports/changed/f105.sql": "f79881007988da7de3967e34decc894679317d41c9405f4b1e26b9ce6a8d21e8"
+      }
+    },
+    "policyAtCompletion": {
+      "observedAt": "2026-10-20T12:28:17.016Z",
+      "modificationPolicy": "DISABLED",
+      "sampleAllowRecovery": "N",
+      "sampleItemSpans": {
+        "P1_PROJECT": 12,
+        "P2_SUMMARY": 9
+      }
+    },
+    "qualifications": [
+      "Offset and component IDs are exact decimal strings because remapped component IDs exceed JavaScript safe-integer precision.",
+      "Both scripts commit the import they own and independently export/check target identity and expected item IDs/spans after import. They do not promise atomic application rollback.",
+      "The three negative requests were checked against an unchanged complete public-export fingerprint before and after refusal.",
+      "The latest engine snapshot-completeness guard was compiled by the actual SQLPlus core installation and exercised by the real108 baseline capture and subsequent comparison.",
+      "The separate fault-injection task may subsequently add another synthetic target or temporarily change global policy; this section records state at completion of the portable sample phase.",
+      "An initial diagnostic assertion expected SP2-0310 while WHENEVER OSERROR reported No such file or directory; the assertion was corrected before implementation. That test-harness failure is not a product result."
+    ]
+  }
+}

@@ -17,6 +17,70 @@ begin
 end;
 /
 declare
+ b clob:=q'~wwv_flow_imp_shared.create_theme(p_id=>wwv_flow_imp.id(42),p_theme_id=>42,p_files_version=>123);
+wwv_flow_imp_page.create_page(p_id=>1,p_name=>'Test',p_step_template=>10,p_page_template_options=>'#DEFAULT#');~';
+ c clob:=q'~wwv_flow_imp_shared.create_theme(p_id=>wwv_flow_imp.id(42),p_theme_id=>42,p_files_version=>456789);
+wwv_flow_imp_page.create_page(p_id=>1,p_name=>'Test',p_step_template=>10,p_page_template_options=>'#DEFAULT#');~';
+ a json_array_t;o json_object_t;
+begin
+ a:=apxtm_diff.compare_sources(b,c);
+ for i in 0..a.get_size-1 loop o:=treat(a.get(i) as json_object_t);
+  if o.get_string('classification')!='UNCHANGED' then raise_application_error(-20999,'Theme cache counter caused a semantic difference');end if;
+ end loop;
+end;
+/
+declare
+ -- Exact construct used by the actual 26.2 SQL export; both theme definitions remain.
+ b clob:=q'~wwv_imp_workspace.create_flow(p_id=>wwv_flow.g_flow_id,p_name=>'APXTM Layout Lab',p_theme_id=>42);
+wwv_flow_imp_shared.create_theme(p_id=>wwv_flow_imp.id(42),p_theme_id=>42);
+wwv_flow_imp_shared.create_theme(p_id=>wwv_flow_imp.id(43),p_theme_id=>43);
+wwv_flow_imp_page.create_page(p_id=>1,p_name=>'Test');~';
+ c clob:=q'~wwv_imp_workspace.create_flow(p_id=>wwv_flow.g_flow_id,p_name=>'APXTM Layout Lab',p_theme_id=>43);
+wwv_flow_imp_shared.create_theme(p_id=>wwv_flow_imp.id(42),p_theme_id=>42);
+wwv_flow_imp_shared.create_theme(p_id=>wwv_flow_imp.id(43),p_theme_id=>43);
+wwv_flow_imp_page.create_page(p_id=>1,p_name=>'Test');~';
+ a json_array_t;o json_object_t;n number:=0;
+begin
+ a:=apxtm_diff.compare_sources(b,c);
+ for i in 0..a.get_size-1 loop o:=treat(a.get(i) as json_object_t);
+  if o.get_string('kind')='APPLICATION' and o.get_string('property')='p_theme_id' and o.get_string('classification')='CHANGED' and o.get_string('eligible')='N' then n:=n+1;end if;
+ end loop;
+ if n!=1 then raise_application_error(-20999,'Real-format active-theme switch was invisible');end if;
+end;
+/
+declare
+ b clob:=q'~wwv_flow_imp_shared.create_template(p_id=>wwv_flow_imp.id(10),p_name=>'Standard',p_theme_class_id=>1,p_theme_id=>42,p_header_template=>'<header>before</header>');
+wwv_flow_imp_page.create_page(p_id=>1,p_name=>'Test',p_step_template=>wwv_flow_imp.id(10));~';
+ c clob:=q'~wwv_flow_imp_shared.create_template(p_id=>wwv_flow_imp.id(10),p_name=>'Standard',p_theme_class_id=>1,p_theme_id=>42,p_header_template=>'<header>after</header>');
+wwv_flow_imp_page.create_page(p_id=>1,p_name=>'Test',p_step_template=>wwv_flow_imp.id(10));~';
+ a json_array_t;o json_object_t;n number:=0;
+begin
+ a:=apxtm_diff.compare_sources(b,c);
+ for i in 0..a.get_size-1 loop o:=treat(a.get(i) as json_object_t);
+  if o.get_string('property')='p_step_template' and o.get_string('classification')='CHANGED' and o.get_string('eligible')='N' then n:=n+1;end if;
+ end loop;
+ if n!=1 then raise_application_error(-20999,'Same template ID concealed changed template definition');end if;
+end;
+/
+declare
+ b clob:=q'~wwv_flow_imp_shared.create_theme(p_id=>wwv_flow_imp.id(42),p_theme_id=>42);
+wwv_flow_imp_shared.create_theme(p_id=>wwv_flow_imp.id(43),p_theme_id=>43);
+wwv_flow_imp.create_user_interface(p_id=>wwv_flow_imp.id(500),p_theme_id=>42);
+wwv_flow_imp_page.create_page(p_id=>1,p_name=>'Test');~';
+ c clob:=q'~wwv_flow_imp_shared.create_theme(p_id=>wwv_flow_imp.id(42),p_theme_id=>42);
+wwv_flow_imp_shared.create_theme(p_id=>wwv_flow_imp.id(43),p_theme_id=>43);
+wwv_flow_imp.create_user_interface(p_id=>wwv_flow_imp.id(500),p_theme_id=>43);
+wwv_flow_imp_page.create_page(p_id=>1,p_name=>'Test');~';
+ a json_array_t;o json_object_t;n number:=0;
+begin
+ a:=apxtm_diff.compare_sources(b,c);
+ for i in 0..a.get_size-1 loop o:=treat(a.get(i) as json_object_t);
+  if o.get_string('kind')='USER_INTERFACE' and o.get_string('property')='p_theme_id' and o.get_string('classification')='CHANGED' and o.get_string('eligible')='N' then n:=n+1;end if;
+ end loop;
+ if n!=1 then raise_application_error(-20999,'Switch between existing themes was invisible');end if;
+end;
+/
+declare
  b clob:=q'~wwv_flow_imp_shared.create_template(p_id=>wwv_flow_imp.id(10),p_name=>'Standard',p_theme_class_id=>1,p_theme_id=>42);
 wwv_flow_imp_page.create_page(p_id=>1,p_name=>'Test',p_step_template=>wwv_flow_imp.id(10));~';
  c clob:=q'~wwv_flow_imp_shared.create_template(p_id=>wwv_flow_imp.id(20),p_name=>'Standard',p_theme_class_id=>1,p_theme_id=>43);

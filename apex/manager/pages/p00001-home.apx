@@ -1,0 +1,266 @@
+page 1 (
+    name: Overview
+    alias: HOME
+    title: Overview | APEX Theme Manager
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        warnOnUnsavedChanges: false
+    }
+    security {
+        authentication: required
+        pageAccessProtection: argumentsMustHaveChecksum
+    }
+
+
+    region welcome (
+        name: Definition history. Clear recovery.
+        type: staticContent
+        layout {
+            sequence: 10
+            slot: body
+            columnSpan: 12
+            startNewRow: true
+        }
+        appearance {
+            template: @/hero
+            templateOptions: #DEFAULT#
+            icon: fa-clone
+        }
+        source {
+            htmlCode: ```html
+    <p class="apxtm-eyebrow">B2DEV TECH / COMMUNITY LAB</p><p class="apxtm-lead">Keep a trusted definition baseline, understand layout changes, and recover compatible properties through a reviewed, auditable operation.</p>
+    ```
+        }
+    
+    
+    )
+
+    region summary (
+        name: Workspace at a glance
+        type: cards
+        layout {
+            sequence: 20
+            slot: body
+            columnSpan: 12
+            startNewRow: true
+        }
+        appearance {
+            template: @/standard
+            templateOptions: #DEFAULT#
+    
+        }
+        source {
+            type: sqlQuery
+            sqlQuery: ```sql
+    select 'Registered applications' metric, to_char(count(*)) value from apxtm_applications a where apxtm_engine.allowed(a.application_id)=1
+    union all select 'Definition snapshots',to_char(count(*)) from apxtm_snapshots s join apxtm_artifacts a on a.artifact_id=s.artifact_id where apxtm_engine.allowed(a.application_id)=1
+    union all select 'Verified operations',to_char(count(*)) from apxtm_operations o where o.status='VERIFIED' and apxtm_engine.allowed(o.application_id)=1
+    ```
+        }
+        componentAppearance {
+            layout: grid
+            gridColumns: 3
+        }
+        card {
+            primaryKeyColumn1: METRIC
+        }
+        title {
+            advancedFormatting: false
+            column: VALUE
+            cssClasses: apxtm-count
+        }
+        body {
+            advancedFormatting: false
+            column: METRIC
+        }
+    
+    
+    )
+
+    region applications (
+        name: Registered applications
+        type: classicReport
+        layout {
+            sequence: 30
+            slot: body
+            columnSpan: 12
+            startNewRow: true
+        }
+        appearance {
+            template: @/standard
+            templateOptions: #DEFAULT#
+    
+        }
+        source {
+            type: sqlQuery
+            sqlQuery: ```sql
+    select a.application_id,a.application_name,a.parsing_schema,case when a.allow_recovery='Y' then 'Allowed by registry' else 'Read only' end recovery_policy,
+     '<a href="'||apex_escape.html_attribute(apex_page.get_url(p_page=>10,p_items=>'P10_APPLICATION_ID',p_values=>a.application_id))||'">Open application</a>' open_app
+    from apxtm_applications a where apxtm_engine.allowed(a.application_id)=1 order by a.application_name
+    ```
+        }
+        componentAppearance {
+            templateType: theme
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Report--altRowsDefault
+                t-Report--rowHighlight
+            ]
+        }
+        pagination {
+            type: setPaginationSearchEngine
+            partialPageRefresh: false
+        }
+        messages {
+            whenNoDataFound: No records yet. Use the steps above to begin.
+        }
+        headerAndFooter {
+            headerText: <p class="apxtm-table-hint">Scroll the table horizontally to view every column.</p>
+        }
+    
+        column APPLICATION_ID (
+            type: plainText
+            layout {
+                sequence: 10
+            }
+            heading {
+                heading: App
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column APPLICATION_NAME (
+            type: plainText
+            layout {
+                sequence: 20
+            }
+            heading {
+                heading: Application
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column PARSING_SCHEMA (
+            type: plainText
+            layout {
+                sequence: 30
+            }
+            heading {
+                heading: Schema
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column RECOVERY_POLICY (
+            type: plainText
+            layout {
+                sequence: 40
+            }
+            heading {
+                heading: Recovery policy
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column OPEN_APP (
+            type: plainText
+            layout {
+                sequence: 50
+            }
+            heading {
+                heading: Details
+            }
+            security {
+                escapeSpecialChars: false
+            }
+            sorting {
+                sortable: false
+            }
+        )
+    )
+
+    region start (
+        name: Your next step
+        type: staticContent
+        layout {
+            sequence: 40
+            slot: body
+            columnSpan: 12
+            startNewRow: true
+        }
+        appearance {
+            template: @/standard
+            templateOptions: #DEFAULT#
+    
+        }
+        source {
+            htmlCode: ```html
+    <p>Open an application and capture a baseline before changing its layout. The registry is maintained by your database owner; an empty list means no applications have been registered for this workspace.</p><p class="apxtm-note">Recovery starts disabled. Each apply requires a fresh export, a verified backup and an exact confirmation phrase.</p>
+    ```
+        }
+    
+    
+    )
+
+    button open-applications (
+        buttonName: OPEN_APPLICATIONS
+        label: Browse applications
+        layout {
+            sequence: 10
+            region: @start
+            slot: change
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: true
+        }
+        behavior {
+            action: redirectThisApp
+            target: {
+                page: 10
+            }
+        }
+    
+    )
+
+    button open-guide (
+        buttonName: OPEN_GUIDE
+        label: Read the guide
+        layout {
+            sequence: 20
+            region: @start
+            slot: change
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: false
+        }
+        behavior {
+            action: redirectThisApp
+            target: {
+                page: 50
+            }
+        }
+    
+    )
+)

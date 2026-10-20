@@ -1,0 +1,41 @@
+authorization can-read (
+    name: Can read
+    type: plSqlFunctionBody
+    settings {
+        plsqlFunctionBody: return apxtm_engine.has_permission('READ');
+    }
+    advanced {
+        evaluationType: always
+    }
+    error {
+        errorMessage: Your account does not have permission for this action. Contact the workspace administrator.
+    }
+)
+
+authorization can-recover (
+    name: Can recover
+    type: plSqlFunctionBody
+    settings {
+        plsqlFunctionBody: return apxtm_engine.has_permission('RECOVER');
+    }
+    advanced {
+        evaluationType: always
+    }
+    error {
+        errorMessage: Your account does not have permission for this action. Contact the workspace administrator.
+    }
+)
+
+authorization can-restore (
+    name: Can restore
+    type: plSqlFunctionBody
+    settings {
+        plsqlFunctionBody: return apxtm_engine.has_permission('RESTORE');
+    }
+    advanced {
+        evaluationType: always
+    }
+    error {
+        errorMessage: Your account does not have permission for this action. Contact the workspace administrator.
+    }
+)
