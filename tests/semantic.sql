@@ -1,0 +1,52 @@
+declare
+ b clob:=q'~wwv_flow_imp_shared.create_theme(p_id=>wwv_flow_imp.id(42),p_theme_id=>42,p_default_page_template=>10);
+wwv_flow_imp_page.create_page(p_id=>1,p_name=>'Test',p_step_template=>10);
+wwv_flow_imp_page.create_page_item(p_id=>wwv_flow_imp.id(8),p_name=>'P1_X',p_colspan=>6,p_begin_on_new_line=>'Y');~';
+ c clob:=q'~wwv_flow_imp_shared.create_theme(p_id=>wwv_flow_imp.id(42),p_theme_id=>42,p_default_page_template=>11);
+wwv_flow_imp_page.create_page(p_id=>1,p_name=>'Test',p_step_template=>10);
+wwv_flow_imp_page.create_page_item(p_id=>wwv_flow_imp.id(8),p_name=>'P1_X',p_colspan=>12,p_begin_on_new_line=>'N');~';
+ a json_array_t; o json_object_t; eligible number:=0; defaults number:=0;
+begin
+ a:=apxtm_diff.compare_sources(b,c);
+ for i in 0..a.get_size-1 loop
+  o:=treat(a.get(i) as json_object_t);
+  if o.get_string('eligible')='Y' then eligible:=eligible+1; end if;
+  if o.get_string('property')='p_default_page_template' and o.get_string('classification')='NO_MATCH' then defaults:=defaults+1; end if;
+ end loop;
+ if eligible!=2 or defaults!=1 then raise_application_error(-20999,'Wrong scalar eligibility or omitted theme defaults'); end if;
+end;
+/
+declare
+ b clob:=q'~wwv_flow_imp_shared.create_template(p_id=>wwv_flow_imp.id(10),p_name=>'Standard',p_theme_class_id=>1,p_theme_id=>42);
+wwv_flow_imp_page.create_page(p_id=>1,p_name=>'Test',p_step_template=>wwv_flow_imp.id(10));~';
+ c clob:=q'~wwv_flow_imp_shared.create_template(p_id=>wwv_flow_imp.id(20),p_name=>'Standard',p_theme_class_id=>1,p_theme_id=>43);
+wwv_flow_imp_shared.create_template(p_id=>wwv_flow_imp.id(21),p_name=>'Standard',p_theme_class_id=>1,p_theme_id=>43);
+wwv_flow_imp_page.create_page(p_id=>1,p_name=>'Test',p_step_template=>wwv_flow_imp.id(20));~';
+ a json_array_t; o json_object_t; ambiguous number:=0;
+begin
+ a:=apxtm_diff.compare_sources(b,c);
+ for i in 0..a.get_size-1 loop
+  o:=treat(a.get(i) as json_object_t);
+  if o.get_string('property')='p_step_template' and o.get_string('classification')='AMBIGUOUS' and o.get_string('eligible')='N' then ambiguous:=ambiguous+1; end if;
+ end loop;
+ if ambiguous!=1 then raise_application_error(-20999,'Duplicated template names did not block mapping'); end if;
+end;
+/
+declare
+ b clob:=q'~wwv_flow_imp_page.create_page(p_id=>1,p_name=>'Test',p_page_template_options=>'a:b');
+wwv_flow_imp_page.create_page_item(p_id=>wwv_flow_imp.id(8),p_name=>'P1_X',p_colspan=>6);~';
+ c clob:=q'~wwv_flow_imp_page.create_page(p_id=>1,p_name=>'Test',p_page_template_options=>'b:a');
+wwv_flow_imp_page.create_page_item(p_id=>wwv_flow_imp.id(8),p_name=>'P1_RECREATED',p_colspan=>12);
+wwv_flow_imp_page.create_page_button(p_id=>wwv_flow_imp.id(9),p_button_name=>'NEW',p_grid_column_span=>3);~';
+ a json_array_t; o json_object_t; conflicts number:=0; added number:=0; same number:=0;
+begin
+ a:=apxtm_diff.compare_sources(b,c);
+ for i in 0..a.get_size-1 loop
+  o:=treat(a.get(i) as json_object_t);
+  if o.get_string('classification')='CONFLICT' and o.get_string('eligible')='N' then conflicts:=conflicts+1; end if;
+  if o.get_string('classification')='ADDED' then added:=added+1; end if;
+  if o.get_string('property')='p_page_template_options' and o.get_string('classification')='UNCHANGED' then same:=same+1; end if;
+ end loop;
+ if conflicts!=1 or added<1 or same!=1 then raise_application_error(-20999,'Wrong structural identity or option-set comparison'); end if;
+end;
+/
