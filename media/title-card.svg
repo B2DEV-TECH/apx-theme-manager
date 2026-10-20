@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+  <title id="title">APEX Theme Manager — Snapshot. Compare. Recover.</title>
+  <desc id="desc">Independent B2DEV TECH community beta. Actual automated APEX 26.2 laboratory execution with synthetic layouts.</desc>
+  <rect width="1280" height="720" fill="#07090c"/>
+  <path d="M80 126H1200M80 594H1200" stroke="#f5a640" stroke-opacity=".24"/>
+  <rect x="80" y="78" width="36" height="5" rx="2" fill="#f5a640"/>
+  <text x="132" y="89" fill="#f5a640" font-family="Arial,sans-serif" font-size="22" font-weight="700" letter-spacing="3">B2DEV TECH</text>
+  <text x="80" y="255" fill="#f4f4f5" font-family="Arial,sans-serif" font-size="67" font-weight="700">APEX Theme Manager</text>
+  <text x="80" y="326" fill="#f5a640" font-family="Arial,sans-serif" font-size="39">Snapshot. Compare. Recover.</text>
+  <text x="80" y="417" fill="#a1a1aa" font-family="Arial,sans-serif" font-size="25">Real APEX execution • Synthetic layout changes</text>
+  <text x="80" y="459" fill="#a1a1aa" font-family="Arial,sans-serif" font-size="23">Edited with reading pauses • Synthetic English narration</text>
+  <text x="80" y="554" fill="#f4f4f5" font-family="Arial,sans-serif" font-size="23">APEX 26.2.0  /  Independent community beta</text>
+  <text x="80" y="652" fill="#a1a1aa" font-family="Arial,sans-serif" font-size="21">github.com/B2DEV-TECH/apx-theme-manager</text>
+</svg>

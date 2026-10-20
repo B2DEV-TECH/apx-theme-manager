@@ -1,8 +1,19 @@
-# Synthetic workflow recording script
+# Actual synthetic workflow recording and reproduction
 
-This is a production plan, not an existing video. Record only the original
-synthetic sample in an authorized disposable laboratory. Publish media only
-after the final engine, preservation, browser and release gates pass.
+The original synthetic sample was recorded on October 20, 2026. The edited
+MP4 is 239.686 seconds (1600 × 1200, H.264/AAC), with 23 English captions and
+synthetic narration from an installed Windows voice. It uses actual automated
+APEX 26.2.0 execution and unchanged runtime screenshots, with labeled reading
+pauses. No APEX screens were reconstructed. There is no music or human-voice
+claim. Public hosting is verified separately from local production.
+
+The successful source run passed all 16 browser checks without JavaScript
+errors. Local Chrome decoded audio/video, loaded all 23 WebVTT cues and sought
+successfully through all nine chapters. See [edit manifest](demo-edit-manifest.json)
+and [playback evidence](demo-playback-evidence.json) for hashes and measurements.
+
+The following script and shot list also document how to repeat the recording.
+Use only the original synthetic sample in an authorized disposable laboratory.
 
 The scenario demonstrates controlled APEXlang-authored layout changes. Do not
 describe it as a recording of a reproduced APEX theme-switch defect.
@@ -76,6 +87,18 @@ in this lab.”
 
 Adjust narration to what the final footage actually shows. Omit unrecorded
 actions and do not retain a success sentence if a final check fails.
+
+## Local editing tools
+
+`media/narration.json` is the exact spoken/caption text. The optional
+`scripts/narrate-video.ps1` uses an already installed Windows English voice;
+it downloads nothing. `scripts/build-demo-video.mjs` requires FFmpeg, ffprobe
+and a Playwright-compatible browser. Pass their executable paths through
+`--ffmpeg`, `--ffprobe` and `--chrome` if they are not on the normal path.
+It requires a passing recorded run, checks source files before encoding,
+preserves actual-time video speed and writes its output under ignored `.local/`.
+The checked-in captions, thumbnail, chapters and edit manifest are small public
+production artifacts; raw and intermediate recordings remain excluded.
 
 ## Editing and publication
 

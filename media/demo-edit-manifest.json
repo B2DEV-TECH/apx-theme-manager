@@ -1,0 +1,287 @@
+{
+  "recorded": "2026-10-20T12:59:52.640Z",
+  "built": "2026-10-20T13:31:57.983Z",
+  "testedApex": "26.2.0",
+  "disclosure": "Actual automated browser footage, edited into chapters with reading pauses. Synthetic layout changes; no reproduced theme-switch defect.",
+  "voice": "Synthetic English narration using an installed Windows voice.",
+  "runtimeScreensReconstructed": false,
+  "playbackSpeed": 1,
+  "pauses": "Freeze frames and unchanged actual runtime screenshots are labeled.",
+  "rawManagerSha256": "d4276c68c9c38a8b894dd7b0258ffa85a671b140ce1ebaeb1732f04a1195bbe8",
+  "successfulBrowserChecks": 16,
+  "output": {
+    "filename": "apex-theme-manager-demo.mp4",
+    "bytes": 8547836,
+    "sha256": "72c5c3cf243e15c9e2dbd5dbd4f942b953c2298ddb573c09bd19c50065d2baf1",
+    "durationSeconds": 239.685384,
+    "width": 1600,
+    "height": 1200,
+    "video": "H.264 yuv420p",
+    "audio": "AAC",
+    "frameRate": 24
+  },
+  "chapters": [
+    {
+      "id": "opening",
+      "title": "Snapshot. Compare. Recover.",
+      "startSeconds": 0
+    },
+    {
+      "id": "baseline",
+      "title": "A known baseline",
+      "startSeconds": 19.958333
+    },
+    {
+      "id": "changed",
+      "title": "Controlled layout changes",
+      "startSeconds": 49.124348999999995
+    },
+    {
+      "id": "comparison",
+      "title": "Meaning and eligibility",
+      "startSeconds": 67.70768199999999
+    },
+    {
+      "id": "preview",
+      "title": "Review one repair",
+      "startSeconds": 90.20768199999999
+    },
+    {
+      "id": "selected",
+      "title": "Backup. Apply. Verify.",
+      "startSeconds": 120.12369799999999
+    },
+    {
+      "id": "remaining",
+      "title": "Remaining eligible values",
+      "startSeconds": 148.873364
+    },
+    {
+      "id": "restore",
+      "title": "A separate restore operation",
+      "startSeconds": 172.123364
+    },
+    {
+      "id": "closing",
+      "title": "A reproducible community beta",
+      "startSeconds": 203.54003000000003
+    }
+  ],
+  "edits": [
+    {
+      "caption": 1,
+      "chapter": "opening",
+      "kind": "original title card",
+      "title": true,
+      "outputStartSeconds": 0,
+      "outputDurationSeconds": 10,
+      "sourceSha256": "f493adfbe924b0b39322df765f23a65399109c216a02dce60b94a6db764df2f5"
+    },
+    {
+      "caption": 2,
+      "chapter": "opening",
+      "kind": "runtime screenshot / reading pause",
+      "file": "00-overview.png",
+      "outputStartSeconds": 10,
+      "outputDurationSeconds": 9.958333,
+      "sourceSha256": "fdcf29bc1f40e65ff9a7966c3c36380f82f97802776e937f1c10451e167f6678"
+    },
+    {
+      "caption": 3,
+      "chapter": "baseline",
+      "kind": "runtime screenshot / reading pause",
+      "file": "sample-baseline.png",
+      "outputStartSeconds": 19.958333,
+      "outputDurationSeconds": 8.75,
+      "sourceSha256": "e0c5d90d7e7b5a19d3f785ed1063e41b6457d288427a0f28655ad5f6b611cb06"
+    },
+    {
+      "caption": 4,
+      "chapter": "baseline",
+      "kind": "actual browser video / reading pause after clip",
+      "start": 3.2,
+      "end": 9.25,
+      "outputStartSeconds": 28.708333,
+      "outputDurationSeconds": 10.457683,
+      "sourceSha256": "d4276c68c9c38a8b894dd7b0258ffa85a671b140ce1ebaeb1732f04a1195bbe8"
+    },
+    {
+      "caption": 5,
+      "chapter": "baseline",
+      "kind": "runtime screenshot / reading pause",
+      "file": "sample-baseline-review.png",
+      "outputStartSeconds": 39.166016,
+      "outputDurationSeconds": 9.958333,
+      "sourceSha256": "51110776807fc9eafac82822a7bd96afb9a38c3233d07e0a4e00a3ae9f795ffe"
+    },
+    {
+      "caption": 6,
+      "chapter": "changed",
+      "kind": "runtime screenshot / reading pause",
+      "file": "sample-changed-review.png",
+      "outputStartSeconds": 49.124348999999995,
+      "outputDurationSeconds": 7.958333,
+      "sourceSha256": "74dcf9d189b8daec4d694057c1d410b5e77161189647a24fd8ac9382342fb8cc"
+    },
+    {
+      "caption": 7,
+      "chapter": "changed",
+      "kind": "runtime screenshot / reading pause",
+      "file": "sample-changed.png",
+      "outputStartSeconds": 57.08268199999999,
+      "outputDurationSeconds": 10.625,
+      "sourceSha256": "1e27bcad802a3810e99d1fad4a55665d0f5f0622d72763a30b7bebcf1f416fb8"
+    },
+    {
+      "caption": 8,
+      "chapter": "comparison",
+      "kind": "actual browser video / reading pause after clip",
+      "start": 19.3,
+      "end": 25.45,
+      "outputStartSeconds": 67.70768199999999,
+      "outputDurationSeconds": 11.125,
+      "sourceSha256": "d4276c68c9c38a8b894dd7b0258ffa85a671b140ce1ebaeb1732f04a1195bbe8"
+    },
+    {
+      "caption": 9,
+      "chapter": "comparison",
+      "kind": "runtime screenshot / reading pause",
+      "file": "02-comparison.png",
+      "outputStartSeconds": 78.83268199999999,
+      "outputDurationSeconds": 11.375,
+      "sourceSha256": "829b0e8a328725c243854c112e7257c493683f3fb7a036ac8e44995a6db2de36"
+    },
+    {
+      "caption": 10,
+      "chapter": "preview",
+      "kind": "actual browser video / reading pause after clip",
+      "start": 54.85,
+      "end": 58.8,
+      "outputStartSeconds": 90.20768199999999,
+      "outputDurationSeconds": 9.332683,
+      "sourceSha256": "d4276c68c9c38a8b894dd7b0258ffa85a671b140ce1ebaeb1732f04a1195bbe8"
+    },
+    {
+      "caption": 11,
+      "chapter": "preview",
+      "kind": "runtime screenshot / reading pause",
+      "file": "03-preview-selected.png",
+      "outputStartSeconds": 99.540365,
+      "outputDurationSeconds": 10.958333,
+      "sourceSha256": "fa9e9fa8da4ec762186e76ee4e6cce320630586861e32729c1f5dd93fc5e02f2"
+    },
+    {
+      "caption": 12,
+      "chapter": "preview",
+      "kind": "actual browser video / reading pause after clip",
+      "start": 60.05,
+      "end": 60.95,
+      "outputStartSeconds": 110.49869799999999,
+      "outputDurationSeconds": 9.625,
+      "sourceSha256": "d4276c68c9c38a8b894dd7b0258ffa85a671b140ce1ebaeb1732f04a1195bbe8"
+    },
+    {
+      "caption": 13,
+      "chapter": "selected",
+      "kind": "actual browser video / reading pause after clip",
+      "start": 61.08,
+      "end": 68.3,
+      "outputStartSeconds": 120.12369799999999,
+      "outputDurationSeconds": 9.333,
+      "sourceSha256": "d4276c68c9c38a8b894dd7b0258ffa85a671b140ce1ebaeb1732f04a1195bbe8"
+    },
+    {
+      "caption": 14,
+      "chapter": "selected",
+      "kind": "runtime screenshot / reading pause",
+      "file": "05-selected-verified.png",
+      "outputStartSeconds": 129.456698,
+      "outputDurationSeconds": 11.208333,
+      "sourceSha256": "5c96cc8476d1f66704dbc3efaf2ad15b9d87710f047a6634ffa5dc081479265c"
+    },
+    {
+      "caption": 15,
+      "chapter": "selected",
+      "kind": "runtime screenshot / reading pause",
+      "file": "05-selected-verified.png",
+      "outputStartSeconds": 140.665031,
+      "outputDurationSeconds": 8.208333,
+      "sourceSha256": "5c96cc8476d1f66704dbc3efaf2ad15b9d87710f047a6634ffa5dc081479265c"
+    },
+    {
+      "caption": 16,
+      "chapter": "remaining",
+      "kind": "actual browser video / reading pause after clip",
+      "start": 75.7,
+      "end": 88.45,
+      "outputStartSeconds": 148.873364,
+      "outputDurationSeconds": 13.25,
+      "sourceSha256": "d4276c68c9c38a8b894dd7b0258ffa85a671b140ce1ebaeb1732f04a1195bbe8"
+    },
+    {
+      "caption": 17,
+      "chapter": "remaining",
+      "kind": "runtime screenshot / reading pause",
+      "file": "sample-recovered-eligible.png",
+      "outputStartSeconds": 162.123364,
+      "outputDurationSeconds": 10,
+      "sourceSha256": "f80b0df40a18b7a60e1bd2899574819a56c58918a4cb118277b3bbee3a23735c"
+    },
+    {
+      "caption": 18,
+      "chapter": "restore",
+      "kind": "runtime screenshot / reading pause",
+      "file": "07-restore-preview.png",
+      "outputStartSeconds": 172.123364,
+      "outputDurationSeconds": 11.333333,
+      "sourceSha256": "446e733c28ce75bc956beb66cbf866da98c49da2fc0b4ba62f6d873984282cec"
+    },
+    {
+      "caption": 19,
+      "chapter": "restore",
+      "kind": "actual browser video / reading pause after clip",
+      "start": 104.5,
+      "end": 113.5,
+      "outputStartSeconds": 183.45669700000002,
+      "outputDurationSeconds": 10.583333,
+      "sourceSha256": "d4276c68c9c38a8b894dd7b0258ffa85a671b140ce1ebaeb1732f04a1195bbe8"
+    },
+    {
+      "caption": 20,
+      "chapter": "restore",
+      "kind": "runtime screenshot / reading pause",
+      "file": "sample-restored-definition.png",
+      "outputStartSeconds": 194.04003000000003,
+      "outputDurationSeconds": 9.5,
+      "sourceSha256": "e0c5d90d7e7b5a19d3f785ed1063e41b6457d288427a0f28655ad5f6b611cb06"
+    },
+    {
+      "caption": 21,
+      "chapter": "closing",
+      "kind": "actual browser video / reading pause after clip",
+      "start": 116.8,
+      "end": 120.3,
+      "outputStartSeconds": 203.54003000000003,
+      "outputDurationSeconds": 10.207683,
+      "sourceSha256": "d4276c68c9c38a8b894dd7b0258ffa85a671b140ce1ebaeb1732f04a1195bbe8"
+    },
+    {
+      "caption": 22,
+      "chapter": "closing",
+      "kind": "runtime screenshot / reading pause",
+      "file": "00-overview.png",
+      "outputStartSeconds": 213.74771300000003,
+      "outputDurationSeconds": 10.958333,
+      "sourceSha256": "fdcf29bc1f40e65ff9a7966c3c36380f82f97802776e937f1c10451e167f6678"
+    },
+    {
+      "caption": 23,
+      "chapter": "closing",
+      "kind": "original title card",
+      "title": true,
+      "outputStartSeconds": 224.70604600000004,
+      "outputDurationSeconds": 14.958333,
+      "sourceSha256": "f493adfbe924b0b39322df765f23a65399109c216a02dce60b94a6db764df2f5"
+    }
+  ]
+}

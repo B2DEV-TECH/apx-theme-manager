@@ -1,0 +1,602 @@
+{
+  "recorded": "2026-10-20T13:36:49.577Z",
+  "version": "v0.1.0-beta candidate",
+  "scope": "Original synthetic applications in two disposable local workspaces only",
+  "sourceFiles": [
+    {
+      "filename": "database/packages/apxtm_parse.pks",
+      "sha256": "8768a76cc0901b5821eb8fa11b1aa122c3c2103deafbd2ecea0c645be94ba2c9",
+      "compiledSourceMatches": true
+    },
+    {
+      "filename": "database/packages/apxtm_parse.pkb",
+      "sha256": "3ccf2376985612abf81c7a0673423b82ac91c9f13c94cb5be2ebf6c57bef1f11",
+      "compiledSourceMatches": true
+    },
+    {
+      "filename": "database/packages/apxtm_diff.pks",
+      "sha256": "c3af6d6df29f018b3c86820bcf85838b8b72d04352a1417ffc63dfa05b6a25a8",
+      "compiledSourceMatches": true
+    },
+    {
+      "filename": "database/packages/apxtm_diff.pkb",
+      "sha256": "1d9712884991ea5d57be222e9d0bd5c581013974896bff214c97fe898168b44d",
+      "compiledSourceMatches": true
+    },
+    {
+      "filename": "database/packages/apxtm_engine.pks",
+      "sha256": "ad2104706cac21fe5bffcaba8a51d80df7a5cce0f2362f4712cc39286cb90f7d",
+      "compiledSourceMatches": true
+    },
+    {
+      "filename": "database/packages/apxtm_engine.pkb",
+      "sha256": "87c99aa70a408e88be708797cb935463200e068da36afe2e85d8e5e41738967a",
+      "compiledSourceMatches": true
+    }
+  ],
+  "environment": {
+    "apex": "26.2.0",
+    "database": "23.26.3.0.0",
+    "node": "v22.16.0",
+    "operatingSystem": "Windows"
+  },
+  "databaseObjects": [
+    {
+      "OBJECT_TYPE": "INDEX",
+      "OBJECT_COUNT": 4
+    },
+    {
+      "OBJECT_TYPE": "PACKAGE",
+      "OBJECT_COUNT": 3
+    },
+    {
+      "OBJECT_TYPE": "PACKAGE BODY",
+      "OBJECT_COUNT": 3
+    },
+    {
+      "OBJECT_TYPE": "TABLE",
+      "OBJECT_COUNT": 9
+    },
+    {
+      "OBJECT_TYPE": "TRIGGER",
+      "OBJECT_COUNT": 3
+    }
+  ],
+  "invalidObjects": [],
+  "unit": {
+    "passed": 26,
+    "failed": 0,
+    "blocks": [
+      "tests/parser.sql #1",
+      "tests/parser.sql #2",
+      "tests/parser.sql #3",
+      "tests/parser.sql #4",
+      "tests/parser.sql #5",
+      "tests/parser.sql #6",
+      "tests/parser.sql #7",
+      "tests/parser.sql #8",
+      "tests/parser.sql #9",
+      "tests/parser.sql #10",
+      "tests/parser.sql #11",
+      "tests/parser.sql #12",
+      "tests/parser.sql #13",
+      "tests/parser.sql #14",
+      "tests/parser.sql #15",
+      "tests/parser.sql #16",
+      "tests/semantic.sql #1",
+      "tests/semantic.sql #2",
+      "tests/semantic.sql #3",
+      "tests/semantic.sql #4",
+      "tests/semantic.sql #5",
+      "tests/semantic.sql #6",
+      "tests/semantic.sql #7",
+      "tests/semantic.sql #8",
+      "tests/semantic.sql #9",
+      "tests/security.sql #1"
+    ]
+  },
+  "integration": {
+    "started": "2026-10-20T13:28:43.908Z",
+    "tests": [
+      {
+        "name": "guard: target is the original synthetic app in the configured workspace",
+        "status": "PASS",
+        "milliseconds": 15
+      },
+      {
+        "name": "explicit lab setup registers read-only before recovery enablement",
+        "status": "PASS",
+        "milliseconds": 16
+      },
+      {
+        "name": "baseline snapshot is durable and its ZIP/source integrity validates",
+        "status": "PASS",
+        "milliseconds": 5652
+      },
+      {
+        "name": "actual export item parents and button/region aliases match public live metadata",
+        "status": "PASS",
+        "milliseconds": 1616
+      },
+      {
+        "name": "actual generated application export detects an active theme switch",
+        "status": "PASS",
+        "milliseconds": 3175
+      },
+      {
+        "name": "snapshot does not commit the caller transaction and identical exports deduplicate",
+        "status": "PASS",
+        "milliseconds": 1998
+      },
+      {
+        "name": "unchanged application has no changed properties",
+        "status": "PASS",
+        "milliseconds": 5384
+      },
+      {
+        "name": "independent APEXlang-authored modifications produce the expected semantic differences",
+        "status": "PASS",
+        "milliseconds": 5597
+      },
+      {
+        "name": "unsafe isolated grid corrections reject before persisting a proposal",
+        "status": "PASS",
+        "milliseconds": 564
+      },
+      {
+        "name": "Fix Selected preview does not modify the application",
+        "status": "PASS",
+        "milliseconds": 2128
+      },
+      {
+        "name": "incorrect typed confirmation is rejected before any backup or import",
+        "status": "PASS",
+        "milliseconds": 3
+      },
+      {
+        "name": "Fix Selected creates a verified backup and independently verifies the entire import",
+        "status": "PASS",
+        "milliseconds": 7330
+      },
+      {
+        "name": "consumed recovery token cannot be replayed",
+        "status": "PASS",
+        "milliseconds": 3
+      },
+      {
+        "name": "Fix All Eligible recovers every remaining eligible scalar",
+        "status": "PASS",
+        "milliseconds": 18626
+      },
+      {
+        "name": "a stale second preview preserves the first verified repair outcome",
+        "status": "PASS",
+        "milliseconds": 15676
+      },
+      {
+        "name": "full restore requires its separate confirmation and verifies the complete definition",
+        "status": "PASS",
+        "milliseconds": 12357
+      },
+      {
+        "name": "full restore rejects changed ACL assignments before creating a request or importing",
+        "status": "PASS",
+        "milliseconds": 3321
+      },
+      {
+        "name": "stale comparison rejects preview after an independent application edit",
+        "status": "PASS",
+        "milliseconds": 5729
+      },
+      {
+        "name": "application edit after preview invalidates apply and preserves the later state",
+        "status": "PASS",
+        "milliseconds": 7701
+      },
+      {
+        "name": "manager self-target and unknown IDs are rejected server-side",
+        "status": "PASS",
+        "milliseconds": 4
+      }
+    ],
+    "versions": {
+      "apex": "26.2.0",
+      "database": "Oracle AI Database 26ai Free 23.26.3.0.0"
+    },
+    "baseline": {
+      "SOURCE_CHARACTERS": 112448,
+      "ARCHIVE_BYTES": 46353,
+      "COMPONENT_COUNT": 23
+    },
+    "actualExportIdentity": {
+      "itemsMatched": 9,
+      "buttonTemplateReferences": 3,
+      "regionOptionSets": 4
+    },
+    "observedDifferences": [
+      {
+        "COMPONENT_NAME": "OPEN_REVIEW",
+        "PROPERTY_NAME": "p_grid_column_span",
+        "BASELINE_VALUE": "3",
+        "CURRENT_VALUE": "4",
+        "CLASSIFICATION": "CHANGED",
+        "ELIGIBLE": "Y"
+      },
+      {
+        "COMPONENT_NAME": "P1_EMAIL",
+        "PROPERTY_NAME": "p_begin_on_new_line",
+        "BASELINE_VALUE": "N",
+        "CURRENT_VALUE": null,
+        "CLASSIFICATION": "DROPPED",
+        "ELIGIBLE": "N"
+      },
+      {
+        "COMPONENT_NAME": "P1_EMAIL",
+        "PROPERTY_NAME": "p_colspan",
+        "BASELINE_VALUE": "6",
+        "CURRENT_VALUE": "12",
+        "CLASSIFICATION": "CHANGED",
+        "ELIGIBLE": "Y"
+      },
+      {
+        "COMPONENT_NAME": "P1_EMAIL",
+        "PROPERTY_NAME": "p_grid_column",
+        "BASELINE_VALUE": "7",
+        "CURRENT_VALUE": "1",
+        "CLASSIFICATION": "CHANGED",
+        "ELIGIBLE": "Y"
+      },
+      {
+        "COMPONENT_NAME": "P1_OWNER",
+        "PROPERTY_NAME": "p_begin_on_new_line",
+        "BASELINE_VALUE": "N",
+        "CURRENT_VALUE": null,
+        "CLASSIFICATION": "DROPPED",
+        "ELIGIBLE": "N"
+      },
+      {
+        "COMPONENT_NAME": "P1_OWNER",
+        "PROPERTY_NAME": "p_grid_column",
+        "BASELINE_VALUE": "7",
+        "CURRENT_VALUE": "1",
+        "CLASSIFICATION": "CHANGED",
+        "ELIGIBLE": "Y"
+      },
+      {
+        "COMPONENT_NAME": "P1_PROJECT",
+        "PROPERTY_NAME": "p_colspan",
+        "BASELINE_VALUE": "6",
+        "CURRENT_VALUE": "12",
+        "CLASSIFICATION": "CHANGED",
+        "ELIGIBLE": "Y"
+      },
+      {
+        "COMPONENT_NAME": "Contact details",
+        "PROPERTY_NAME": "p_plug_display_column",
+        "BASELINE_VALUE": "7",
+        "CURRENT_VALUE": "9",
+        "CLASSIFICATION": "CHANGED",
+        "ELIGIBLE": "Y"
+      },
+      {
+        "COMPONENT_NAME": "Contact details",
+        "PROPERTY_NAME": "p_plug_grid_column_span",
+        "BASELINE_VALUE": "6",
+        "CURRENT_VALUE": "4",
+        "CLASSIFICATION": "CHANGED",
+        "ELIGIBLE": "Y"
+      },
+      {
+        "COMPONENT_NAME": "Project brief",
+        "PROPERTY_NAME": "p_plug_grid_column_span",
+        "BASELINE_VALUE": "6",
+        "CURRENT_VALUE": "8",
+        "CLASSIFICATION": "CHANGED",
+        "ELIGIBLE": "Y"
+      },
+      {
+        "COMPONENT_NAME": "BACK_TO_DESK",
+        "PROPERTY_NAME": "p_grid_column_span",
+        "BASELINE_VALUE": "3",
+        "CURRENT_VALUE": "4",
+        "CLASSIFICATION": "CHANGED",
+        "ELIGIBLE": "Y"
+      },
+      {
+        "COMPONENT_NAME": "P2_STATUS",
+        "PROPERTY_NAME": "p_colspan",
+        "BASELINE_VALUE": "6",
+        "CURRENT_VALUE": "3",
+        "CLASSIFICATION": "CHANGED",
+        "ELIGIBLE": "Y"
+      },
+      {
+        "COMPONENT_NAME": "P2_STATUS",
+        "PROPERTY_NAME": "p_grid_column",
+        "BASELINE_VALUE": "7",
+        "CURRENT_VALUE": "10",
+        "CLASSIFICATION": "CHANGED",
+        "ELIGIBLE": "Y"
+      },
+      {
+        "COMPONENT_NAME": "P2_SUMMARY",
+        "PROPERTY_NAME": "p_colspan",
+        "BASELINE_VALUE": "6",
+        "CURRENT_VALUE": "9",
+        "CLASSIFICATION": "CHANGED",
+        "ELIGIBLE": "Y"
+      }
+    ],
+    "selectedRecovery": {
+      "operationId": 56,
+      "status": "VERIFIED",
+      "backupSnapshotId": 113
+    },
+    "finished": "2026-10-20T13:30:20.806Z"
+  },
+  "negative": {
+    "finished": "2026-10-20T13:31:57.720Z",
+    "tests": [
+      {
+        "name": "guard exact workspace, synthetic target and manager identities",
+        "status": "PASS"
+      },
+      {
+        "name": "read-only principal cannot recover or restore",
+        "status": "PASS"
+      },
+      {
+        "name": "registry workspace mismatch is rejected before export",
+        "status": "PASS"
+      },
+      {
+        "name": "non-allowlisted and self applications are rejected",
+        "status": "PASS"
+      },
+      {
+        "name": "immutable snapshot, artifact and audit metadata reject updates",
+        "status": "PASS"
+      },
+      {
+        "name": "corrupted archive fixture is rejected before decompression/import",
+        "status": "PASS"
+      },
+      {
+        "name": "expired operation token is rejected before claiming or importing",
+        "status": "PASS"
+      },
+      {
+        "name": "unknown authenticated APEX principal is denied server-side",
+        "status": "PASS"
+      },
+      {
+        "name": "privileged principal in a different APEX application is denied",
+        "status": "PASS"
+      },
+      {
+        "name": "export fingerprint is stable between database and authenticated APEX actors",
+        "status": "PASS"
+      },
+      {
+        "name": "concurrent recovery claims allow only one active import",
+        "status": "PASS"
+      },
+      {
+        "name": "successful recovery releases its developer lock",
+        "status": "PASS"
+      }
+    ]
+  },
+  "importFailure": {
+    "started": "2026-10-20T13:15:13.032Z",
+    "checks": [
+      {
+        "name": "native INSTALL failure leaves FAILED operation and independently valid durable backup",
+        "status": "PASS",
+        "operationId": 32,
+        "STATUS": "FAILED",
+        "ERROR_CODE": -20987,
+        "BACKUP_SNAPSHOT_ID": 39
+      },
+      {
+        "name": "explicit owner reimport recovers the synthetic fault application",
+        "status": "PASS"
+      }
+    ],
+    "applicationId": 116,
+    "installErrorCode": 20987,
+    "installError": "ORA-20987: APEX - Execution  of the statement was unsuccessful. ORA-06502: PL&#x2F;SQL: value or conversion error: character to number conversion error",
+    "applicationExistsAfterFailure": 1,
+    "finished": "2026-10-20T13:15:34.068Z"
+  },
+  "history": {
+    "started": "2026-10-20T13:34:13.512Z",
+    "schema": "APXTM_VERIFY",
+    "checks": [
+      {
+        "name": "guard isolated owner/workspace and allocate a new original synthetic application",
+        "status": "PASS",
+        "detail": {
+          "applicationId": 117,
+          "name": "APXTM History Access Lab",
+          "alias": "APXTM-HISTORY-LAB-117"
+        }
+      },
+      {
+        "name": "create real preview, verified operation and durable pre-import backup",
+        "status": "PASS",
+        "detail": {
+          "baselineSnapshotId": 40,
+          "backupSnapshotId": 41,
+          "verifiedOperationId": 33,
+          "previewOperationId": 34,
+          "comparisonId": 45
+        }
+      },
+      {
+        "name": "changed live alias retains validated baseline backup and proposal downloads",
+        "status": "PASS",
+        "detail": {
+          "baseline_hash": "73C34B2738FD0132A05433BCE54C6F6D08CEFDB3BF76B21ECBCA73C10D0FE989",
+          "backup_bytes": 46362,
+          "proposal_bytes": 46362
+        }
+      },
+      {
+        "name": "changed live alias still denies capture compare restore apply and retirement",
+        "status": "PASS"
+      },
+      {
+        "name": "disabled modification policy and per-target recovery flag do not hide history",
+        "status": "PASS",
+        "detail": {
+          "baseline_hash": "73C34B2738FD0132A05433BCE54C6F6D08CEFDB3BF76B21ECBCA73C10D0FE989",
+          "backup_bytes": 46362,
+          "proposal_bytes": 46362
+        }
+      },
+      {
+        "name": "revoked principal denies all historical download APIs",
+        "status": "PASS"
+      },
+      {
+        "name": "disabled allowlist entry denies history",
+        "status": "PASS"
+      },
+      {
+        "name": "registered workspace mismatch denies history",
+        "status": "PASS"
+      },
+      {
+        "name": "configured workspace mismatch denies history",
+        "status": "PASS"
+      },
+      {
+        "name": "registered parsing-schema mismatch denies history",
+        "status": "PASS"
+      },
+      {
+        "name": "manager self-exclusion applies even to a registered historical target",
+        "status": "PASS"
+      },
+      {
+        "name": "reader role can download historical definitions without recovery authority",
+        "status": "PASS",
+        "detail": {
+          "baseline_hash": "73C34B2738FD0132A05433BCE54C6F6D08CEFDB3BF76B21ECBCA73C10D0FE989",
+          "backup_bytes": 46362,
+          "proposal_bytes": 46362
+        }
+      },
+      {
+        "name": "unknown null and non-allowlisted IDs deny history",
+        "status": "PASS"
+      },
+      {
+        "name": "unauthorized authenticated manager user cannot read historical definitions",
+        "status": "PASS"
+      },
+      {
+        "name": "archive corruption remains rejected for snapshot and operation downloads",
+        "status": "PASS",
+        "detail": {
+          "artifactId": 52,
+          "snapshotId": 43,
+          "operationId": 35,
+          "fixturesRolledBack": true
+        }
+      },
+      {
+        "name": "hash-valid ZIP with a different exported application identity is rejected",
+        "status": "PASS",
+        "detail": {
+          "snapshotId": 44,
+          "archiveAndSourceHashesValid": true,
+          "expectedError": 20026,
+          "fixtureRolledBack": true
+        }
+      },
+      {
+        "name": "public REMOVE_APPLICATION removes only the guarded newly allocated fixture",
+        "status": "PASS",
+        "detail": {
+          "applicationId": 117,
+          "liveApplicationRows": 0
+        }
+      },
+      {
+        "name": "absent target retains validated baseline backup and proposal downloads",
+        "status": "PASS",
+        "detail": {
+          "baseline_hash": "73C34B2738FD0132A05433BCE54C6F6D08CEFDB3BF76B21ECBCA73C10D0FE989",
+          "backup_bytes": 46362,
+          "proposal_bytes": 46362
+        }
+      },
+      {
+        "name": "absent target still denies all live operations despite enabled recovery policy",
+        "status": "PASS"
+      },
+      {
+        "name": "explicit owner reimport restores original synthetic identity and component IDs",
+        "status": "PASS",
+        "detail": {
+          "applicationId": 117,
+          "sourceHash": "8617e6c649952e41e1501331b114c83170ca48780649775a84870b73535ff9db"
+        }
+      }
+    ],
+    "sourceFiles": {
+      "database/packages/apxtm_engine.pks": {
+        "sha256": "ad2104706cac21fe5bffcaba8a51d80df7a5cce0f2362f4712cc39286cb90f7d",
+        "modified": "2026-10-20T12:48:53.900Z"
+      },
+      "database/packages/apxtm_engine.pkb": {
+        "sha256": "87c99aa70a408e88be708797cb935463200e068da36afe2e85d8e5e41738967a",
+        "modified": "2026-10-20T12:48:54.727Z"
+      }
+    },
+    "removalApiDocumentation": "https://docs.oracle.com/en/database/oracle/apex/26.1/aeapi/APEX_APPLICATION_INSTALL.REMOVE_APPLICATION-Procedure.html",
+    "applicationId": 117,
+    "workspaceId": 7473848173202335,
+    "savedTrustedSource": {
+      "path": ".local/verify-history-source-117.sql",
+      "sha256": "ea8de43b6119b724377fe1353c032986d1502a491254743b8daeb3fbbf48c0bb"
+    },
+    "history": {
+      "baselineSnapshotId": 40,
+      "backupSnapshotId": 41,
+      "verifiedOperationId": 33,
+      "previewOperationId": 34,
+      "comparisonId": 45
+    },
+    "finalState": {
+      "modificationPolicy": "DISABLED",
+      "targetAllowRecovery": "N",
+      "invalidObjects": 0
+    },
+    "finished": "2026-10-20T13:35:23.105Z"
+  },
+  "browserWorkflow": {
+    "evidence": "../../apex/screenshots/final-workflow-evidence.json",
+    "passed": 16,
+    "failed": 0,
+    "versions": {
+      "apex": "26.2.0",
+      "database": "23.26.3.0.0",
+      "chrome": "155.0.8059.85"
+    }
+  },
+  "browserHistory": {
+    "evidence": "../../apex/screenshots/history-access-evidence.json",
+    "passed": 10,
+    "failed": 0
+  },
+  "limits": [
+    "APEX 24.2 untested; only exact 26.2.0 modification gate tested.",
+    "Synthetic controlled layout edits; no reproduced native theme-switch defect.",
+    "Template/options/theme-default repair, omitted parameter insertion and cross-copy mapping unsupported.",
+    "No general visual proof or atomic application-import rollback guarantee.",
+    "Large real applications and process termination at every import phase untested."
+  ]
+}

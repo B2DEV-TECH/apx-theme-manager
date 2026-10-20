@@ -21,6 +21,32 @@ begin
   then raise_application_error(-20999,'Incorrect component identity or semantic values'); end if;
 end;
 /
+begin
+ if not apxtm_parse.is_recoverable('REGION','p_plug_display_column','7') then
+  raise_application_error(-20999,'Explicit region grid column was not recoverable');end if;
+end;
+/
+declare
+ s clob:=q'~wwv_flow_imp_page.create_page(p_id=>2,p_name=>'Review');
+wwv_flow_imp_page.create_page_plug(p_id=>wwv_flow_imp.id(1),p_plug_name=>'Region');
+wwv_flow_imp_page.create_page_item(p_id=>wwv_flow_imp.id(10),p_name=>'SUMMARY',p_plug_id=>wwv_flow_imp.id(1),p_item_sequence=>10,p_colspan=>9,p_grid_column=>1);
+wwv_flow_imp_page.create_page_item(p_id=>wwv_flow_imp.id(20),p_name=>'STATUS',p_plug_id=>wwv_flow_imp.id(1),p_item_sequence=>20,p_colspan=>3,p_grid_column=>10,p_begin_on_new_line=>'N');~';
+ patched clob;rejected boolean;
+begin
+ for i in 1..2 loop
+  rejected:=false;
+  begin
+   patched:=apxtm_parse.patch(s,json_array_t(case i
+    when 1 then '[{"key":"ITEM:2:20","property":"p_colspan","expected":"3","value":"6"}]'
+    when 2 then '[{"key":"ITEM:2:20","property":"p_grid_column","expected":"10","value":"7"}]' end));
+  exception when others then if sqlcode=-20001 then rejected:=true;else raise;end if;end;
+  if not rejected then raise_application_error(-20999,'Unsafe grid combination accepted case '||i);end if;
+ end loop;
+ patched:=apxtm_parse.patch(s,json_array_t('[{"key":"ITEM:2:10","property":"p_colspan","expected":"9","value":"6"},{"key":"ITEM:2:20","property":"p_colspan","expected":"3","value":"6"},{"key":"ITEM:2:20","property":"p_grid_column","expected":"10","value":"7"}]'));
+ if dbms_lob.instr(patched,'p_colspan=>6,p_grid_column=>7')=0 then raise_application_error(-20999,'Compatible grouped repair failed');end if;
+ dbms_lob.freetemporary(patched);
+end;
+/
 declare
  s clob;a json_array_t;rejected boolean:=false;
 begin
@@ -171,5 +197,37 @@ wwv_flow_imp_page.create_page(p_id=>1,p_name=>'Café laboratório');~';
   a:=apxtm_parse.parse(s); c:=treat(a.get(0) as json_object_t);
   if a.get_size!=1 or c.get_string('name')!='Café laboratório' then raise_application_error(-20999,'Large Unicode CLOB truncated'); end if;
   dbms_lob.freetemporary(s);
+end;
+/
+
+-- BODY buttons and items share a grid; kind-based occupancy is insufficient.
+declare
+  s clob:=q'~wwv_flow_imp_page.create_page(p_id=>1,p_name=>'Mixed grid');
+wwv_flow_imp_page.create_page_item(p_id=>wwv_flow_imp.id(8),p_name=>'P1_X',
+ p_item_plug_id=>wwv_flow_imp.id(20),p_item_sequence=>10,p_grid_column=>1,p_colspan=>6);
+wwv_flow_imp_page.create_page_button(p_id=>wwv_flow_imp.id(9),p_button_name=>'NEXT',
+ p_button_plug_id=>wwv_flow_imp.id(20),p_button_sequence=>20,p_button_position=>'BODY',
+ p_grid_new_row=>'N',p_grid_new_column=>'Y',p_grid_column=>7,p_grid_column_span=>6);~';
+  result clob;
+  rejected boolean:=false;
+begin
+  begin
+    result:=apxtm_parse.patch(s,json_array_t('[{"key":"ITEM:1:8","property":"p_colspan","expected":"6","value":"8"}]'));
+    if dbms_lob.istemporary(result)=1 then dbms_lob.freetemporary(result);end if;
+  exception when others then
+    if sqlcode=-20001 and instr(sqlerrm,'Mixed item/BODY-button')>0 then rejected:=true;else raise;end if;
+  end;
+  if not rejected then raise_application_error(-20999,'Mixed item/BODY-button overlap accepted');end if;
+  -- Even a numerically valid coupled mixed row stays outside the beta scope.
+  rejected:=false;
+  begin
+    result:=apxtm_parse.patch(s,json_array_t('[{"key":"ITEM:1:8","property":"p_colspan","expected":"6","value":"8"},{"key":"BUTTON:1:9","property":"p_grid_column","expected":"7","value":"9"},{"key":"BUTTON:1:9","property":"p_grid_column_span","expected":"6","value":"4"}]'));
+  exception when others then
+    if sqlcode=-20001 and instr(sqlerrm,'Mixed item/BODY-button')>0 then rejected:=true;else raise;end if;
+  end;
+  if not rejected then raise_application_error(-20999,'Unsupported coupled mixed row accepted');end if;
+  s:=replace(s,'p_grid_new_row=>''N''','p_grid_new_row=>''Y''');
+  result:=apxtm_parse.patch(s,json_array_t('[{"key":"ITEM:1:8","property":"p_colspan","expected":"6","value":"8"}]'));
+  if dbms_lob.istemporary(result)=1 then dbms_lob.freetemporary(result);end if;
 end;
 /

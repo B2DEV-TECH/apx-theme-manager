@@ -47,23 +47,30 @@ Neither a PL/SQL exception nor `ROLLBACK` proves the application was restored.
 A returned API call also does not prove that the expected properties survived.
 
 1. Stop edits/imports for the target and disable future manager recovery requests.
-2. Inspect the operation, audit entry and durable backup snapshot. Treat an
-   `APPLYING` operation after an interruption as unresolved until investigated.
-   Do not clear its status just to retry.
-3. Export and inspect the target's actual current definition. Preserve that
-   evidence before taking another action; do not include it in public reports.
+2. Inspect Activity's operation, audit entry and definition snapshot history.
+   Download and retain the validated durable backup ZIP. Authorized history
+   reads remain available if the live application is missing or its alias has
+   changed, and when modification policy or per-target recovery is disabled.
+   READ principal, enabled target registration, workspace and parsing-schema
+   checks still apply. Treat an `APPLYING` operation after an interruption as
+   unresolved until investigated. Do not clear its status just to retry.
+3. If the target still exists, export and inspect its actual current definition.
+   Otherwise record its absence. Preserve that evidence before taking another
+   action; do not include it in public reports.
 4. If appropriate, use the separate restore preview and explicit confirmation
    workflow with a `RESTORER` account and a validated backup. It performs another
-   import with its own risks. If the manager is unavailable, the workspace owner
-   can review and import the independently retained trusted definition through
-   supported APEX tooling.
+   import with its own risks. The manager refuses live recovery when the target
+   is absent or its registered identity has changed. In that case, or if the
+   manager is unavailable, the workspace owner must review the retained trusted
+   definition and use supported APEX tooling for an explicit import. History
+   access does not authorize overwriting a new application that reuses an ID.
 5. Re-export independently, check the intended and unrelated properties, and
    resolve any remaining application lock under its actual owner.
 
 Recovery snapshots omit table data, workspace users and external dependencies.
 Arrange their recovery separately when needed. Retest behavior after any
-restoration, and preserve evidence of partial failures. Initial failure-handling
-integration claims remain pending until the release records those tests.
+restoration, and preserve evidence of partial failures. Release evidence records
+the specific failure paths exercised; other partial-import outcomes remain possible.
 
 ## Retention
 

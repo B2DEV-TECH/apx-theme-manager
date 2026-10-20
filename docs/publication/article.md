@@ -7,6 +7,9 @@ category: "oracle-apex"
 tags: ["Oracle APEX", "PL/SQL", "APEXlang", "Layout Recovery", "Open Source"]
 author: "geraldo-viana"
 github: "https://github.com/B2DEV-TECH/apx-theme-manager"
+canonical: "https://b2dev.tech/blog/oracle-apex-theme-manager-layout-recovery"
+cover: "/images/articles/apxtm/manager-overview.png"
+coverAlt: "Actual APEX Theme Manager overview with the registered synthetic application and recovery history."
 seo:
   title: "Building a Layout Recovery Engine for Oracle APEX"
   description: "Application snapshots, semantic differences and controlled layout recovery in an original Oracle APEX and PL/SQL lab."
@@ -63,13 +66,6 @@ related: ["voice-driven-ai-agent-oracle-apex", "apex-deep-data-security-entra-ze
 draft: true
 ---
 
-:::warning[Draft publication gate]
-The screenshot and video paths reserved in this draft are not published media.
-Keep this article in draft until the actual recordings, public source links and
-final release checks have been verified. Media insertion points are commented
-out below so that the draft does not present a recording that does not exist.
-:::
-
 A page layout can be described in a few small values: a region spans six columns,
 an item starts at column seven, a button occupies three. Recovering those values
 becomes harder when an application has continued to change. Reimporting an old
@@ -77,15 +73,11 @@ application would also replace work that has nothing to do with the layout.
 
 I built APEX Theme Manager to explore a narrower operation: keep the current
 application, compare its definition with an earlier snapshot, and recover only
-attributes whose identity and transformation can be established. The difficult
-parts were deciding when a difference is eligible, protecting a preview from
-later edits, and proving what survived the import.
+attributes whose identity and transformation can be established.
 
 The demonstration uses controlled layout changes authored in APEXlang and
 deployed with SQLcl. It tests recovery from known changes; it is not evidence of
-a defect caused by switching an APEX theme. The same engineering questions arise
-when reviewing layout drift after an upgrade, a template change or an ordinary
-Page Designer edit.
+a defect caused by switching an APEX theme.
 
 ## Where the native theme workflow fits
 
@@ -127,10 +119,9 @@ APEX Theme Manager is an independent B2DEV TECH community project. Its original
 source is licensed under Apache-2.0. Oracle APEX and generated Universal Theme
 material retain their own applicable terms and notices.
 
-<!-- MEDIA PENDING: capture the real manager after final browser verification.
 [![APEX Theme Manager overview with the registered synthetic application.](/images/articles/apxtm/manager-overview.png)](/images/articles/apxtm/manager-overview.png)
+
 *Figure 1. The manager and its explicitly registered development target.*
--->
 
 ## Three packages, one privileged workflow
 
@@ -189,7 +180,10 @@ requested because a full import must preserve more than the grid attributes
 being repaired. The resulting definitions require confidential handling.
 The engine validates identity through `APEX_APPLICATION_INSTALL.GET_INFO`,
 stores source and archive SHA-256 hashes, and uses `APEX_EXPORT.ZIP`/`UNZIP` for
-UTF-8 transport. Identical source definitions can share one stored artifact.
+UTF-8 transport. Before storage, a new capture also compares exported page,
+region, item and button identity sets with public live metadata. A historical
+snapshot is validated against its stored provenance, not today's component set.
+Identical definitions can share one stored artifact.
 
 Cross-actor testing exposed a changing generated `Exported By` comment. I now
 normalize that one recognized header line before storage/fingerprinting; the
@@ -231,9 +225,16 @@ and supported row/field booleans, explicitly present in both definitions.
 Missing parameters, unknown expressions and uncertain identities remain outside
 automatic recovery.
 
+Final review exposed a gap in my hand-built models: actual 26.2 items use
+`p_item_plug_id`; buttons use `p_button_template_id`; regions emit
+`p_region_template_options` and `p_plug_item_display_point`. Missing those names
+lost parent or detection context. I reproduced the failures before fixing them,
+retained legacy aliases, and added an integration check comparing every exported
+item parent with live public metadata. Passing modeled syntax was insufficient.
+
 ## A difference is not permission to repair
 
-The controlled fixture produced twelve differences: ten eligible numeric grid
+The controlled fixture produced fourteen differences: twelve eligible numeric grid
 changes and two omitted row flags. A few examples show the distinction:
 
 | Component / property | Baseline | Changed export | Classification | Eligible |
@@ -253,31 +254,40 @@ Consequently, **Fix All Eligible** means all eligible attributes. In the test,
 the remaining grid differences were recovered, while the two DROPPED row flags
 remained outside that operation. Full definition restore is a separate action.
 
-<!-- MEDIA PENDING: capture both actual synthetic states and their comparison.
+Actual rendering caught a flaw in my first changed fixture: individually valid
+scalars produced overlapping regions/items. I corrected the Contact region's
+column from 7 to 9 and `P2_STATUS` from 7 to 10. The transformer now validates the
+recognized twelve-column plan, rejecting overflow and same-row/sibling overlap.
+Position and span can be coupled; an unsafe selection is refused even when each
+value is bounded. Mixed item/BODY-button rows remain manual, even safe coupled
+rows; only known numeric trailing buttons with new-row/new-column behavior
+are supported. This is not a general proof of responsive HTML/CSS.
+
 [![Project Desk before the controlled layout changes.](/images/articles/apxtm/sample-baseline.png)](/images/articles/apxtm/sample-baseline.png)
+
+*Figure 2. Project Desk at the captured baseline.*
+
 [![The same synthetic page after the independently authored layout changes.](/images/articles/apxtm/sample-changed.png)](/images/articles/apxtm/sample-changed.png)
+
+*Figure 3. Controlled APEXlang-authored layout changes on the same synthetic page.*
+
 [![Comparison with eligible grid values and ineligible omitted row flags.](/images/articles/apxtm/comparison.png)](/images/articles/apxtm/comparison.png)
-*Figures 2–4. The baseline, the controlled changed state and their semantic differences.*
--->
+
+*Figure 4. Semantic differences distinguish eligible grid values from omitted row flags.*
 
 ### Why template names are insufficient
 
-Templates introduce another identity problem. A numeric template ID does not
-establish equivalence across themes, and a familiar name can occur more than
-once. The semantic comparison considers available type, name, class and reference
-context. Missing inherited definitions become `NO_MATCH`; duplicate
-type/name/class combinations become `AMBIGUOUS`.
-
-Changed template references, template options and theme defaults can be detected.
-They are not automatically mapped in this version. A convincing cross-theme
-mapping would need evidence for that particular source/target combination,
-including behavior the export alone cannot show. I kept those cases visible
-without making them eligible.
+A template ID or familiar name does not establish cross-theme equivalence.
+Missing definitions become `NO_MATCH`; duplicate type/name/class combinations
+become `AMBIGUOUS` in the pure unit models. Actual inherited Universal Theme
+bodies were absent even with `p_with_no_subscriptions=>true`. Those modeled
+name/class rules do not certify a live cross-theme mapping. Template references,
+options and theme defaults remain detection-only.
 
 The first theme-context digest also mistook `p_files_version`, a generated cache
 counter changed by APEXlang import, for theme drift. I exclude only that span
 from the **THEME context digest**; the complete artifact/freshness SHA retains
-it. This removed false positives while leaving the twelve real layout changes.
+it. This removed false positives while retaining the real layout changes.
 
 The real export expresses the active theme in `wwv_imp_workspace.create_flow`,
 with `p_id=>wwv_flow.g_flow_id` and `p_theme_id=>42`. A test changes that
@@ -307,11 +317,13 @@ After installation, the engine re-exports independently and requires the
 **complete normalized SQL fingerprint** to match the approved artifact. Selected values
 alone would be an incomplete success check.
 
-<!-- MEDIA PENDING: capture the actual preview and verified operation screens.
 [![Recovery preview showing the selected scalar change and target.](/images/articles/apxtm/recovery-preview.png)](/images/articles/apxtm/recovery-preview.png)
+
+*Figure 5. Review the selected scalar, target and proposed definition before apply.*
+
 [![Verified operation with its durable backup reference.](/images/articles/apxtm/recovery-verified.png)](/images/articles/apxtm/recovery-verified.png)
-*Figures 5–6. Review before apply, then the verified result and its backup.*
--->
+
+*Figure 6. The verified operation retains its durable pre-import backup.*
 
 ## The transaction problem appeared at import
 
@@ -348,9 +360,11 @@ not a reason to call recovery while holding application metadata locks in a
 parent transaction. Developer scripts should complete their own import and use
 a fresh session.
 
-There is no atomic rollback promise. An import can commit internally or fail
-partially. FAILED or interrupted APPLYING operations require inspection of the
-actual application, backup and audit. Restore performs another privileged import.
+There is no atomic rollback promise. A deliberately invalid synthetic import
+raised `ORA-20987`: the operation was FAILED, its durable backup validated and the
+application remained present. An explicit owner reimport recovered it. That is
+one failure path, not proof of all partial-import behavior. FAILED or interrupted
+APPLYING operations require inspecting the actual application, backup and audit.
 
 ### The restore check caught retained ACL state
 
@@ -368,30 +382,46 @@ to roll back runtime access assignments.
 ## What the tests establish
 
 The [recorded verification report](https://github.com/B2DEV-TECH/apx-theme-manager/blob/main/docs/testing/verification.md)
-for October 20 records **18 passing integration checks**, **12 passing negative
-checks** and **21 real PL/SQL test blocks**: 13 parser, seven semantic and one
-security block. Their scope is more useful than a combined count:
+for October 20 records **20 passing integration checks**, **26 real PL/SQL test
+blocks** (16 parser, nine semantic, one security), **12 negative checks**,
+**20 independent history checks**, **16 main native browser checks** and
+**10 browser history checks**. Their scope matters more than a combined count:
 
 | Area | Observed in the synthetic lab |
 |---|---|
 | Capture | Durable validated ZIP/source, deduplicated identical exports, pending caller DML not committed by snapshot |
-| Comparison | Twelve actual layout differences; cache-counter noise excluded only from theme context; active-theme text and same-ID template changes detected |
+| Comparison | Fourteen layout differences, twelve eligible; cache-counter noise excluded only from theme context; active-theme text and same-ID template changes detected |
 | Selected recovery | Preview leaves the target unchanged; wrong confirmation is rejected; apply creates a validated backup and verifies the whole export |
 | Remaining eligible recovery / compatible restore | Both reach VERIFIED after the normalized complete export matches the approved artifact; incompatible ACL state is rejected |
 | Rejection paths | Consumed/expired tokens, stale edits, second stale preview preserving prior FIXED outcomes, wrong application/principal/workspace, corrupted archives and immutable metadata changes |
 | Concurrent sessions | Two fresh database sessions produced one VERIFIED operation and one unique-constraint rejection; the public developer lock was released |
+| Native browser | Both sample pages rendered at four states; three downloaded ZIPs matched stored hashes; two tabs kept their reviewed operation; zero JavaScript errors |
 
 A separate clean workspace exercised install/reinstall, SQL*Plus configuration,
 read-only capture, selected recovery on a different destination application ID,
-the 21 unit blocks and cross-actor identity. Removal consent tests preserved an
+the SQL suites and cross-actor identity. Removal consent tests preserved an
 unrelated sentinel object. A fresh-session test also exposed an unset APEX
 security-group context; it is now initialized from trusted configuration after
-authorization, rather than relying on a warm laboratory session.
+authorization.
+
+`GET_APPLICATION` persisted a snapshot, yet the runtime HTTP response was empty.
+I isolated that behavior and changed the native full-POST
+flow to use public `APEX_UTIL.REDIRECT_URL` and `APEX_PAGE.GET_URL` after success
+or rejection. The browser verified HTTP 302 followed by a fresh GET and protected
+notices. No JSON-preservation workaround was needed.
+
+History reads now have separate authorization from live operations. Authorized
+users can download stored snapshots, proposals and backups when a target is
+absent or its alias changes; capture, comparison and recovery still reject that
+target. Recovery evidence should not disappear with the application it protects.
+The separate native history run verified six hash-matching ZIP downloads after
+alias change and actual target removal, then exact owner restoration.
 
 This is still one host and APEX release, with one observed two-session race;
 it does not establish exhaustive concurrency or partial-failure coverage.
-Browser workflow verification and the actual recording are pending. Step timings
-include validation/query overhead and are not API benchmarks.
+The browser scenario took 162.316 seconds including navigation, validation and
+queries, not API-only work. The edited recording below has separate reading
+pauses and is not a performance benchmark.
 
 ## Reproducing the experiment
 
@@ -434,15 +464,14 @@ Configure credentials only in the ignored local lab configuration described by
 the contribution guide. Inspect the integration guard and fixture identity
 before running it. Do not point it at an application containing real work.
 
-<!-- VIDEO PENDING: activate only after an actual reviewed runtime recording exists.
 <figure>
-<video controls playsinline preload="metadata" poster="/images/articles/apxtm/manager-overview.png" aria-label="Recorded synthetic Oracle APEX layout recovery workflow" style="aspect-ratio:16/9;width:100%;border:1px solid var(--border-subtle);border-radius:var(--radius-card);background:#000">
-<source src="/media/videos/apxtm/apex-theme-manager-demo.mp4" type="video/mp4">
-Your browser cannot play this video. <a href="/media/videos/apxtm/apex-theme-manager-demo.mp4">Download the MP4</a>.
+<video controls playsinline preload="metadata" poster="/images/articles/apxtm/demo-thumbnail.png" aria-label="Recorded synthetic Oracle APEX layout recovery workflow" style="aspect-ratio:4/3;width:100%;border:1px solid var(--border-subtle);border-radius:var(--radius-card);background:#000">
+<source src="https://b2dev.tech/media/videos/apxtm/v0.1.0-beta/apex-theme-manager-demo.mp4" type="video/mp4">
+<track kind="captions" src="https://b2dev.tech/media/videos/apxtm/v0.1.0-beta/demo.en.vtt" srclang="en" label="English">
+Your browser cannot play this video. <a href="https://b2dev.tech/media/videos/apxtm/v0.1.0-beta/apex-theme-manager-demo.mp4">Download the MP4</a>.
 </video>
+<figcaption>3:59.685 (239.685 seconds), nine chapters and 23 English caption cues. Actual automated browser footage, edited into chapters with labeled reading pauses and unchanged runtime screenshots; no APEX screens were reconstructed. Narration uses a synthetic English Windows voice. Captions are burned into the video; the optional English track is not enabled by default. The pages and layout changes are synthetic, and no theme-switch defect is claimed.</figcaption>
 </figure>
-Add the measured duration, caption availability and exact editing disclosure after reviewing the real recording. Do not invent those properties.
--->
 
 ## The authority the manager needs
 
@@ -472,11 +501,8 @@ identity and cross-theme mappings require review. Split SQL exports, APEXlang
 input parsing, other APEX versions, runtime data recovery and production-wide
 deployment are outside this evidence.
 
-The next work is to expand adverse-case testing, repeat clean installation on
-independent environments, and investigate specific template mappings with
-reproducible fixtures. Each extension needs its own eligibility rule and failure
-tests. I would rather expose an unresolved difference than make a plausible
-replacement without enough identity information.
+Next are independent installations, broader adverse-case tests and specific
+template-mapping fixtures. Each extension needs eligibility rules and failure tests.
 
 If you want to contribute, start with a small synthetic application, its two
 definitions and the exact difference you expect. A case the engine refuses can

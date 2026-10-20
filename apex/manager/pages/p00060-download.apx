@@ -69,7 +69,6 @@ page 60 (
             plsqlCode: ```plsql
     declare archive blob; app_id number; begin
      select a.application_id into app_id from apxtm_snapshots s join apxtm_artifacts a on a.artifact_id=s.artifact_id where s.snapshot_id=:P60_SNAPSHOT_ID;
-     apxtm_engine.assert_access(app_id,'READ');
      archive:=apxtm_engine.snapshot_zip(:P60_SNAPSHOT_ID);
      sys.htp.init;
      sys.owa_util.mime_header('application/zip',false);

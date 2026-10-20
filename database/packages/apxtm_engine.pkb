@@ -29,6 +29,23 @@ create or replace package body apxtm_engine as
   exception when no_data_found then return false;
   end;
 
+  procedure assert_history_access(p_application_id number) is
+    c apxtm_config%rowtype;
+    r apxtm_applications%rowtype;
+  begin
+    if not has_permission('READ') then deny; end if;
+    select * into c from apxtm_config where config_id=1;
+    select * into r from apxtm_applications where application_id=p_application_id and enabled='Y';
+    if c.workspace_id is null or c.manager_app_id is null or r.workspace_id!=c.workspace_id
+      or p_application_id=c.manager_app_id
+      or upper(r.parsing_schema)!=upper(sys_context('USERENV','CURRENT_USER')) then deny; end if;
+  exception when no_data_found then deny;
+  end;
+
+  function can_read_history(p_application_id number) return number is
+  begin assert_history_access(p_application_id); return 1;
+  exception when others then return 0; end;
+
   procedure assert_access(p_application_id number,p_permission varchar2 default 'READ') is
     c apxtm_config%rowtype;
     r apxtm_applications%rowtype;
@@ -266,7 +283,7 @@ create or replace package body apxtm_engine as
     art number;app number;f apex_t_export_files;
   begin
     select s.artifact_id,a.application_id into art,app from apxtm_snapshots s join apxtm_artifacts a on a.artifact_id=s.artifact_id where s.snapshot_id=p_snapshot_id;
-    assert_access(app);f:=artifact_files(art);free_files(f);return true;
+    assert_history_access(app);f:=artifact_files(art);free_files(f);return true;
   exception when others then free_files(f);raise;
   end;
 
@@ -458,7 +475,7 @@ create or replace package body apxtm_engine as
   function operation_zip(p_operation_id number) return blob is
     r apxtm_operations%rowtype;z blob;f apex_t_export_files;
   begin
-    select * into r from apxtm_operations where operation_id=p_operation_id;assert_access(r.application_id);
+    select * into r from apxtm_operations where operation_id=p_operation_id;assert_history_access(r.application_id);
     f:=artifact_files(r.proposed_artifact_id);free_files(f);
     select archive into z from apxtm_artifacts where artifact_id=r.proposed_artifact_id;return z;
   end;

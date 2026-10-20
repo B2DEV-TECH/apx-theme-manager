@@ -28,7 +28,7 @@ The runtime workflow uses these pages:
 | 10 | Application details, immutable snapshots, comparison and restore preview |
 | 20 | Classified differences, filters and explicit eligible selections |
 | 30 | Exact preview, fingerprints, protected token and typed POST confirmation |
-| 40 | Operation results, backup downloads and append-only audit history |
+| 40 | Operation results, backup/proposal downloads, snapshot and audit history |
 | 50 | Workflow guide, supported scope and recovery limitations |
 | 60 | Authorized snapshot ZIP download |
 | 61 | Authorized proposed-definition ZIP download |
@@ -41,6 +41,18 @@ The one-use preview token is held in encrypted, restricted APEX session state.
 Full definition restore requires identical ACL assignment state in the snapshot
 and current application. A mismatch is rejected for explicit manual review;
 the tool does not reset ACL assignments or restore database table data.
+
+Operating pages use native full POST submission and explicit public redirects.
+Server notices live in protected, encrypted session state and are escaped on the
+fresh page. Errors retain the operation's actual stored outcome. This avoids an
+APEX 26.2 runtime issue where a definition export disrupts implicit submit output.
+History downloads use a separate engine authorization boundary so existing
+archives remain accessible if the live application's identity changes or it is
+missing. That history permission does not authorize a live capture or recovery.
+
+Oracle-generated SQL exports warn that editing them is unsupported. Public
+export/import APIs do not make transformed SQL an Oracle-supported authoring
+contract. This community beta is not Oracle-certified.
 
 Local authoring was validated with SQLcl 26.3 against APEX 26.2.0. The scripts
 `scripts/apex-lab.mjs` and `scripts/apex-browser-smoke.mjs` are optional development

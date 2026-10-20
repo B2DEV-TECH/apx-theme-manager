@@ -17,9 +17,9 @@ create or replace package body apxtm_diff as
     begin
       if p_kind in ('APPLICATION','USER_INTERFACE') then return p_name='p_theme_id';end if;
       if p_kind='THEME' and p_name in ('p_theme_id','p_theme_internal_name','p_reference_id','p_theme_version') then return true;end if;
-      if p_name in ('p_id','p_name','p_files_version','p_plug_name','p_button_name','p_plug_id','p_button_plug_id',
+      if p_name in ('p_id','p_name','p_files_version','p_plug_display_sequence','p_item_sequence','p_button_sequence','p_plug_name','p_button_name','p_plug_id','p_item_plug_id','p_button_plug_id',
         'p_parent_plug_id','p_theme_id','p_theme_name','p_theme_version','p_theme_class_id','p_internal_name','p_reference_id',
-        'p_template_id','p_css_classes','p_theme_internal_name') then return false; end if;
+        'p_template_id','p_template_name','p_page_plug_template_name','p_css_classes','p_theme_internal_name') then return false; end if;
       return p_kind in ('PAGE','REGION','ITEM','BUTTON','THEME','USER_INTERFACE');
     end;
 
@@ -67,7 +67,7 @@ create or replace package body apxtm_diff as
         when p_property in ('p_step_template','p_default_page_template','p_default_dialog_template',
           'p_dialog_template','p_error_template','p_printer_friendly_template','p_login_template') then 'PAGE_TEMPLATE'
         when p_property in ('p_field_template','p_default_label_template') then 'ITEM_TEMPLATE'
-        when p_property in ('p_button_template','p_default_button_template') then 'BUTTON_TEMPLATE'
+        when p_property in ('p_button_template','p_button_template_id','p_default_button_template') then 'BUTTON_TEMPLATE'
         else 'REGION_TEMPLATE' end;
       for i in 0..b.get_size-1 loop
         t:=treat(b.get(i) as json_object_t);

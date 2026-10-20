@@ -11,6 +11,13 @@ Final release counts and outcomes belong in the
 this guide deliberately does not infer PASS from a source file or a prior run.
 An unavailable dependency/environment is a blocked check, not a passing test.
 
+The latest completed runs passed 26 real SQL blocks (16 parser, nine semantic,
+one security), 20 engine integration checks and 12 negative checks after reviewer
+fixes. Recorded history/browser evidence has 20 independent
+history checks, 16 main native browser checks and 10 browser history checks.
+Release/media publication remains pending. The main browser run took 162.316
+seconds for the whole automated scenario; that is not an API-only benchmark.
+
 ## Setup
 
 1. Review [installation](../installation/README.md),
@@ -54,19 +61,67 @@ for `installer/` scripts.
 
 | Group | Purpose |
 | --- | --- |
-| `parser.sql` | Quoting/comments, bounded syntax, component identity, unsupported expressions, Unicode/CLOB handling and exact unrelated-source preservation |
-| `semantic.sql` | Semantic differences, explicit scalar eligibility, missing/default parameters and template ambiguity/missing definitions |
+| `parser.sql` | Quoting/comments, bounded syntax, component identity, unsupported expressions, Unicode/CLOB handling, unrelated-source preservation and the recognized twelve-column grid-plan guard |
+| `semantic.sql` | Semantic differences, actual 26.2 parameter names, explicit scalar eligibility, missing/default parameters and unit-modeled template ambiguity/missing definitions |
 | `security.sql` | Permission and input rejection at the PL/SQL boundary |
-| `integration.mjs` | Durable snapshots, deduplication, caller-DML isolation, controlled fixture differences, selected/all-eligible recovery, full restore, freshness/replay and preservation checks |
+| `integration.mjs` | Actual exported item parents versus live public metadata, durable snapshots, deduplication, caller-DML isolation, controlled fixture differences, selected/all-eligible recovery, full restore, freshness/replay and preservation checks |
 | `negative.mjs` | Denied principals/targets, corrupted fixtures, immutable metadata, claim/lock/failure and related adverse scenarios implemented in that suite |
 | Browser smoke | Authenticated read-only navigation, mobile document width, scrollable tables and browser error capture |
-| Browser workflow | Actual native capture/compare/preview/apply/restore/download journey on the guarded synthetic application |
+| Browser workflow | Actual native capture/compare/preview/apply/restore/download journey, explicit redirects/rejections, hash-checked ZIPs, two-tab binding and both rendered sample pages |
 
 This table describes test purpose, not completed coverage. Check the final report
 for which cases ran after the last code/export changes, their exact versions and
 any remaining gaps. Full restore must reject divergent ACL assignment state;
 fresh cross-actor exports normalize only the generated `Exported By` comment.
 Those preservation rules need their own positive and negative evidence.
+
+Final review found actual 26.2 parameter names missing from earlier pure models:
+item `p_item_plug_id`, button `p_button_template_id`, region
+`p_region_template_options` and `p_plug_item_display_point`. Red-to-green
+regressions now cover those names while retaining legacy aliases. A separate
+mixed item/BODY-button regression rejects arbitrary interleaved/shared rows,
+including numerically safe coupled rows; only known numeric trailing buttons
+with new-row/new-column behavior are supported. Inherited Universal Theme
+bodies remained absent even in the no-subscriptions export probe, so pure
+name/class tests are not live cross-theme equivalence evidence.
+
+## Verified native browser run
+
+[`workflow-evidence.json`](../../apex/screenshots/workflow-evidence.json) records
+16/16 passing checks and zero JavaScript errors. Successful and rejected export
+submissions returned explicit HTTP 302 redirects, followed by fresh native GET
+pages. Source, proposed-definition and backup downloads matched their stored
+ZIP hashes. Same-session tabs remained bound to the operation each user reviewed.
+
+The [actual captures](../../apex/screenshots/README.md) show Project Desk and
+Review Board at baseline, changed, eligible-recovered and full-restored states.
+Rendering exposed overlap in the earlier fixture, which source scalar assertions
+had missed. Corrected columns now produce 14 actual differences: 12 eligible and
+two DROPPED row flags. A recognized twelve-column overflow or same-row/sibling
+overlap is rejected at preview; this is not a general proof of responsive CSS.
+
+## Completeness, failure and history
+
+New snapshots compare exported page/region/item/button identity sets with public
+live metadata before storage. Historical validation checks its own stored
+identity/hashes rather than requiring today's application to have the same
+component set. The recognized component count for the measured fixture is 23.
+
+An actual native INSTALL on a separate deliberately invalid synthetic fault app
+raised ORA-20987. APXTM recorded FAILED and retained a valid durable backup; the
+application remained present, and explicit owner reimport recovered it. This is
+one observed failure path, not proof of atomic rollback or every partial failure.
+
+History authorization is independent of live-app lookup: authorized stored ZIPs
+remain readable when the live target is absent or its alias changes. Capture,
+comparison and recovery still reject such a target. The separate independent
+history run passed 20 checks. An additional
+[`history-access-evidence.json`](../../apex/screenshots/history-access-evidence.json)
+records ten real native browser checks in a separate clean workspace: baseline,
+backup and proposal downloads matched their stored ZIP hashes after alias change
+and after actual guarded target removal (six downloads total). Live controls
+remained denied, and explicit owner reimport restored the exact trusted target.
+The verification report records each run's exact cases.
 
 ## Clean installation and administration clients
 

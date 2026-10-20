@@ -113,7 +113,7 @@ the disposable sample. The wrapper commits and independently checks the two
 preserved IDs and changed spans. An import is not an atomic rollback operation.
 
 Reconnect before comparison, then select the installed sample and saved
-baseline snapshot in the manager. The controlled comparison has ten eligible
+baseline snapshot in the manager. The controlled comparison has twelve eligible
 changed scalars and two dropped explicit parameters that remain detection-only.
 Recovery stays disabled until the owner separately enables that target through
 the documented recovery policy. Preserve the baseline and use this disposable
@@ -125,6 +125,7 @@ Only these source layout values differ:
 | --- | --- | --- | --- | --- |
 | 1 | Project brief region | Column span | 6 | 8 |
 | 1 | Contact details region | Column span | 6 | 4 |
+| 1 | Contact details region | Column | 7 | 9 |
 | 1 | P1_PROJECT | Column span | 6 | 12 |
 | 1 | P1_OWNER | Start new row | false | true |
 | 1 | P1_OWNER | Column | 7 | 1 |
@@ -134,6 +135,7 @@ Only these source layout values differ:
 | 1 | OPEN_REVIEW | Column span | 3 | 4 |
 | 2 | P2_SUMMARY | Column span | 6 | 9 |
 | 2 | P2_STATUS | Column span | 6 | 3 |
+| 2 | P2_STATUS | Column | 7 | 10 |
 | 2 | BACK_TO_DESK | Column span | 3 | 4 |
 
 The SQL exporter may omit defaults or metadata irrelevant to a component's

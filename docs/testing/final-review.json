@@ -1,0 +1,203 @@
+{
+  "reportVersion": 1,
+  "evidenceKind": "Actual independent final-delta review and targeted Oracle execution; no inferred PASS results",
+  "reviewedUtc": "2026-10-20",
+  "codeUnderTest": {
+    "committedHeadAtTest": "d63223e6a3d7a0e5a9dff1f81209a385c6b89ef1",
+    "workingTreeModified": true,
+    "notFinalReleaseCommitCertification": true,
+    "sha256": {
+      "database/packages/apxtm_parse.pks": "8768a76cc0901b5821eb8fa11b1aa122c3c2103deafbd2ecea0c645be94ba2c9",
+      "database/packages/apxtm_parse.pkb": "3ccf2376985612abf81c7a0673423b82ac91c9f13c94cb5be2ebf6c57bef1f11",
+      "database/packages/apxtm_diff.pks": "c3af6d6df29f018b3c86820bcf85838b8b72d04352a1417ffc63dfa05b6a25a8",
+      "database/packages/apxtm_diff.pkb": "1d9712884991ea5d57be222e9d0bd5c581013974896bff214c97fe898168b44d",
+      "database/packages/apxtm_engine.pks": "ad2104706cac21fe5bffcaba8a51d80df7a5cce0f2362f4712cc39286cb90f7d",
+      "database/packages/apxtm_engine.pkb": "87c99aa70a408e88be708797cb935463200e068da36afe2e85d8e5e41738967a",
+      "tests/parser.sql": "b2621e4061324b7f392a13fe4be676858bac1dd354817be9978b24e770384de8",
+      "tests/semantic.sql": "847016414f86dc80840a98a2ab4a9bb1c160b59c0c799a892a6794c91ceb15f2",
+      "tests/security.sql": "1ad6d62c8dcb5dee8d17728ca0d13b166981c2a636980cb48e6c84f365b5179d",
+      "samples/layout-lab/exports/baseline/f105.sql": "505c5d3a5a356db8a24da08f761096db6aada3df342a67dd812c6e80c62b9148"
+    }
+  },
+  "environment": {
+    "database": "Oracle AI Database 26ai Free 23.26.3.0.0",
+    "apex": "26.2.0",
+    "verificationSchema": "APXTM_VERIFY",
+    "verificationWorkspace": "APXTM_VERIFY"
+  },
+  "scope": {
+    "reviewed": [
+      "Engine authorization, historical reads, immutable artifact checks, ACL restore preflight and operation-state boundaries",
+      "Parser/diff changes since the prior review, including grid plans and actual native export parameter names",
+      "Public installer guardrails and refusal behavior by source inspection, supplementing earlier actual clean-install evidence",
+      "Public text source, documentation, generated export and evidence hygiene"
+    ],
+    "mutationsInThisPhase": [
+      "Explicitly authorized CREATE OR REPLACE of APXTM_PARSE and APXTM_DIFF bodies in APXTM_VERIFY only",
+      "This sanitized evidence document"
+    ],
+    "noApplicationImportsOrPersistentTestDml": true,
+    "noConfigurationChanges": true,
+    "noApplication104Or105Mutations": true,
+    "application105Access": "One expressly requested read-only public GET_APPLICATION export of the exact original synthetic application; no source or credentials printed",
+    "noImplementationEditsByReviewerInThisPhase": true
+  },
+  "finalExecution": {
+    "startedUtc": "2026-10-20T13:31:16.244Z",
+    "finishedUtc": "2026-10-20T13:31:41.134Z",
+    "launcher": "PowerShell here-string piped to node --input-type=module, using the existing Oracle driver and private APXTM_LAB_CONFIG override",
+    "compile": {
+      "status": "PASS",
+      "recompiledBodies": ["APXTM_PARSE", "APXTM_DIFF"],
+      "compileErrors": 0,
+      "validPackageUnitsAfterward": 6
+    },
+    "sqlUnits": {
+      "status": "PASS",
+      "total": 26,
+      "perFile": {
+        "tests/parser.sql": 16,
+        "tests/semantic.sql": 9,
+        "tests/security.sql": 1
+      },
+      "method": "Read the exact recorded SQL files, split with scripts/lib/oracle.mjs statements(), and execute every block in the isolated verification connection"
+    },
+    "additionalReadOnlyProbes": [
+      {
+        "name": "Actual p_item_plug_id establishes P1_PROJECT parent and a moved item becomes CONFLICT/N",
+        "status": "PASS",
+        "observedParent": "7405331782042676",
+        "textOnlyMovedParent": "7405457100042695"
+      },
+      {
+        "name": "Actual p_button_template_id changes are detected and remain ineligible",
+        "status": "PASS",
+        "changedReferences": 3,
+        "classification": "NO_MATCH",
+        "eligible": "N",
+        "reason": "Inherited template definitions are not embedded in the actual sample export"
+      },
+      {
+        "name": "Actual region template options and item display point changes are detected and ineligible",
+        "status": "PASS",
+        "p_region_template_options": "UNSUPPORTED/N",
+        "p_plug_item_display_point": "CHANGED/N"
+      },
+      {
+        "name": "Original overlapping mixed item/BODY-button selection requires manual review",
+        "status": "PASS",
+        "currentRanges": {"item": [1, 6], "bodyButton": [7, 12]},
+        "rejectedSelectedItemRange": [1, 8],
+        "expectedError": 20001
+      },
+      {
+        "name": "Even numerically valid coupled mixed-row changes remain outside the beta scope",
+        "status": "PASS",
+        "expectedError": 20001
+      },
+      {
+        "name": "Known trailing new-row/new-column BODY button is accepted",
+        "status": "PASS"
+      },
+      {
+        "name": "Omitted BODY position is recognized for a safe trailing button row",
+        "status": "PASS"
+      },
+      {
+        "name": "Previously observed omitted true row/column defaults are accepted in the trailing case",
+        "status": "PASS"
+      },
+      {
+        "name": "Button before items or ambiguous button sequence requires manual review",
+        "status": "PASS",
+        "expectedError": 20001
+      },
+      {
+        "name": "Explicit new-column N requires manual review even with new-row Y",
+        "status": "PASS",
+        "expectedError": 20001
+      },
+      {
+        "name": "Selecting only the BODY button cannot bypass mixed-grid scope",
+        "status": "PASS",
+        "sameRowRejected": true,
+        "knownTrailingRowAccepted": true
+      }
+    ]
+  },
+  "findingsResolvedDuringReview": [
+    {
+      "severity": "Important",
+      "problem": "Kind-based grid occupancy accepted an ITEM span restoration that overlapped a same-row BODY button",
+      "originalReproduction": "Both full states were valid: current item1-6 plus button7-12; baseline item1-8 plus button9-12. Selecting only item span6-to8 was previously accepted.",
+      "resolution": "The implementation rejects arbitrary mixed rows and permits only known numeric trailing button rows with fresh-row/fresh-column flags; coupled mixed rows also remain manual",
+      "independentlyVerifiedResolved": true
+    },
+    {
+      "severity": "Important",
+      "problem": "Actual native ITEM parent parameter p_item_plug_id was omitted, hiding region moves and merging unrelated region grids",
+      "originalReproduction": "The actual baseline P1_PROJECT parent parsed as #NULL#. Changing its real parent plus span produced CHANGED/Y instead of CONFLICT/N.",
+      "resolution": "Recognize the actual parent parameter, use it for component identity/grouping, and exclude it as a standalone layout scalar",
+      "independentlyVerifiedResolved": true
+    },
+    {
+      "severity": "Important",
+      "problem": "Actual p_button_template_id and p_region_template_options parameter names were missing from semantic detection",
+      "originalReproduction": "Changing three actual button-template references yielded no changed rows before the correction",
+      "resolution": "Recognize actual component aliases, map the button reference to BUTTON_TEMPLATE, and retain detection-only handling; region display point and observed extra theme defaults are also recognized",
+      "independentlyVerifiedResolved": true
+    }
+  ],
+  "inheritedTemplateExportObservation": {
+    "status": "OBSERVED_LIMITATION",
+    "applicationId": 105,
+    "identityGuard": "APXTM Layout Lab / APXTM-LAYOUT-LAB / configured owner and workspace",
+    "api": "APEX_EXPORT.GET_APPLICATION",
+    "options": {
+      "p_type": "SQL",
+      "p_split": false,
+      "p_with_date": false,
+      "p_with_original_ids": false,
+      "p_with_no_subscriptions": true,
+      "p_with_audit_info": null,
+      "p_with_supporting_objects": "N",
+      "p_with_acl_assignments": true,
+      "p_with_ir_public_reports": true,
+      "p_with_ir_private_reports": true,
+      "p_with_ir_notifications": true,
+      "p_with_translations": true
+    },
+    "sourceCharacters": 112349,
+    "embeddedConstructorCounts": {
+      "create_template": 0,
+      "create_plug_template": 0,
+      "create_field_template": 0,
+      "create_button_templates": 0,
+      "create_list_template": 0,
+      "create_menu_template": 0,
+      "create_row_template": 0,
+      "create_report_template": 0
+    },
+    "conclusion": "Removing subscription markers did not materialize inherited Universal Theme template bodies. Embedded-template name/class aliases are unit-model coverage, not actual end-to-end template-mapping certification. Inherited references remain manual; visual equivalence and automatic template repair are not claimed."
+  },
+  "hygiene": {
+    "publicTextFilesScanned": 138,
+    "keyTokenOrPrivateKeyPatternsFound": 0,
+    "literalCredentialCandidatesFound": 0,
+    "literalApexSessionOrChecksumUrlsFound": 0,
+    "credentialBearingUrlsFound": 0,
+    "trackedOrUnignoredPrivateDevelopmentMaterialFound": 0,
+    "privateConfigContentsPrinted": false,
+    "limits": "Pattern-based public text scan only; this independent phase does not certify binary media or all possible secret formats and does not replace the release provenance/history scan"
+  },
+  "remainingScopeLimits": [
+    "No additional concrete release blocker was found in the final recorded code bytes after the verified corrections.",
+    "No general mixed-grid, responsive CSS, visual equivalence or arbitrary theme proof is claimed.",
+    "Application navigation-list settings remain explicitly outside this beta's semantic-comparison scope.",
+    "Template constructors and name/class aliases lacking real embedded export bodies have unit-model evidence only.",
+    "Prior history/import-failure/browser runs have separate evidence. This phase did not repeat their application mutations or claim their full coverage.",
+    "Public import can commit or fail partially; trusted artifacts, coordinated maintenance and explicit owner recovery remain required.",
+    "Only the recorded Oracle/APEX environment is covered; this is not an exhaustive security audit or a final release-commit certification."
+  ],
+  "verdict": "No remaining concrete release-blocking finding in the independently verified final delta, within the documented beta scope."
+}

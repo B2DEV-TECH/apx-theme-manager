@@ -1,0 +1,47 @@
+[
+  {
+    "id": "opening",
+    "title": "Snapshot. Compare. Recover.",
+    "startSeconds": 0
+  },
+  {
+    "id": "baseline",
+    "title": "A known baseline",
+    "startSeconds": 19.958333
+  },
+  {
+    "id": "changed",
+    "title": "Controlled layout changes",
+    "startSeconds": 49.124348999999995
+  },
+  {
+    "id": "comparison",
+    "title": "Meaning and eligibility",
+    "startSeconds": 67.70768199999999
+  },
+  {
+    "id": "preview",
+    "title": "Review one repair",
+    "startSeconds": 90.20768199999999
+  },
+  {
+    "id": "selected",
+    "title": "Backup. Apply. Verify.",
+    "startSeconds": 120.12369799999999
+  },
+  {
+    "id": "remaining",
+    "title": "Remaining eligible values",
+    "startSeconds": 148.873364
+  },
+  {
+    "id": "restore",
+    "title": "A separate restore operation",
+    "startSeconds": 172.123364
+  },
+  {
+    "id": "closing",
+    "title": "A reproducible community beta",
+    "startSeconds": 203.54003000000003
+  }
+]

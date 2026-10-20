@@ -28,18 +28,22 @@ the complete normalized post-import definition. The article covers native APEX
 theme/subscription workflows, observed import transaction and ACL preservation
 behavior, narrow generated-header normalization and workspace-wide authority.
 Results come from synthetic fixtures on APEX 26.2.0 and Oracle AI Database 26ai
-Free 23.26.3.0.0: 21 real SQL test blocks (13 parser, seven semantic, one security),
-18 integration checks and 12 negative checks passed. A separate clean workspace
-also exercised installation, selected recovery and removal consent with different
-destination IDs. Final browser workflow and recording verification remain
-pending. The article makes no other-version compatibility claim or reproduced
-theme-switch defect claim. It states explicitly that public APIs do not make
-modified generated SQL an Oracle-supported transformation contract.
+Free 23.26.3.0.0: 26 real SQL test blocks (16 parser, nine semantic, one security),
+20 integration checks and 12 negative checks passed after reviewer fixes.
+Recorded evidence also has 20 independent history checks,
+16 main browser checks and ten browser history checks passing. Both sample pages
+were captured at four workflow states; browser checks verified three ZIP hashes,
+two-tab operation binding and zero JavaScript errors.
+A separate clean workspace exercised installation, selected recovery and removal
+consent with different destination IDs. Article publication and the beta release
+tag remain pending; the demonstration MP4 is public. The article makes no other-version compatibility claim or
+reproduced theme-switch defect claim. It states explicitly that public APIs do
+not make modified generated SQL an Oracle-supported transformation contract.
 
 ## Open-source project
 
 **Name:** APEX Theme Manager  
-**Repository URL to verify after publication:**
+**Public development repository (beta release pending):**
 `https://github.com/B2DEV-TECH/apx-theme-manager`  
 **License for original source:** Apache-2.0  
 **Technologies:** Oracle APEX, PL/SQL, Oracle Database; APEXlang/SQLcl for sample authoring  
@@ -55,46 +59,65 @@ exported ACL role/assignment state. The repository
 includes original PL/SQL packages, native APEX exports, an independently authored
 synthetic sample, portable installer scripts, security documentation and
 reproducible tests. Default recovery is disabled. Template/options mappings,
-missing defaults and uncertain identities are detection-only. Whole-artifact
-fingerprints retain the generated cache counter; only the recognized
-`Exported By` header comment is normalized across actors, with the real actor
+missing defaults and uncertain identities are detection-only. A bounded
+twelve-column grid-plan check rejects recognized overflow and same-row/sibling
+overlap. New captures cross-check component identity sets against public live
+metadata; history authorization permits stored downloads without a healthy live
+target. Whole-artifact fingerprints retain the generated cache counter; only the
+recognized `Exported By` header comment is normalized across actors, with the real actor
 retained in immutable audit records. The generated Oracle SQL warning about
 unsupported file modification remains a material limitation. Generated Oracle
 components retain their own applicable terms and notices.
+Mixed item/BODY-button rows remain manual except known numeric trailing buttons
+with new-row/new-column behavior. Actual item parents are verified against
+public metadata; pure template name/class models do not certify live cross-theme
+equivalence when inherited Universal Theme bodies are absent.
 
 ## Video
 
 **Proposed title:** APEX Theme Manager: A Verified Layout Recovery Workflow  
-**Language:** English captions/narration to confirm after reviewing the recording  
-**Status:** Recording and final media verification pending  
-**URL:** Pending; do not submit a reserved path as an existing video  
-**Reserved media path:**
-`/media/videos/apxtm/apex-theme-manager-demo.mp4`  
-**Duration, publication date and editing disclosure:** Pending actual media
+**Language:** English captions; synthetic English narration  
+**Status:** Public MP4 verified anonymously; Chrome playback passed  
+**URL:**
+`https://b2dev.tech/media/videos/apxtm/v0.1.0-beta/apex-theme-manager-demo.mp4`  
+**English captions:**
+`https://b2dev.tech/media/videos/apxtm/v0.1.0-beta/demo.en.vtt`  
+**Measured duration:** 239.685 seconds (3:59.685)  
+**Captions / chapters:** 23 caption cues / nine chapters  
+**Public verification date:** October 20, 2026  
+**Editing disclosure:** Actual automated browser footage edited into chapters
+with labeled reading pauses and unchanged runtime screenshots; no APEX screens
+were reconstructed. The pages and layout changes are synthetic. Narration uses
+an installed Windows synthetic English voice. Captions are burned into the MP4;
+the optional WebVTT track is not enabled by default.
 
-**Draft summary to use only if the final recording shows this workflow:**
+**Suggested summary:**
 
 A demonstration on the original two-page synthetic APEX application: capture a
 baseline, apply controlled layout changes, compare eligible and ineligible
 differences, preview one selected repair, confirm the target, inspect the
 verified result and backup, then demonstrate remaining eligible recovery and
-the separate restore workflow with compatible ACL state. The recording should retain failed/rejected
-actions when relevant and disclose cuts, accelerated waits and captions. It
-must not be described as a reproduced Oracle theme-switch defect.
+the separate restore workflow with compatible ACL state. The edited recording
+uses actual automated browser footage, labeled reading pauses, synthetic English
+narration and captions. It is not a reproduced Oracle theme-switch defect.
+
+Anonymous hosting verification returned HTTP 200 for the exact 8,547,836-byte
+MP4, HTTP 206 for a byte-range request and HTTP 200 for the exact WebVTT. See
+`media/publication-evidence.json` for the SHA-256 and recorded checks.
 
 ## Before manual submission
 
 Verify that the article is public at its final canonical URL and its author,
 publication date and source links are correct. Confirm the repository/license,
-actual release status and public test evidence. For video, replace every pending
-field with the measured facts and a playable public URL; otherwise omit it.
+actual release status and public test evidence. Recheck video playback and the
+published MP4/caption URLs at manual submission time.
 Ensure all media is synthetic and free of credentials, connection details and
 unrelated application content. Review article, project and video as separate
 materials without assuming how the program counts them.
 
 Keep the measured baseline metadata aligned with the final article: 112,448
 CLOB characters, a 46,353-byte ZIP and 23 recognized components in the recorded
-fixture. Twelve real layout differences comprise ten eligible numeric changes
+fixture. Fourteen real layout differences comprise twelve eligible numeric changes
 and two DROPPED row flags. The active-theme detection test changed exported text
 from theme 42 to 43; it did not import another theme. Do not describe that test
 as an observed runtime theme-switch defect.
@@ -115,8 +138,8 @@ as an observed runtime theme-switch defect.
 - The current canonical article route is `/blog/<slug>`; the older
   `/engineering/articles/<slug>` route redirects there. Keep public URLs aligned
   with the actual deployed site.
-- Activate the six commented screenshot insertion points and video block only
-  after the referenced artifacts exist and have been reviewed. Add duration,
-  captions and editing disclosure from the recording, not from this draft.
+- The article now has six active real screenshot blocks and the verified public
+  MP4/caption URLs. Copy the six screenshot assets and video poster unchanged to
+  their referenced site paths, then check native rendering before clearing draft.
 - Do not add a duplicate lab entry. This handoff does not edit, publish or deploy
   the website, and does not submit anything to an external portal.

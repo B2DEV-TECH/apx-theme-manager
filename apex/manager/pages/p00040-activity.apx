@@ -31,7 +31,7 @@ page 40 (
         }
         source {
             htmlCode: ```html
-    <p>Every snapshot, comparison, preview and apply records its actor and result. Use operation IDs when investigating a result.</p>
+    <p>Every snapshot, comparison, preview and apply records its actor and result. Use operation IDs when investigating a result. Authorized definition archives remain available here if the live application is missing or its identity has changed. Archive access does not authorize a new recovery.</p>
     ```
         }
     
@@ -56,8 +56,9 @@ page 40 (
             type: sqlQuery
             sqlQuery: ```sql
     select o.operation_id,o.application_id,o.operation_kind,o.selected_count,o.status,o.created_by,to_char(o.created_at,'YYYY-MM-DD HH24:MI:SS') created_at,o.error_code,o.result_message,
-     case when o.backup_snapshot_id is not null then '<a href="'||apex_escape.html_attribute(apex_page.get_url(p_page=>60,p_items=>'P60_SNAPSHOT_ID',p_values=>o.backup_snapshot_id))||'">Backup ZIP</a>' end backup
-    from apxtm_operations o where apxtm_engine.allowed(o.application_id)=1 order by o.operation_id desc
+     case when o.backup_snapshot_id is not null then '<a href="'||apex_escape.html_attribute(apex_page.get_url(p_page=>60,p_items=>'P60_SNAPSHOT_ID',p_values=>o.backup_snapshot_id))||'">Backup ZIP</a>' end backup,
+     '<a href="'||apex_escape.html_attribute(apex_page.get_url(p_page=>61,p_items=>'P61_OPERATION_ID',p_values=>o.operation_id))||'">Proposed ZIP</a>' proposal
+    from apxtm_operations o where apxtm_engine.can_read_history(o.application_id)=1 order by o.operation_id desc
     ```
         }
         componentAppearance {
@@ -230,6 +231,186 @@ page 40 (
                 sortable: false
             }
         )
+        column PROPOSAL (
+            type: plainText
+            layout {
+                sequence: 110
+            }
+            heading {
+                heading: Proposed definition
+            }
+            security {
+                escapeSpecialChars: false
+            }
+            sorting {
+                sortable: false
+            }
+        )
+    )
+
+    region snapshot-history (
+        name: Definition snapshot history
+        type: classicReport
+        layout {
+            sequence: 25
+            slot: body
+            columnSpan: 12
+            startNewRow: true
+        }
+        appearance {
+            template: @/standard
+            templateOptions: #DEFAULT#
+    
+        }
+        source {
+            type: sqlQuery
+            sqlQuery: ```sql
+    select s.snapshot_id,a.application_id,r.application_name,s.snapshot_name,s.snapshot_kind,s.created_by,to_char(s.created_at,'YYYY-MM-DD HH24:MI:SS') captured_at,
+     '<a href="'||apex_escape.html_attribute(apex_page.get_url(p_page=>60,p_items=>'P60_SNAPSHOT_ID',p_values=>s.snapshot_id))||'">Download ZIP</a>' download
+    from apxtm_snapshots s join apxtm_artifacts a on a.artifact_id=s.artifact_id join apxtm_applications r on r.application_id=a.application_id
+    where apxtm_engine.can_read_history(a.application_id)=1 order by s.snapshot_id desc
+    ```
+        }
+        componentAppearance {
+            templateType: theme
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Report--altRowsDefault
+                t-Report--rowHighlight
+            ]
+        }
+        pagination {
+            type: setPaginationSearchEngine
+            partialPageRefresh: false
+        }
+        messages {
+            whenNoDataFound: No records yet. Use the steps above to begin.
+        }
+        headerAndFooter {
+            headerText: <p class="apxtm-table-hint">Scroll the table horizontally to view every column.</p>
+        }
+    
+        column SNAPSHOT_ID (
+            type: plainText
+            layout {
+                sequence: 10
+            }
+            heading {
+                heading: Snapshot
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column APPLICATION_ID (
+            type: plainText
+            layout {
+                sequence: 20
+            }
+            heading {
+                heading: App
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column APPLICATION_NAME (
+            type: plainText
+            layout {
+                sequence: 30
+            }
+            heading {
+                heading: Application
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column SNAPSHOT_NAME (
+            type: plainText
+            layout {
+                sequence: 40
+            }
+            heading {
+                heading: Name
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column SNAPSHOT_KIND (
+            type: plainText
+            layout {
+                sequence: 50
+            }
+            heading {
+                heading: Kind
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column CREATED_BY (
+            type: plainText
+            layout {
+                sequence: 60
+            }
+            heading {
+                heading: Actor
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column CAPTURED_AT (
+            type: plainText
+            layout {
+                sequence: 70
+            }
+            heading {
+                heading: Captured
+            }
+            security {
+                escapeSpecialChars: true
+            }
+            sorting {
+                sortable: false
+            }
+        )
+        column DOWNLOAD (
+            type: plainText
+            layout {
+                sequence: 80
+            }
+            heading {
+                heading: Archive
+            }
+            security {
+                escapeSpecialChars: false
+            }
+            sorting {
+                sortable: false
+            }
+        )
     )
 
     region audit (
@@ -249,7 +430,7 @@ page 40 (
         source {
             type: sqlQuery
             sqlQuery: ```sql
-    select event_id,application_id,operation_id,actor,action,outcome,error_code,detail,to_char(created_at,'YYYY-MM-DD HH24:MI:SS TZH:TZM') event_time from apxtm_audit where application_id is not null and apxtm_engine.allowed(application_id)=1 order by event_id desc
+    select event_id,application_id,operation_id,actor,action,outcome,error_code,detail,to_char(created_at,'YYYY-MM-DD HH24:MI:SS TZH:TZM') event_time from apxtm_audit where application_id is not null and apxtm_engine.can_read_history(application_id)=1 order by event_id desc
     ```
         }
         componentAppearance {

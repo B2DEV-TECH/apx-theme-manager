@@ -1,0 +1,23 @@
+{
+  "checked": "2026-10-20T13:34:54.432Z",
+  "videoUrl": "https://b2dev.tech/media/videos/apxtm/v0.1.0-beta/apex-theme-manager-demo.mp4",
+  "checks": [
+    {
+      "name": "anonymous public full MP4 download",
+      "status": 200,
+      "bytes": 8547836,
+      "sha256": "72c5c3cf243e15c9e2dbd5dbd4f942b953c2298ddb573c09bd19c50065d2baf1",
+      "contentType": "video/mp4"
+    },
+    {
+      "name": "public byte range supports seeking",
+      "status": 206,
+      "contentRange": "bytes 0-1023/8547836"
+    },
+    {
+      "name": "public English WebVTT exact bytes",
+      "status": 200,
+      "contentType": "text/vtt"
+    }
+  ]
+}

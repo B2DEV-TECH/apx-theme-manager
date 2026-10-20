@@ -1,34 +1,41 @@
 # Verification record — initial beta
 
 Recorded on 2026-10-20 using synthetic applications created for this project.
-This is working-tree evidence. **Release gates remain open while the native
-browser workflow and final media/publication checks are in progress.**
+These results describe the beta candidate. Runtime and authorization checks
+passed; final media/publication verification and the release tag are tracked
+separately. The machine-readable [test report](test-results.json) includes the
+exact source hashes and confirms all six compiled package sources match Git.
 
 ## Environment and completed checks
 
 | Check | Actual result |
 | --- | --- |
 | Runtime | Oracle AI Database 26ai Free 23.26.3.0.0; APEX 26.2.0; Windows |
-| PL/SQL units | 21 blocks passed: 13 parser, 7 semantic, 1 authorization/input |
-| Engine integration | 18 cases passed before the final completeness guard; final rerun pending |
-| Negative suite | 12 cases passed before the final completeness guard; final rerun pending |
-| Independent final-core check | Six valid package units, 21 blocks passed, actual-export active-theme detection and cross-actor fingerprint equality |
+| PL/SQL units | 26 blocks passed: 16 parser, 9 semantic, 1 authorization/input |
+| Engine integration | 20 cases passed against the final completeness, history, actual item-parent and conservative mixed-grid controls |
+| Negative suite | 12 cases passed, including simultaneous fresh-session recovery claims |
+| Independent final-core check | Six valid package units, 26 blocks passed; actual-export identity/property probes and cross-actor fingerprint equality |
 | Clean installation | Second schema/workspace; SQLcl core twice; actual SQL*Plus core twice, manager installation, configuration, registration and capture |
 | Uninstall | Missing/wrong consent rejected; exact consent removed only APXTM objects; unrelated sentinel and APEX applications survived; reinstall passed |
-| Portable sample | New destination app/offset, baseline capture, changed import with preserved IDs: 10 eligible grid differences and 2 DROPPED flags |
+| Portable sample | New destination app/offset, baseline capture and changed import with preserved IDs passed. That earlier fixture had 10 eligible differences; the final rendered fixture has 12 eligible and 2 DROPPED flags |
 | Installer refusal | Existing app ID, wrong change confirmation and wrong saved offset rejected without source change |
-| Actual failed installation | Deliberately invalid numeric attribute in a new synthetic fault app: native INSTALL returned ORA-20987; operation FAILED; validated durable backup survived |
+| Actual failed installation | Latest fault app 116: native INSTALL returned ORA-20987; operation 32 FAILED; independently valid durable backup 39 survived |
 | Fault-app recovery | Explicit owner reimport restored the synthetic fault application; no transactional rollback claim |
-| Native browser workflow | Persisted snapshot + empty HTTP response isolated to runtime export; explicit POST/redirect/GET passes capture; complete rerun pending |
+| Native browser workflow | All 16 checks passed with no JavaScript errors; actual selected repair, all-eligible repair, full restore, stale requests, unsafe selection and two-tab binding. A separate final rerun passed after parser hardening |
+| Historical access | 20 database checks passed after guarded alias change/public application removal; historical reads remain authorized, live operations remain denied |
+| Native historical access | 10 browser checks passed; six baseline/backup/proposal ZIP downloads matched stored hashes while the target alias changed or the target was absent |
 
-Open release issues: complete the native workflow/video, and retain authorized
-backup/history access when a failed import leaves the target absent or its
-identity changed. That read-path fix is in progress; live operations must still
-reject an absent or changed target.
+The historical-read fix has passed both database and native-browser checks.
+Application absence was deliberately induced with the guarded public removal
+API; it was not observed as an outcome of the failed INSTALL. The owner then
+reimported the saved trusted definition and verified its complete fingerprint.
 
-Visual browser verification also exposed overlapping columns in the controlled
-changed fixture. Its layout must be corrected and the expected differences
-updated before a demonstration/release can be presented as working.
+Browser verification exposed overlapping columns in the original controlled
+fixture. The independently authored fixture was corrected, and coupled-grid
+checks now reject recognized overflow/overlap before creating a proposal. Both
+actual sample pages render at baseline, changed, eligible-recovered and restored
+states. Eligible repair leaves the two omitted row defaults for manual review;
+only the separate full restore returns the complete baseline definition.
 
 The complete independent installation report, exact source hashes and historical
 findings are in [clean-install-result.json](clean-install-result.json). Earlier
@@ -78,6 +85,23 @@ still has the baseline's component count.
   root directory. Public wrappers now use explicit repository-root includes.
 - SQLcl 26.3 printed WHENEVER help and exited zero without configuring. Public
   scripts retain their guards; SQL*Plus is the verified administration client.
+- A runtime export persisted its snapshot but left an empty HTTP response.
+  The six export-capable POST actions now explicitly redirect through the public
+  APEX API on success and failure; the final browser run verified nonempty pages
+  or explicit redirects for every submitted export path.
+- Native report column sorting overrode SQL history ordering. History reports
+  now retain SQL descending order without a conflicting native column sort.
+- Live identity authorization blocked backup access after target damage. A
+  separate server-side READ-history boundary validates stored identity and
+  integrity while all live-operation guards remain enforced.
+- Actual item exports use `p_item_plug_id`. A regression now checks every sample
+  item's exported region against public live metadata; moving a component
+  between regions invalidates its scalar eligibility.
+- Actual button-template and region-option/display-point aliases were missed
+  by the first parser. They now have detection-only regression coverage.
+- Items and BODY buttons can share a grid. Arbitrary mixed/interleaved rows are
+  rejected for manual review, even if a proposed combination looks numerically
+  valid. Only known trailing new-row/new-column BODY buttons are supported.
 
 ## Measured fixture and limits
 

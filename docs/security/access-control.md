@@ -11,8 +11,10 @@ themselves permissions.
 | `RECOVERER` | Reader actions plus preview/apply eligible layout recovery |
 | `RESTORER` | Recoverer actions plus full definition restore and explicit snapshot retirement |
 
-A role does not bypass the configured workspace, application allowlist, target
-identity, manager exclusion, development policy or per-target recovery flag.
+A role does not bypass the configured workspace, application allowlist, parsing
+schema or manager exclusion. Live capture/comparison also requires the current
+application to match its registered identity. Recovery additionally requires the
+development policy and per-target recovery flag.
 The role table describes the intended API boundary; release evidence must show
 which positive and negative paths were exercised.
 
@@ -55,3 +57,23 @@ application that subsequently changed. Restore has a separate preview and
 requires `RESTORE` authority; it is another import, not a transaction rollback.
 The UI must bind confirmation to the actual operation and display the target,
 backup and selected effects before the user confirms.
+
+## Historical definitions
+
+`APXTM_ENGINE.CAN_READ_HISTORY(application_id)` returns `1` only for an enabled
+READ principal and enabled registered target in the configured workspace and
+current parsing schema, excluding the manager. It does not require the live
+application to exist or retain its registered alias. This keeps pre-import
+backups available after a partial import damages the target identity.
+
+Snapshot validation and snapshot/proposal ZIP downloads use this history check.
+They still verify archive/source hashes, ZIP contents and exported application,
+workspace and schema identity. Activity uses the same history permission to
+show operations, audit entries and definition snapshots. Disabling modification
+policy or setting `allow_recovery='N'` does not revoke these read permissions;
+disabling the principal or registered target does.
+
+History access grants no authority to capture, compare, preview, apply, restore
+or retire an absent or changed application. Those paths retain live identity
+checks. A downloaded artifact is a sensitive executable definition for owner
+review, not permission to import it into whichever application now uses an ID.

@@ -39,7 +39,7 @@ prompt APPLICATION 104 - APEX Theme Manager
 --     Pages:                     10
 --       Items:                   18
 --       Processes:               14
---       Regions:                 33
+--       Regions:                 34
 --       Buttons:                 12
 --     Shared Components:
 --       Logic:
@@ -106,7 +106,7 @@ wwv_imp_workspace.create_flow(
 ,p_substitution_string_01=>'APP_NAME'
 ,p_substitution_value_01=>'APEX Theme Manager'
 ,p_file_prefix=>nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
-,p_files_version=>2461334094420
+,p_files_version=>2461334100914
 ,p_print_server_type=>'NATIVE'
 ,p_file_storage=>'DB'
 ,p_is_pwa=>'Y'
@@ -902,7 +902,7 @@ wwv_flow_imp_shared.create_theme(
 ,p_default_required_label=>1612549789555753698
 ,p_default_navbar_list_template=>2850970698196720012
 ,p_file_prefix=>nvl(wwv_flow_application_install.get_static_theme_file_prefix(42),'#APEX_FILES#themes/theme_42/26.2/')
-,p_files_version=>2461334094420
+,p_files_version=>2461334100914
 ,p_icon_library=>'FONTAPEX'
 ,p_javascript_file_urls=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '#APEX_FILES#libraries/apex/#MIN_DIRECTORY#widget.stickyWidget#MIN#.js?v=#APEX_VERSION#',
@@ -2750,7 +2750,8 @@ wwv_flow_imp_page.create_page_plug(
 ,p_plug_grid_column_span=>12
 ,p_plug_item_display_point=>'ABOVE'
 ,p_location=>null
-,p_plug_source=>'<p>Every snapshot, comparison, preview and apply records its actor and result. Use operation IDs when investigating a result.</p>'
+,p_plug_source=>'<p>Every snapshot, comparison, preview and apply records its actor and result. Use operation IDs when investigating a result. Authorized definition archives remain available here if the live application is missing or its identity has changed. Archive'
+||' access does not authorize a new recovery.</p>'
 ,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
   'expand_shortcuts', 'N',
   'output_as', 'HTML')).to_clob
@@ -2766,8 +2767,8 @@ wwv_flow_imp_page.create_report_region(
 ,p_grid_column_span=>12
 ,p_source_type=>'NATIVE_SQL_REPORT'
 ,p_query_type=>'SQL'
-,p_source=>'select event_id,application_id,operation_id,actor,action,outcome,error_code,detail,to_char(created_at,''YYYY-MM-DD HH24:MI:SS TZH:TZM'') event_time from apxtm_audit where application_id is not null and apxtm_engine.allowed(application_id)=1 order by ev'
-||'ent_id desc'
+,p_source=>'select event_id,application_id,operation_id,actor,action,outcome,error_code,detail,to_char(created_at,''YYYY-MM-DD HH24:MI:SS TZH:TZM'') event_time from apxtm_audit where application_id is not null and apxtm_engine.can_read_history(application_id)=1 or'
+||'der by event_id desc'
 ,p_header=>'<p class="apxtm-table-hint">Scroll the table horizontally to view every column.</p>'
 ,p_query_row_template=>2542081983073888486
 ,p_query_num_rows=>15
@@ -2874,8 +2875,9 @@ wwv_flow_imp_page.create_report_region(
 ,p_query_type=>'SQL'
 ,p_source=>wwv_flow_string.join(wwv_flow_t_varchar2(
 'select o.operation_id,o.application_id,o.operation_kind,o.selected_count,o.status,o.created_by,to_char(o.created_at,''YYYY-MM-DD HH24:MI:SS'') created_at,o.error_code,o.result_message,',
-' case when o.backup_snapshot_id is not null then ''<a href="''||apex_escape.html_attribute(apex_page.get_url(p_page=>60,p_items=>''P60_SNAPSHOT_ID'',p_values=>o.backup_snapshot_id))||''">Backup ZIP</a>'' end backup',
-'from apxtm_operations o where apxtm_engine.allowed(o.application_id)=1 order by o.operation_id desc'))
+' case when o.backup_snapshot_id is not null then ''<a href="''||apex_escape.html_attribute(apex_page.get_url(p_page=>60,p_items=>''P60_SNAPSHOT_ID'',p_values=>o.backup_snapshot_id))||''">Backup ZIP</a>'' end backup,',
+' ''<a href="''||apex_escape.html_attribute(apex_page.get_url(p_page=>61,p_items=>''P61_OPERATION_ID'',p_values=>o.operation_id))||''">Proposed ZIP</a>'' proposal',
+'from apxtm_operations o where apxtm_engine.can_read_history(o.application_id)=1 order by o.operation_id desc'))
 ,p_header=>'<p class="apxtm-table-hint">Scroll the table horizontally to view every column.</p>'
 ,p_query_row_template=>2542081983073888486
 ,p_query_num_rows=>15
@@ -2953,6 +2955,16 @@ wwv_flow_imp_page.create_report_columns(
 ,p_include_in_export=>'Y'
 );
 wwv_flow_imp_page.create_report_columns(
+ p_id=>wwv_flow_imp.id(7697644338661531)
+,p_column_alias=>'PROPOSAL'
+,p_column_display_sequence=>110
+,p_column_heading=>'Proposed definition'
+,p_heading_alignment=>'LEFT'
+,p_display_as=>'WITHOUT_MODIFICATION'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_imp_page.create_report_columns(
  p_id=>wwv_flow_imp.id(7425323726083489)
 ,p_column_alias=>'RESULT_MESSAGE'
 ,p_column_display_sequence=>90
@@ -2975,6 +2987,107 @@ wwv_flow_imp_page.create_report_columns(
 ,p_column_alias=>'STATUS'
 ,p_column_display_sequence=>50
 ,p_column_heading=>'Status'
+,p_heading_alignment=>'LEFT'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_imp_page.create_report_region(
+ p_id=>wwv_flow_imp.id(7629597406570007)
+,p_name=>'Definition snapshot history'
+,p_static_id=>'snapshot-history'
+,p_template=>4075786578761660127
+,p_display_sequence=>25
+,p_region_template_options=>'#DEFAULT#'
+,p_component_template_options=>'#DEFAULT#:t-Report--altRowsDefault:t-Report--rowHighlight'
+,p_grid_column_span=>12
+,p_source_type=>'NATIVE_SQL_REPORT'
+,p_query_type=>'SQL'
+,p_source=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'select s.snapshot_id,a.application_id,r.application_name,s.snapshot_name,s.snapshot_kind,s.created_by,to_char(s.created_at,''YYYY-MM-DD HH24:MI:SS'') captured_at,',
+' ''<a href="''||apex_escape.html_attribute(apex_page.get_url(p_page=>60,p_items=>''P60_SNAPSHOT_ID'',p_values=>s.snapshot_id))||''">Download ZIP</a>'' download',
+'from apxtm_snapshots s join apxtm_artifacts a on a.artifact_id=s.artifact_id join apxtm_applications r on r.application_id=a.application_id',
+'where apxtm_engine.can_read_history(a.application_id)=1 order by s.snapshot_id desc'))
+,p_header=>'<p class="apxtm-table-hint">Scroll the table horizontally to view every column.</p>'
+,p_query_row_template=>2542081983073888486
+,p_query_num_rows=>15
+,p_query_options=>'DERIVED_REPORT_COLUMNS'
+,p_query_no_data_found=>'No records yet. Use the steps above to begin.'
+,p_query_num_rows_type=>'SEARCH_ENGINE'
+,p_pagination_display_position=>'BOTTOM_RIGHT'
+,p_csv_output=>'N'
+,p_prn_output=>'N'
+,p_sort_null=>'L'
+,p_plug_query_strip_html=>'N'
+);
+wwv_flow_imp_page.create_report_columns(
+ p_id=>wwv_flow_imp.id(7629737375570007)
+,p_column_alias=>'APPLICATION_ID'
+,p_column_display_sequence=>20
+,p_column_heading=>'App'
+,p_heading_alignment=>'LEFT'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_imp_page.create_report_columns(
+ p_id=>wwv_flow_imp.id(7629879265570007)
+,p_column_alias=>'APPLICATION_NAME'
+,p_column_display_sequence=>30
+,p_column_heading=>'Application'
+,p_heading_alignment=>'LEFT'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_imp_page.create_report_columns(
+ p_id=>wwv_flow_imp.id(7630270051570007)
+,p_column_alias=>'CAPTURED_AT'
+,p_column_display_sequence=>70
+,p_column_heading=>'Captured'
+,p_heading_alignment=>'LEFT'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_imp_page.create_report_columns(
+ p_id=>wwv_flow_imp.id(7630101791570007)
+,p_column_alias=>'CREATED_BY'
+,p_column_display_sequence=>60
+,p_column_heading=>'Actor'
+,p_heading_alignment=>'LEFT'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_imp_page.create_report_columns(
+ p_id=>wwv_flow_imp.id(7630373122570007)
+,p_column_alias=>'DOWNLOAD'
+,p_column_display_sequence=>80
+,p_column_heading=>'Archive'
+,p_heading_alignment=>'LEFT'
+,p_display_as=>'WITHOUT_MODIFICATION'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_imp_page.create_report_columns(
+ p_id=>wwv_flow_imp.id(7629634839570007)
+,p_column_alias=>'SNAPSHOT_ID'
+,p_column_display_sequence=>10
+,p_column_heading=>'Snapshot'
+,p_heading_alignment=>'LEFT'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_imp_page.create_report_columns(
+ p_id=>wwv_flow_imp.id(7630085671570007)
+,p_column_alias=>'SNAPSHOT_KIND'
+,p_column_display_sequence=>50
+,p_column_heading=>'Kind'
+,p_heading_alignment=>'LEFT'
+,p_derived_column=>'N'
+,p_include_in_export=>'Y'
+);
+wwv_flow_imp_page.create_report_columns(
+ p_id=>wwv_flow_imp.id(7629961343570007)
+,p_column_alias=>'SNAPSHOT_NAME'
+,p_column_display_sequence=>40
+,p_column_heading=>'Name'
 ,p_heading_alignment=>'LEFT'
 ,p_derived_column=>'N'
 ,p_include_in_export=>'Y'
@@ -3021,8 +3134,8 @@ wwv_flow_imp_page.create_page_plug(
 ,p_plug_grid_column_span=>12
 ,p_plug_item_display_point=>'ABOVE'
 ,p_location=>null
-,p_plug_source=>'<p>The initial automatic scope covers recognized grid spans, positions and row or field booleans that are explicitly present in both exports. Matching requires stable application and component identity.</p><p>Template changes, cross-theme mappings, u'
-||'nknown expressions, absent properties and ambiguous matches are detection only. Review their reasons and use App Builder for deliberate edits.</p>'
+,p_plug_source=>'<p>Automatic grid recovery assumes the standard 12-column grid. The initial scope covers recognized spans, positions and row or field booleans explicitly present in both exports. Matching requires stable application and component identity.</p><p>Temp'
+||'late changes, cross-theme mappings, unknown expressions, absent properties and ambiguous matches are detection only. Review their reasons and use App Builder for deliberate edits.</p>'
 ,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
   'expand_shortcuts', 'N',
   'output_as', 'HTML')).to_clob
@@ -3144,7 +3257,6 @@ wwv_flow_imp_page.create_page_process(
 ,p_process_sql_clob=>wwv_flow_string.join(wwv_flow_t_varchar2(
 'declare archive blob; app_id number; begin',
 ' select a.application_id into app_id from apxtm_snapshots s join apxtm_artifacts a on a.artifact_id=s.artifact_id where s.snapshot_id=:P60_SNAPSHOT_ID;',
-' apxtm_engine.assert_access(app_id,''READ'');',
 ' archive:=apxtm_engine.snapshot_zip(:P60_SNAPSHOT_ID);',
 ' sys.htp.init;',
 ' sys.owa_util.mime_header(''application/zip'',false);',
@@ -3209,7 +3321,6 @@ wwv_flow_imp_page.create_page_process(
 ,p_process_sql_clob=>wwv_flow_string.join(wwv_flow_t_varchar2(
 'declare archive blob; app_id number; begin',
 ' select application_id into app_id from apxtm_operations where operation_id=:P61_OPERATION_ID;',
-' apxtm_engine.assert_access(app_id,''READ'');',
 ' archive:=apxtm_engine.operation_zip(:P61_OPERATION_ID);',
 ' sys.htp.init;',
 ' sys.owa_util.mime_header(''application/zip'',false);',

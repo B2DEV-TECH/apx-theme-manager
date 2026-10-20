@@ -1,0 +1,75 @@
+{
+  "checked": "2026-10-20T13:33:26.977Z",
+  "sourceSha256": "72c5c3cf243e15c9e2dbd5dbd4f942b953c2298ddb573c09bd19c50065d2baf1",
+  "browser": "155.0.8059.85",
+  "initial": {
+    "duration": 239.685384,
+    "width": 1600,
+    "height": 1200,
+    "audioTracks": 15389,
+    "frames": 28,
+    "captions": 23,
+    "activeCaption": "APEX Theme Manager captures application definitions, compares layout properties, and recovers a tested subset of compatible values."
+  },
+  "chapterSeeks": [
+    {
+      "chapter": "opening",
+      "time": 1,
+      "readyState": 4,
+      "caption": "APEX Theme Manager captures application definitions, compares layout properties, and recovers a tested subset of compatible values."
+    },
+    {
+      "chapter": "baseline",
+      "time": 20.958333,
+      "readyState": 4,
+      "caption": "Project Desk and Review Board are the original sample pages. Notice the six-column fields and side-by-side regions."
+    },
+    {
+      "chapter": "changed",
+      "time": 50.124348,
+      "readyState": 4,
+      "caption": "The changed fixture is imported through the public installation API, retaining the sample's component identities."
+    },
+    {
+      "chapter": "comparison",
+      "time": 68.707681,
+      "readyState": 4,
+      "caption": "Comparison identifies the component, property, baseline value and current value. It compares recognized definitions rather than SQL line numbers."
+    },
+    {
+      "chapter": "preview",
+      "time": 91.207681,
+      "readyState": 4,
+      "caption": "I select only the project field's column span. Preview records the exact selection and proposed definition without modifying the application."
+    },
+    {
+      "chapter": "selected",
+      "time": 121.123697,
+      "readyState": 4,
+      "caption": "Apply rechecks permission and freshness, acquires the public application lock, and persists a validated backup before importing."
+    },
+    {
+      "chapter": "remaining",
+      "time": 149.873364,
+      "readyState": 4,
+      "caption": "A fresh comparison lets me preview and apply the remaining eligible grid values. Each operation has its own verified backup and audit outcome."
+    },
+    {
+      "chapter": "restore",
+      "time": 173.123364,
+      "readyState": 4,
+      "caption": "Full definition restore is separate. It requires stronger permission, identical exported ACL assignment state, and the exact restore confirmation."
+    },
+    {
+      "chapter": "closing",
+      "time": 204.54003,
+      "readyState": 4,
+      "caption": "The repository contains the original source, portable installers, synthetic fixtures, security model and recorded test evidence."
+    }
+  ],
+  "pageErrors": [],
+  "notes": [
+    "Actual local MP4 decoding and WebVTT cues; no external hosting claimed by this check.",
+    "Synthetic narration was decoded; this automated check does not rate pronunciation."
+  ]
+}

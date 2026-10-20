@@ -73,6 +73,18 @@ try{
   const zip=await db.execute("declare f apex_t_export_files;begin f:=apex_export.unzip(apxtm_engine.snapshot_zip(:id));:found:=case when dbms_lob.instr(f(1).contents,'APXTM_SYNTHETIC_READER')>0 then 1 else 0 end;end;",{id:baselineId,found:{dir:oracledb.BIND_OUT,type:oracledb.NUMBER}});
   assert.equal(zip.outBinds.found,1);
  });
+ await test('actual export item parents and button/region aliases match public live metadata',async()=>{
+  const source=await fs.readFile('samples/layout-lab/exports/baseline/f105.sql','utf8');
+  const parsed=await db.execute('declare a json_array_t;begin a:=apxtm_parse.parse(:source);:result:=a.to_clob;end;',{
+   source:{val:source,type:oracledb.CLOB},result:{dir:oracledb.BIND_OUT,type:oracledb.CLOB}});
+  const lob=parsed.outBinds.result;const components=JSON.parse(typeof lob==='string'?lob:await lob.getData());if(typeof lob!=='string')await lob.close();
+  const items=(await db.execute("select item_name,to_char(region_id,'TM9') region_id from apex_application_page_items where application_id=:app",{app:appId})).rows;
+  const exportedItems=components.filter(x=>x.kind==='ITEM');assert.equal(exportedItems.length,items.length);
+  for(const item of items)assert.equal(exportedItems.find(x=>x.name===item.ITEM_NAME)?.parent,item.REGION_ID,item.ITEM_NAME+' parent differs from live metadata');
+  assert(components.filter(x=>x.kind==='BUTTON').every(x=>x.attrs.p_button_template_id));
+  assert(components.filter(x=>x.kind==='REGION').every(x=>x.attrs.p_region_template_options));
+  evidence.actualExportIdentity={itemsMatched:items.length,buttonTemplateReferences:components.filter(x=>x.kind==='BUTTON').length,regionOptionSets:components.filter(x=>x.kind==='REGION').length};
+ });
  await test('actual generated application export detects an active theme switch',async()=>{
   const baseline=await fs.readFile('samples/layout-lab/exports/baseline/f105.sql','utf8');
   const start=baseline.indexOf('wwv_imp_workspace.create_flow('),end=baseline.indexOf('\n);',start);
@@ -109,13 +121,21 @@ try{
   comparisonId=await callNumber('apxtm_engine.compare(:baseline)',{baseline:baselineId});
   const rows=(await db.execute("select component_name,property_name,baseline_value,current_value,classification,eligible from apxtm_differences where comparison_id=:id and classification!='UNCHANGED' order by page_id,component_type,component_name,property_name",{id:comparisonId})).rows;
   evidence.observedDifferences=rows;
-  assert.equal(rows.length,12,'Only the controlled layout edits should differ semantically');
-  assert.equal(rows.filter(x=>x.ELIGIBLE==='Y').length,10);
+  assert.equal(rows.length,14,'Only the controlled layout edits should differ semantically');
+  assert.equal(rows.filter(x=>x.ELIGIBLE==='Y').length,12);
   const span=rows.find(x=>x.COMPONENT_NAME==='P1_PROJECT'&&x.PROPERTY_NAME==='p_colspan');
   assert.deepEqual([span.BASELINE_VALUE,span.CURRENT_VALUE,span.CLASSIFICATION,span.ELIGIBLE],['6','12','CHANGED','Y']);
   const region=rows.find(x=>x.COMPONENT_NAME==='Project brief'&&x.PROPERTY_NAME==='p_plug_grid_column_span');
   assert(region&&region.BASELINE_VALUE==='6'&&region.CURRENT_VALUE==='8');
   assert(rows.filter(x=>x.ELIGIBLE==='Y').length>=6);
+ });
+ await test('unsafe isolated grid corrections reject before persisting a proposal',async()=>{
+  const before=await scalar('select count(*) from apxtm_operations');
+  for(const property of ['p_plug_grid_column_span','p_plug_display_column']){
+   const id=await scalar("select difference_id from apxtm_differences where comparison_id=:id and component_name='Contact details' and property_name=:property",{id:comparisonId,property});
+   assert(id);await reject(()=>preview(comparisonId,String(id)),20001);
+  }
+  assert.equal(await scalar('select count(*) from apxtm_operations'),before);
  });
  let selectedOp;
  await test('Fix Selected preview does not modify the application',async()=>{

@@ -2,6 +2,8 @@ create or replace package apxtm_engine authid definer as
   function actor return varchar2;
   function has_permission(p_permission varchar2 default 'READ') return boolean;
   function allowed(p_application_id number,p_permission varchar2 default 'READ') return number;
+  -- History reads use the registered identity even if an import damaged the live app.
+  function can_read_history(p_application_id number) return number;
   procedure assert_access(p_application_id number,p_permission varchar2 default 'READ');
   -- Registry is maintained by the database owner, never by runtime page items.
   procedure register_application(p_application_id number);

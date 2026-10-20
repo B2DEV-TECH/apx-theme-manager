@@ -26,22 +26,33 @@ The engineering focus areas:
   context, with observed differences separate from recovery eligibility.
 - **Controlled recovery** for recognized numeric grid and row/field scalars
   explicitly present in both definitions. Template/options mappings remain
-  detection-only.
+  detection-only. A bounded twelve-column plan rejects recognized overflow and
+  same-row/sibling overlap. Shared/interleaved item/BODY-button rows stay manual;
+  only known numeric trailing buttons with new-row/new-column behavior are supported.
 - **Preview and verification** with actor/target binding, a single-use token,
   freshness checks, public APEX application locks, a durable validated backup and
   a complete normalized post-import export fingerprint check.
 - **Explicit authority** through owner-managed principals and target registration,
   with recovery disabled by default and a separate full-definition restore role.
   Restore rejects divergent exported ACL role/assignment state for manual review.
+- **Historical access** independent of live-app availability, so authorized
+  backup/proposal downloads remain possible after target deletion or alias change.
 
 The recorded synthetic lab run uses APEX 26.2.0 and Oracle AI Database 26ai Free
-23.26.3.0.0, with 21 real SQL blocks, 18 integration checks and 12 negative checks
-passing. It verifies selected/remaining-eligible recovery, compatible full restore,
-ACL rejection and an observed two-session race; a separate clean workspace
-exercised different destination IDs. Final browser workflow and recording
-verification are pending. These results do not establish compatibility with
-APEX 24.2 or other versions. The sample demonstrates controlled APEXlang-authored
-layout edits, not an observed theme-switch defect.
+23.26.3.0.0: 26 real SQL blocks, 20 integration checks and 12 negative checks
+passed after reviewer fixes. Recorded evidence also contains
+20 independent history checks, 16 main browser checks and ten browser history
+checks passing. The corrected two-page fixture has 14 differences: 12 eligible
+and two omitted row flags. Actual captures show both
+pages at baseline, changed, eligible-recovered and restored states. Browser
+checks verified three ZIP hashes, operation binding across tabs and no JavaScript
+errors. A separate clean workspace exercised different destination IDs. Release
+and edited video publication remain pending. These results do not establish
+compatibility with APEX 24.2 or other versions. The sample demonstrates
+controlled APEXlang-authored layout edits, not an observed theme-switch defect.
+Actual item parents are compared with live metadata; inherited Universal Theme
+bodies remain unavailable, so pure name/class models certify no live cross-theme
+equivalence.
 
 The manager export declares workspace-wide **Modify Other Applications**
 authority. Review the threat model before importing it into a dedicated trusted
@@ -61,7 +72,7 @@ applicable terms and notices. Node.js and browser tooling are development-only.
 
 <!-- Publication gate: copy to content/projects/apx-theme-manager.md only after
 public source/release checks. Keep draft:true until approved for publication.
-Optional screenshot, after the real capture exists:
+Optional screenshot, after the actual native capture is copied and verified on the site:
 screenshot: "/images/articles/apxtm/manager-overview.png"
 Set latestRelease only after the actual beta tag is published and verified.
 Do not create a duplicate lab entry for this same project.

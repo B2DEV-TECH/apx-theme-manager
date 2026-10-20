@@ -11,8 +11,10 @@ if (!process.argv.includes('--disposable-lab')) throw new Error('Requires --disp
 const config=await localConfig();
 const db=await connect();
 const sampleId=105,managerId=104;
-const directory=path.resolve('.local/ui-agent-workflow');
+// Keep the reviewed recording intact when rechecking later parser hardening.
+const directory=path.resolve(process.argv.includes('--final-validation')?'.local/ui-final-validation':'.local/ui-agent-workflow');
 await fs.mkdir(directory,{recursive:true});
+await Promise.all(['failure.txt','failure.png'].map(file=>fs.rm(path.join(directory,file),{force:true})));
 const record=process.argv.includes('--record');
 const videoDirectory=path.join(directory,'video');
 if(record)await fs.mkdir(videoDirectory,{recursive:true});
@@ -43,10 +45,16 @@ async function sampleScene(name){
   await Promise.all([samplePage.waitForNavigation({waitUntil:'networkidle'}),samplePage.getByRole('button',{name:'Sign In',exact:true}).click()]);
  }
  assert.match(await samplePage.title(),/Project Desk/);
- assert(!/(?:ORA-\d+|Error during rendering)/.test(await samplePage.locator('body').innerText()));
+ assert(!/(?:ORA-\d+|Error during rendering|cannot be rendered|Setting the Column to Automatic|Contact your application administrator)/i.test(await samplePage.locator('body').innerText()));
  await samplePage.bringToFront();await samplePage.screenshot({path:path.join(directory,name+'.png'),fullPage:true});
  const items=(await db.execute("select item_name,grid_column_span from apex_application_page_items where application_id=105 and page_id=1 order by item_name")).rows;
  evidence.sampleScenes.push({name,atMs:Math.round(performance.now()-clockOrigin),file:name+'.png',items});
+ await Promise.all([samplePage.waitForNavigation({waitUntil:'networkidle'}),samplePage.getByRole('button',{name:'Open review',exact:true}).click()]);
+ assert.match(await samplePage.title(),/Review Board/);
+ assert(!/(?:ORA-\d+|Error during rendering|cannot be rendered|Setting the Column to Automatic|Contact your application administrator)/i.test(await samplePage.locator('body').innerText()));
+ await samplePage.screenshot({path:path.join(directory,name+'-review.png'),fullPage:true});
+ evidence.sampleScenes.push({name:name+'-review',atMs:Math.round(performance.now()-clockOrigin),file:name+'-review.png'});
+ await Promise.all([samplePage.waitForNavigation({waitUntil:'networkidle'}),samplePage.getByRole('button',{name:'Back to desk',exact:true}).click()]);
  await page.bringToFront();
 }
 async function healthy(){const text=await page.locator('body').innerText();assert(!/(?:ORA-\d+|Error during rendering|An unexpected internal application error)/i.test(text),text.slice(-3500));}
@@ -84,8 +92,9 @@ async function download(link,expectedHash,name){
  const destination=path.join(directory,name+'.zip');await file.saveAs(destination);
  const bytes=await fs.readFile(destination);
  assert.equal(bytes.subarray(0,4).toString('hex'),'504b0304');
- assert.equal(createHash('sha256').update(bytes).digest('hex').toUpperCase(),expectedHash.toUpperCase());
- return {bytes:bytes.length,filename:file.suggestedFilename()};
+ const sha256=createHash('sha256').update(bytes).digest('hex').toUpperCase();
+ assert.equal(sha256,expectedHash.toUpperCase());
+ return {bytes:bytes.length,filename:file.suggestedFilename(),sha256};
 }
 let baselineId,selectedOperation,allOperation,restoreOperation;
 try{
@@ -137,6 +146,14 @@ try{
   await navigate(()=>page.getByRole('button',{name:'Preview selected',exact:true}).click());
   assert.match(await page.locator('body').innerText(),/Select at least one eligible difference/);
   assert.equal(await scalar('select count(*) from apxtm_operations where created_by=:actor',{actor:'APEX:'+config.adminUser.toUpperCase()}),before);
+ });
+ await test('an unsafe isolated region span is rejected without creating a proposal',async()=>{
+  const before=await scalar('select count(*) from apxtm_operations');
+  await page.getByRole('row').filter({hasText:'Contact details'}).filter({hasText:'p_plug_grid_column_span'}).locator('.apxtm-check').check();
+  await navigate(()=>page.getByRole('button',{name:'Preview selected',exact:true}).click());
+  assert.match(await page.locator('body').innerText(),/Request failed[\s\S]*(?:grid|span|column|overlap)/i);
+  assert.equal(await scalar('select count(*) from apxtm_operations'),before);
+  assert.equal(await scalar("select grid_column_span from apex_application_page_regions where application_id=105 and page_id=1 and region_name='Contact details'"),4);
  });
  await test('stale preview after export is invalidated before backup or import',async()=>{
   await navigate(()=>page.getByRole('button',{name:'Preview all eligible',exact:true}).click());await healthy();
@@ -191,7 +208,13 @@ try{
  });
  await test('native audit shows browser operation outcomes without browser errors',async()=>{
   if(await page.locator('#t_Button_navControl').getAttribute('aria-expanded')!=='true')await page.locator('#t_Button_navControl').click();
-  await navigate(()=>page.locator('.a-TreeView-label').filter({hasText:/^Activity$/}).click());await healthy();assert.match(await page.locator('body').innerText(),/VERIFIED/);await screenshot('09-audit');assert.deepEqual(pageErrors,[]);
+  await navigate(()=>page.locator('.a-TreeView-label').filter({hasText:/^Activity$/}).click());await healthy();assert.match(await page.locator('body').innerText(),/VERIFIED/);
+  assert.equal(await page.getByRole('heading',{name:'Definition snapshot history',exact:true}).count(),1);
+  const operations=page.locator('.t-Region').filter({has:page.getByRole('heading',{name:'Recovery operations',exact:true})});
+  const restoreRow=operations.getByRole('row').filter({hasText:'RESTORE'}).first();assert.match(await restoreRow.innerText(),new RegExp('\\b'+restoreOperation+'\\b'));
+  const backupHash=await scalar('select a.archive_hash from apxtm_operations o join apxtm_snapshots s on s.snapshot_id=o.backup_snapshot_id join apxtm_artifacts a on a.artifact_id=s.artifact_id where o.operation_id=:id',{id:restoreOperation});
+  evidence.backupDownload=await download(restoreRow.getByRole('link',{name:'Backup ZIP'}),backupHash,'restore-backup');
+  await screenshot('09-audit');assert.deepEqual(pageErrors,[]);
  });
  await test('two tabs cannot silently apply a later preview for the same application',async()=>{
   await installFixture('changed');await openApplications();await compare(baselineId);

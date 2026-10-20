@@ -77,7 +77,7 @@ page 50 (
         }
         source {
             htmlCode: ```html
-    <p>The initial automatic scope covers recognized grid spans, positions and row or field booleans that are explicitly present in both exports. Matching requires stable application and component identity.</p><p>Template changes, cross-theme mappings, unknown expressions, absent properties and ambiguous matches are detection only. Review their reasons and use App Builder for deliberate edits.</p>
+    <p>Automatic grid recovery assumes the standard 12-column grid. The initial scope covers recognized spans, positions and row or field booleans explicitly present in both exports. Matching requires stable application and component identity.</p><p>Template changes, cross-theme mappings, unknown expressions, absent properties and ambiguous matches are detection only. Review their reasons and use App Builder for deliberate edits.</p>
     ```
         }
     

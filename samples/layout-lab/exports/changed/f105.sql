@@ -104,7 +104,7 @@ wwv_imp_workspace.create_flow(
 ,p_substitution_string_01=>'APP_NAME'
 ,p_substitution_value_01=>'APXTM Layout Lab'
 ,p_file_prefix=>nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
-,p_files_version=>2461334084740
+,p_files_version=>2461334094923
 ,p_print_server_type=>'NATIVE'
 ,p_file_storage=>'DB'
 ,p_is_pwa=>'Y'
@@ -837,7 +837,7 @@ wwv_flow_imp_shared.create_theme(
 ,p_default_required_label=>1612549789555753698
 ,p_default_navbar_list_template=>2850970698196720012
 ,p_file_prefix=>nvl(wwv_flow_application_install.get_static_theme_file_prefix(42),'#APEX_FILES#themes/theme_42/26.2/')
-,p_files_version=>2461334084740
+,p_files_version=>2461334094923
 ,p_icon_library=>'FONTAPEX'
 ,p_javascript_file_urls=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '#APEX_FILES#libraries/apex/#MIN_DIRECTORY#widget.stickyWidget#MIN#.js?v=#APEX_VERSION#',
@@ -944,7 +944,7 @@ wwv_flow_imp_page.create_page_plug(
 ,p_plug_display_sequence=>20
 ,p_plug_new_grid_row=>false
 ,p_plug_grid_column_span=>4
-,p_plug_display_column=>7
+,p_plug_display_column=>9
 ,p_plug_item_display_point=>'ABOVE'
 ,p_location=>null
 ,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
@@ -1129,7 +1129,7 @@ wwv_flow_imp_page.create_page_item(
 ,p_cSize=>30
 ,p_begin_on_new_line=>'N'
 ,p_colspan=>3
-,p_grid_column=>7
+,p_grid_column=>10
 ,p_grid_label_column_span=>2
 ,p_label_alignment=>'RIGHT-CENTER'
 ,p_field_alignment=>'LEFT-CENTER'

@@ -1,0 +1,149 @@
+{
+  "started": "2026-10-20T13:12:55.251Z",
+  "workspace": "APXTM_VERIFY",
+  "managerId": 106,
+  "targetId": 115,
+  "history": {
+    "baselineSnapshotId": 32,
+    "backupSnapshotId": 33,
+    "verifiedOperationId": 29,
+    "previewOperationId": 30,
+    "comparisonId": 44
+  },
+  "checks": [
+    {
+      "name": "guard exact isolated manager106 and synthetic fixture115 with policy disabled",
+      "passed": true,
+      "detail": {
+        "managerId": 106,
+        "targetId": 115,
+        "policy": "DISABLED"
+      }
+    },
+    {
+      "name": "save independent complete trusted exports before changing either owned lab app",
+      "passed": true,
+      "detail": {
+        "targetSourceSha256": "31FFE5A25DE59A6AD18B683BE3CC6A48A8F8C064C6559668C968FB59A9F793A0"
+      }
+    },
+    {
+      "name": "refresh native106 from final portable104 export with new public component offset",
+      "passed": true,
+      "detail": {
+        "componentOffset": "7700760047683584",
+        "aliasPreserved": true
+      }
+    },
+    {
+      "name": "authenticate106 and render native Activity archive entry points",
+      "passed": true,
+      "detail": {
+        "authenticatedActor": "APEX:VERIFY_ADMIN",
+        "nativeArchiveRowsVisible": true
+      }
+    },
+    {
+      "name": "owner public import changes only115 alias before browser history verification",
+      "passed": true,
+      "detail": {
+        "liveAlias": "APXTM-HISTORY-LAB-115-CHANGED",
+        "livePermission": 0
+      }
+    },
+    {
+      "name": "changed alias permits real native baseline backup and proposal ZIP downloads",
+      "passed": true,
+      "detail": {
+        "downloadsVerified": 3,
+        "liveTargetSelectorVisible": false
+      }
+    },
+    {
+      "name": "public REMOVE_APPLICATION removes only guarded115 after trusted export checkpoint",
+      "passed": true,
+      "detail": {
+        "applicationId": 115,
+        "liveRows": 0
+      }
+    },
+    {
+      "name": "absent target retains native baseline backup and proposal downloads with live controls denied",
+      "passed": true,
+      "detail": {
+        "liveRows": 0,
+        "downloadsVerified": 3,
+        "liveTargetSelectorVisible": false
+      }
+    },
+    {
+      "name": "explicit public owner reimport restores exact trusted115 definition",
+      "passed": true,
+      "detail": {
+        "targetId": 115,
+        "normalizedSourceSha256": "31FFE5A25DE59A6AD18B683BE3CC6A48A8F8C064C6559668C968FB59A9F793A0",
+        "liveRows": 1
+      }
+    },
+    {
+      "name": "configuration principals modification policy and recovery flags remain unchanged",
+      "passed": true,
+      "detail": {
+        "policy": "DISABLED",
+        "managerId": 106,
+        "targetAllowRecovery": "N",
+        "applying": 0,
+        "invalidEngineObjects": 0
+      }
+    }
+  ],
+  "downloads": [
+    {
+      "stage": "alias-changed-history",
+      "kind": "baseline",
+      "filename": "apxtm-app-115-snapshot-32.zip",
+      "bytes": 46364,
+      "sha256": "DDEDBE6913411BCC4C356564377D90C116F5A195AC399DDB2DB5E5CC36DF3DAB"
+    },
+    {
+      "stage": "alias-changed-history",
+      "kind": "backup",
+      "filename": "apxtm-app-115-snapshot-33.zip",
+      "bytes": 46364,
+      "sha256": "DDEDBE6913411BCC4C356564377D90C116F5A195AC399DDB2DB5E5CC36DF3DAB"
+    },
+    {
+      "stage": "alias-changed-history",
+      "kind": "proposal",
+      "filename": "apxtm-app-115-operation-30.zip",
+      "bytes": 46364,
+      "sha256": "DDEDBE6913411BCC4C356564377D90C116F5A195AC399DDB2DB5E5CC36DF3DAB"
+    },
+    {
+      "stage": "missing-target-history",
+      "kind": "baseline",
+      "filename": "apxtm-app-115-snapshot-32.zip",
+      "bytes": 46364,
+      "sha256": "DDEDBE6913411BCC4C356564377D90C116F5A195AC399DDB2DB5E5CC36DF3DAB"
+    },
+    {
+      "stage": "missing-target-history",
+      "kind": "backup",
+      "filename": "apxtm-app-115-snapshot-33.zip",
+      "bytes": 46364,
+      "sha256": "DDEDBE6913411BCC4C356564377D90C116F5A195AC399DDB2DB5E5CC36DF3DAB"
+    },
+    {
+      "stage": "missing-target-history",
+      "kind": "proposal",
+      "filename": "apxtm-app-115-operation-30.zip",
+      "bytes": 46364,
+      "sha256": "DDEDBE6913411BCC4C356564377D90C116F5A195AC399DDB2DB5E5CC36DF3DAB"
+    }
+  ],
+  "workspaceId": 7473848173202335,
+  "trustedSourceSha256": "31FFE5A25DE59A6AD18B683BE3CC6A48A8F8C064C6559668C968FB59A9F793A0",
+  "managerSourceSha256": "F6372EF3339F616A2BC2F5649027757CE45411D380392A969D8B4BAE4BC6F8A3",
+  "managerGeneratedOffset": "7700760047683584",
+  "finished": "2026-10-20T13:13:17.986Z"
+}

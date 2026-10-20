@@ -61,7 +61,7 @@ page 2 (
             sequence: 20
             region: @review
             slot: regionBody
-            column: 7
+            column: 10
             columnSpan: 3
             labelColumnSpan: 2
             startNewRow: false

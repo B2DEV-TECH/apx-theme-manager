@@ -450,7 +450,7 @@
     "coreValidUnits": 6,
     "invalidObjects": 0
   },
-  "finalAssessment": "Clean installation, idempotent reinstall, consent-protected uninstall, native authentication/rendering and historical controlled recovery passed. The final core independently compiled and passed 21 SQL blocks, actual-export theme detection, exact exporter-comment normalization and cross-actor snapshot deduplication. The previously identified format and actor-fingerprint defects are resolved for these recorded bytes. SQLcl configuration retains a documented client limitation with a verified SQLPlus path. The later portable-sample phase also verified actual SQLPlus core installation twice, new manager/sample imports, exact saved-offset reuse, preserved component IDs, three non-destructive refusals and an actual ten-eligible/two-dropped comparison. The repository-root include-path issue is resolved for the recorded scripts.",
+  "finalAssessment": "Clean installation, idempotent reinstall, consent-protected uninstall, native authentication/rendering and historical controlled recovery passed. The final core independently compiled and passed 21 SQL blocks, actual-export theme detection, exact exporter-comment normalization and cross-actor snapshot deduplication. The previously identified format and actor-fingerprint defects are resolved for these recorded bytes. SQLcl configuration retains a documented client limitation with a verified SQLPlus path. The later portable-sample phase also verified actual SQLPlus core installation twice, new manager/sample imports, exact saved-offset reuse, preserved component IDs, three non-destructive refusals and an actual ten-eligible/two-dropped comparison. The repository-root include-path issue is resolved for the recorded scripts. A later independent history-access phase compiled the latest six units, passed23 SQL blocks and20 new-app history tests, including absent/renamed target downloads, retained live denials, hash-valid wrong-identity rejection and exact owner restoration. These are phased working-tree results, not final-release certification.",
   "finalCoreVerification": {
     "started": "2026-10-20T12:12:26.334Z",
     "headAtTest": "d4fabb0e8beb04ed8f954ed5ad1a1b587c367ebd",
@@ -849,6 +849,327 @@
       "The latest engine snapshot-completeness guard was compiled by the actual SQLPlus core installation and exercised by the real108 baseline capture and subsequent comparison.",
       "The separate fault-injection task may subsequently add another synthetic target or temporarily change global policy; this section records state at completion of the portable sample phase.",
       "An initial diagnostic assertion expected SP2-0310 while WHENEVER OSERROR reported No such file or directory; the assertion was corrected before implementation. That test-harness failure is not a product result."
+    ],
+    "subsequentFixtureScopeNote": "The portable sample phase records the then-current changed fixture (12 differences:10 eligible and2 dropped). Subsequent original authoring corrections made explicit Contact and Review Status grid columns valid; current fixture expectations are14 differences:12 eligible and2 dropped. Historical measurements above are retained and do not certify the later fixture bytes."
+  },
+  "historyAccessVerification": {
+    "evidenceKind": "Actual independent Oracle/APEX execution against the isolated verification laboratory; working-tree bytes, not final-release certification.",
+    "startedUtc": "2026-10-20T13:01:32.766Z",
+    "finishedUtc": "2026-10-20T13:02:53.771Z",
+    "codeUnderTest": {
+      "progressCommit": "d63223e",
+      "workingTreeModified": true,
+      "sourceFiles": {
+        "database/packages/apxtm_parse.pks": {
+          "sha256": "8768a76cc0901b5821eb8fa11b1aa122c3c2103deafbd2ecea0c645be94ba2c9",
+          "modified": "2026-10-20T12:04:14.282Z"
+        },
+        "database/packages/apxtm_parse.pkb": {
+          "sha256": "6b00df8a5a6be10e149dcc304d980d8330fa18cecd682c97d346f8c1ef676f0f",
+          "modified": "2026-10-20T12:59:13.708Z"
+        },
+        "database/packages/apxtm_diff.pks": {
+          "sha256": "c3af6d6df29f018b3c86820bcf85838b8b72d04352a1417ffc63dfa05b6a25a8",
+          "modified": "2026-10-20T11:24:29.604Z"
+        },
+        "database/packages/apxtm_diff.pkb": {
+          "sha256": "bc19114fdb8dcb0def082b93df7a170837f0a2a722b5c52e0500faf18ef8b1c8",
+          "modified": "2026-10-20T12:59:14.564Z"
+        },
+        "database/packages/apxtm_engine.pks": {
+          "sha256": "ad2104706cac21fe5bffcaba8a51d80df7a5cce0f2362f4712cc39286cb90f7d",
+          "modified": "2026-10-20T12:48:53.900Z"
+        },
+        "database/packages/apxtm_engine.pkb": {
+          "sha256": "87c99aa70a408e88be708797cb935463200e068da36afe2e85d8e5e41738967a",
+          "modified": "2026-10-20T12:48:54.727Z"
+        },
+        "tests/parser.sql": {
+          "sha256": "f353d27fc15c30df8f5a55790502cf24c6dfdb2e7784d14a6d33b965bca7d64c",
+          "modified": "2026-10-20T12:52:30.598Z"
+        },
+        "tests/semantic.sql": {
+          "sha256": "8081a74743b5df073edf516954e57b6883649d7e2ad67d87dc9c4464ca878494",
+          "modified": "2026-10-20T12:10:42.208Z"
+        },
+        "tests/security.sql": {
+          "sha256": "1ad6d62c8dcb5dee8d17728ca0d13b166981c2a636980cb48e6c84f365b5179d",
+          "modified": "2026-10-20T11:18:33.503Z"
+        }
+      },
+      "historyTestSha256": "3a24ad143a8de0f75ea0580853485a4cbc355666b5e306c034627d2ddcbfe4ff"
+    },
+    "isolation": {
+      "schema": "APXTM_VERIFY",
+      "workspace": "APXTM_VERIFY",
+      "workspaceId": 7473848173202335,
+      "finalFixtureApplicationId": 115,
+      "noApplication104Or105Access": true,
+      "target": "APXTM History Access Lab",
+      "newPublicApplicationId": true,
+      "originalTrustedExportSavedBeforeIdentityChanges": true,
+      "originalTrustedSourceSha256": "997599ce3f6104723ca152c5aee52887cfe1fcb3abb04e7f3b86be178b538bda"
+    },
+    "publicSignature": "function can_read_history(p_application_id number) return number",
+    "authorization": {
+      "historyReads": [
+        "validate_snapshot",
+        "snapshot_zip",
+        "operation_zip"
+      ],
+      "checks": [
+        "enabled READ principal",
+        "configured workspace",
+        "enabled registered target",
+        "registered workspace matches configuration",
+        "registered parsing schema matches CURRENT_USER",
+        "manager self-exclusion"
+      ],
+      "retainedLiveChecks": [
+        "take_snapshot",
+        "compare",
+        "preview",
+        "preview_restore",
+        "apply",
+        "retire_snapshot"
+      ],
+      "artifactChecksRetained": [
+        "archive SHA-256",
+        "ZIP contents/name/count",
+        "source SHA-256 and character length",
+        "public GET_INFO application/workspace/schema identity",
+        "bounded format parser"
+      ]
+    },
+    "commands": [
+      "$env:APXTM_LAB_CONFIG='.local/verify-config.json'; node .local/verify-history-final.mjs",
+      "$env:APXTM_LAB_CONFIG='.local/verify-config.json'; node tests/history-access.mjs --disposable-lab"
+    ],
+    "originalRegression": {
+      "applicationId": 112,
+      "engineBodySha256": "b67361e2911bd5f60c965e26a32e81312dfc15b8ac592da7bcf338803bf96a11",
+      "trigger": "Owner public import changed only the original synthetic application alias.",
+      "observed": "ORA-20020 Registered application identity has changed from validate_snapshot, despite a real persisted pre-import backup.",
+      "resolved": true,
+      "verifiedOperationId": 21,
+      "backupSnapshotId": 22
+    },
+    "firstCompletedHistoryRun": {
+      "applicationId": 113,
+      "checks": 19,
+      "passed": 19,
+      "observedMissingApplicationRows": 0,
+      "originalDefinitionExactlyRestored": true
+    },
+    "finalCoreCompile": {
+      "compiledUnits": 6,
+      "status": "PASS",
+      "sqlBlocks": 23,
+      "perFile": {
+        "tests/parser.sql": 15,
+        "tests/semantic.sql": 7,
+        "tests/security.sql": 1
+      },
+      "invalidObjects": 0
+    },
+    "finalHistoryRun": {
+      "checks": 20,
+      "passed": 20,
+      "history": {
+        "baselineSnapshotId": 32,
+        "backupSnapshotId": 33,
+        "verifiedOperationId": 29,
+        "previewOperationId": 30,
+        "comparisonId": 44
+      },
+      "results": [
+        {
+          "name": "guard isolated owner/workspace and allocate a new original synthetic application",
+          "status": "PASS",
+          "detail": {
+            "applicationId": 115,
+            "name": "APXTM History Access Lab",
+            "alias": "APXTM-HISTORY-LAB-115"
+          }
+        },
+        {
+          "name": "create real preview, verified operation and durable pre-import backup",
+          "status": "PASS",
+          "detail": {
+            "baselineSnapshotId": 32,
+            "backupSnapshotId": 33,
+            "verifiedOperationId": 29,
+            "previewOperationId": 30,
+            "comparisonId": 44
+          }
+        },
+        {
+          "name": "changed live alias retains validated baseline backup and proposal downloads",
+          "status": "PASS",
+          "detail": {
+            "baseline_hash": "DDEDBE6913411BCC4C356564377D90C116F5A195AC399DDB2DB5E5CC36DF3DAB",
+            "backup_bytes": 46364,
+            "proposal_bytes": 46364
+          }
+        },
+        {
+          "name": "changed live alias still denies capture compare restore apply and retirement",
+          "status": "PASS"
+        },
+        {
+          "name": "disabled modification policy and per-target recovery flag do not hide history",
+          "status": "PASS",
+          "detail": {
+            "baseline_hash": "DDEDBE6913411BCC4C356564377D90C116F5A195AC399DDB2DB5E5CC36DF3DAB",
+            "backup_bytes": 46364,
+            "proposal_bytes": 46364
+          }
+        },
+        {
+          "name": "revoked principal denies all historical download APIs",
+          "status": "PASS"
+        },
+        {
+          "name": "disabled allowlist entry denies history",
+          "status": "PASS"
+        },
+        {
+          "name": "registered workspace mismatch denies history",
+          "status": "PASS"
+        },
+        {
+          "name": "configured workspace mismatch denies history",
+          "status": "PASS"
+        },
+        {
+          "name": "registered parsing-schema mismatch denies history",
+          "status": "PASS"
+        },
+        {
+          "name": "manager self-exclusion applies even to a registered historical target",
+          "status": "PASS"
+        },
+        {
+          "name": "reader role can download historical definitions without recovery authority",
+          "status": "PASS",
+          "detail": {
+            "baseline_hash": "DDEDBE6913411BCC4C356564377D90C116F5A195AC399DDB2DB5E5CC36DF3DAB",
+            "backup_bytes": 46364,
+            "proposal_bytes": 46364
+          }
+        },
+        {
+          "name": "unknown null and non-allowlisted IDs deny history",
+          "status": "PASS"
+        },
+        {
+          "name": "unauthorized authenticated manager user cannot read historical definitions",
+          "status": "PASS"
+        },
+        {
+          "name": "archive corruption remains rejected for snapshot and operation downloads",
+          "status": "PASS",
+          "detail": {
+            "artifactId": 47,
+            "snapshotId": 35,
+            "operationId": 31,
+            "fixturesRolledBack": true
+          }
+        },
+        {
+          "name": "hash-valid ZIP with a different exported application identity is rejected",
+          "status": "PASS",
+          "detail": {
+            "snapshotId": 36,
+            "archiveAndSourceHashesValid": true,
+            "expectedError": 20026,
+            "fixtureRolledBack": true
+          }
+        },
+        {
+          "name": "public REMOVE_APPLICATION removes only the guarded newly allocated fixture",
+          "status": "PASS",
+          "detail": {
+            "applicationId": 115,
+            "liveApplicationRows": 0
+          }
+        },
+        {
+          "name": "absent target retains validated baseline backup and proposal downloads",
+          "status": "PASS",
+          "detail": {
+            "baseline_hash": "DDEDBE6913411BCC4C356564377D90C116F5A195AC399DDB2DB5E5CC36DF3DAB",
+            "backup_bytes": 46364,
+            "proposal_bytes": 46364
+          }
+        },
+        {
+          "name": "absent target still denies all live operations despite enabled recovery policy",
+          "status": "PASS"
+        },
+        {
+          "name": "explicit owner reimport restores original synthetic identity and component IDs",
+          "status": "PASS",
+          "detail": {
+            "applicationId": 115,
+            "sourceHash": "31ffe5a25de59a6ad18b683be3cc6a48a8f8c064c6559668c968fb59a9f793a0"
+          }
+        }
+      ],
+      "finalState": {
+        "modificationPolicy": "DISABLED",
+        "targetAllowRecovery": "N",
+        "invalidObjects": 0
+      },
+      "independentFinalState": {
+        "observedUtc": "2026-10-20T13:04:19.572Z",
+        "applicationId": 115,
+        "identity": {
+          "APPLICATION_NAME": "APXTM History Access Lab",
+          "ALIAS": "APXTM-HISTORY-LAB-115",
+          "OWNER": "APXTM_VERIFY",
+          "WORKSPACE_ID": 7473848173202335,
+          "LOCKED_BY": null
+        },
+        "policy": "DISABLED",
+        "allowRecovery": "N",
+        "configuredManagerId": 106,
+        "canReadHistory": 1,
+        "canReadLive": 1,
+        "canRestore": 0,
+        "activeApplyingOperations": 0,
+        "validPackageUnits": 6,
+        "invalidObjects": 0,
+        "sentinelRows": 1
+      }
+    },
+    "removalApi": {
+      "name": "APEX_APPLICATION_INSTALL.REMOVE_APPLICATION(p_application_id IN NUMBER)",
+      "documentation": "https://docs.oracle.com/en/database/oracle/apex/26.1/aeapi/APEX_APPLICATION_INSTALL.REMOVE_APPLICATION-Procedure.html",
+      "documentedReferenceVersion": "26.1",
+      "actualExecutionVersion": "26.2.0",
+      "invokedThroughPublicSynonymOnly": true,
+      "guardedBy": [
+        "newly allocated application ID",
+        "exact fixture name",
+        "exact fixture alias or intended changed alias",
+        "workspace",
+        "parsing schema"
+      ],
+      "liveApplicationRowsAfterRemoval": 0,
+      "explicitOwnerReimport": true
+    },
+    "harnessCorrections": [
+      "Explicitly read/close OUT CLOB handles before persisting the trusted source.",
+      "Reconnect after each owner import, matching the supported fresh-session workflow. Earlier app112 diagnostics restored its identity and all component/source lines except the generated default-offset header; the complete app113 and app115 runs independently restored exact full source.",
+      "Evaluate JSON get_size in a PL/SQL numeric variable before inserting fixture metadata; the earlier app114 attempt failed only in this test setup and explicitly restored its original source."
+    ],
+    "limits": [
+      "Application absence was deliberately created with a guarded public owner removal, not observed as an outcome of failed INSTALL.",
+      "This phase validates DB authorization/integrity and live-operation denial. Native UI deployment/browser evidence is maintained separately by the UI reviewer.",
+      "Principal/registry/configuration negative tests were uncommitted changes rolled back in the test connection. Deliberately invalid artifacts were rolled back.",
+      "Oracle application imports remain non-atomic. Historical download permission does not enable restore into a missing, mismatched or reused live identity.",
+      "Snapshots and successful operations remain as laboratory evidence; the new target is retained with recovery disabled."
     ]
   }
 }

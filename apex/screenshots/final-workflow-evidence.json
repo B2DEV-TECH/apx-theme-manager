@@ -1,0 +1,523 @@
+{
+  "started": "2026-10-20T13:33:12.480Z",
+  "sampleId": 105,
+  "managerId": 104,
+  "tests": [
+    {
+      "name": "guard exact synthetic application and authorized manager identities",
+      "passed": true,
+      "startMs": 113,
+      "endMs": 181,
+      "milliseconds": 68
+    },
+    {
+      "name": "native authentication and baseline capture",
+      "passed": true,
+      "startMs": 181,
+      "endMs": 10299,
+      "milliseconds": 10118
+    },
+    {
+      "name": "snapshot download is an authorized byte-identical ZIP",
+      "passed": true,
+      "startMs": 10299,
+      "endMs": 12211,
+      "milliseconds": 1912
+    },
+    {
+      "name": "native comparison displays independent changed layout and eligible rows",
+      "passed": true,
+      "startMs": 12211,
+      "endMs": 25099,
+      "milliseconds": 12888
+    },
+    {
+      "name": "stale comparison after export returns an explicit native rejection",
+      "passed": true,
+      "startMs": 25099,
+      "endMs": 35531,
+      "milliseconds": 10432
+    },
+    {
+      "name": "empty selection is rejected before preview creation",
+      "passed": true,
+      "startMs": 35531,
+      "endMs": 36321,
+      "milliseconds": 790
+    },
+    {
+      "name": "an unsafe isolated region span is rejected without creating a proposal",
+      "passed": true,
+      "startMs": 36321,
+      "endMs": 37477,
+      "milliseconds": 1156
+    },
+    {
+      "name": "stale preview after export is invalidated before backup or import",
+      "passed": true,
+      "startMs": 37477,
+      "endMs": 50625,
+      "milliseconds": 13148
+    },
+    {
+      "name": "selected preview binds exactly one property and exposes proposed ZIP",
+      "passed": true,
+      "startMs": 50625,
+      "endMs": 55460,
+      "milliseconds": 4835
+    },
+    {
+      "name": "wrong typed confirmation leaves the target and preview unchanged",
+      "passed": true,
+      "startMs": 55460,
+      "endMs": 56338,
+      "milliseconds": 878
+    },
+    {
+      "name": "typed POST apply verifies selected recovery and persists backup",
+      "passed": true,
+      "startMs": 56338,
+      "endMs": 63161,
+      "milliseconds": 6823
+    },
+    {
+      "name": "all-eligible preview and typed POST apply verify remaining eligible properties",
+      "passed": true,
+      "startMs": 63161,
+      "endMs": 92297,
+      "milliseconds": 29136
+    },
+    {
+      "name": "definition restore has separate preview and exact RESTORE confirmation",
+      "passed": true,
+      "startMs": 92297,
+      "endMs": 119415,
+      "milliseconds": 27118
+    },
+    {
+      "name": "native audit shows browser operation outcomes without browser errors",
+      "passed": true,
+      "startMs": 119415,
+      "endMs": 122688,
+      "milliseconds": 3273
+    },
+    {
+      "name": "two tabs cannot silently apply a later preview for the same application",
+      "passed": true,
+      "startMs": 122688,
+      "endMs": 156599,
+      "milliseconds": 33911
+    },
+    {
+      "name": "all submitted export paths return nonempty pages or explicit redirects",
+      "passed": true,
+      "startMs": 156599,
+      "endMs": 156599,
+      "milliseconds": 0
+    }
+  ],
+  "operations": [
+    {
+      "id": 66,
+      "kind": "RECOVER",
+      "selected": 1,
+      "STATUS": "VERIFIED",
+      "BACKUP_SNAPSHOT_ID": 130
+    },
+    {
+      "id": 67,
+      "kind": "RECOVER",
+      "STATUS": "VERIFIED",
+      "SELECTED_COUNT": 11,
+      "BACKUP_SNAPSHOT_ID": 132
+    },
+    {
+      "id": 68,
+      "kind": "RESTORE",
+      "STATUS": "VERIFIED",
+      "BACKUP_SNAPSHOT_ID": 133
+    }
+  ],
+  "sampleScenes": [
+    {
+      "name": "sample-baseline",
+      "atMs": 8881,
+      "file": "sample-baseline.png",
+      "items": [
+        {
+          "ITEM_NAME": "P1_CITY",
+          "GRID_COLUMN_SPAN": 6
+        },
+        {
+          "ITEM_NAME": "P1_EMAIL",
+          "GRID_COLUMN_SPAN": 6
+        },
+        {
+          "ITEM_NAME": "P1_OWNER",
+          "GRID_COLUMN_SPAN": 6
+        },
+        {
+          "ITEM_NAME": "P1_PROJECT",
+          "GRID_COLUMN_SPAN": 6
+        }
+      ]
+    },
+    {
+      "name": "sample-baseline-review",
+      "atMs": 9610,
+      "file": "sample-baseline-review.png"
+    },
+    {
+      "name": "sample-changed",
+      "atMs": 15921,
+      "file": "sample-changed.png",
+      "items": [
+        {
+          "ITEM_NAME": "P1_CITY",
+          "GRID_COLUMN_SPAN": 6
+        },
+        {
+          "ITEM_NAME": "P1_EMAIL",
+          "GRID_COLUMN_SPAN": 12
+        },
+        {
+          "ITEM_NAME": "P1_OWNER",
+          "GRID_COLUMN_SPAN": 6
+        },
+        {
+          "ITEM_NAME": "P1_PROJECT",
+          "GRID_COLUMN_SPAN": 12
+        }
+      ]
+    },
+    {
+      "name": "sample-changed-review",
+      "atMs": 16675,
+      "file": "sample-changed-review.png"
+    },
+    {
+      "name": "sample-recovered-eligible",
+      "atMs": 90869,
+      "file": "sample-recovered-eligible.png",
+      "items": [
+        {
+          "ITEM_NAME": "P1_CITY",
+          "GRID_COLUMN_SPAN": 6
+        },
+        {
+          "ITEM_NAME": "P1_EMAIL",
+          "GRID_COLUMN_SPAN": 6
+        },
+        {
+          "ITEM_NAME": "P1_OWNER",
+          "GRID_COLUMN_SPAN": 6
+        },
+        {
+          "ITEM_NAME": "P1_PROJECT",
+          "GRID_COLUMN_SPAN": 6
+        }
+      ]
+    },
+    {
+      "name": "sample-recovered-eligible-review",
+      "atMs": 91596,
+      "file": "sample-recovered-eligible-review.png"
+    },
+    {
+      "name": "sample-restored-definition",
+      "atMs": 117985,
+      "file": "sample-restored-definition.png",
+      "items": [
+        {
+          "ITEM_NAME": "P1_CITY",
+          "GRID_COLUMN_SPAN": 6
+        },
+        {
+          "ITEM_NAME": "P1_EMAIL",
+          "GRID_COLUMN_SPAN": 6
+        },
+        {
+          "ITEM_NAME": "P1_OWNER",
+          "GRID_COLUMN_SPAN": 6
+        },
+        {
+          "ITEM_NAME": "P1_PROJECT",
+          "GRID_COLUMN_SPAN": 6
+        }
+      ]
+    },
+    {
+      "name": "sample-restored-definition-review",
+      "atMs": 118713,
+      "file": "sample-restored-definition-review.png"
+    }
+  ],
+  "recording": {
+    "requested": false,
+    "timeOrigin": "Browser context creation completed",
+    "label": "Automated browser / synthetic layout scenario",
+    "viewport": {
+      "width": 1440,
+      "height": 1080
+    },
+    "videos": []
+  },
+  "httpPosts": [
+    {
+      "request": "LOGIN",
+      "status": 200,
+      "contentType": "application/json;charset=utf-8",
+      "responseCharacters": null
+    },
+    {
+      "request": "OPEN",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    },
+    {
+      "request": "CAPTURE",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    },
+    {
+      "request": "LOGIN",
+      "status": 200,
+      "contentType": "application/json;charset=utf-8",
+      "responseCharacters": null
+    },
+    {
+      "request": "LOGIN",
+      "status": 200,
+      "contentType": "application/json;charset=utf-8",
+      "responseCharacters": null
+    },
+    {
+      "request": "COMPARE",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    },
+    {
+      "request": "FILTER",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    },
+    {
+      "request": "PREVIEW_ALL",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    },
+    {
+      "request": "OPEN",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    },
+    {
+      "request": "COMPARE",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    },
+    {
+      "request": "FILTER",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    },
+    {
+      "request": "PREVIEW_SELECTED",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    },
+    {
+      "request": "PREVIEW_SELECTED",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    },
+    {
+      "request": "PREVIEW_ALL",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    },
+    {
+      "request": "APPLY",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    },
+    {
+      "request": "OPEN",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    },
+    {
+      "request": "COMPARE",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    },
+    {
+      "request": "FILTER",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    },
+    {
+      "request": "PREVIEW_SELECTED",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    },
+    {
+      "request": "APPLY",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    },
+    {
+      "request": "APPLY",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    },
+    {
+      "request": "OPEN",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    },
+    {
+      "request": "COMPARE",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    },
+    {
+      "request": "PREVIEW_ALL",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    },
+    {
+      "request": "APPLY",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    },
+    {
+      "request": "LOGIN",
+      "status": 200,
+      "contentType": "application/json;charset=utf-8",
+      "responseCharacters": null
+    },
+    {
+      "request": "OPEN",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    },
+    {
+      "request": "RESTORE",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    },
+    {
+      "request": "APPLY",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    },
+    {
+      "request": "LOGIN",
+      "status": 200,
+      "contentType": "application/json;charset=utf-8",
+      "responseCharacters": null
+    },
+    {
+      "request": "OPEN",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    },
+    {
+      "request": "COMPARE",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    },
+    {
+      "request": "FILTER",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    },
+    {
+      "request": "PREVIEW_SELECTED",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    },
+    {
+      "request": "OPEN",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    },
+    {
+      "request": "COMPARE",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    },
+    {
+      "request": "PREVIEW_ALL",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    },
+    {
+      "request": "APPLY",
+      "status": 302,
+      "contentType": null,
+      "responseCharacters": null
+    }
+  ],
+  "versions": {
+    "apex": "26.2.0",
+    "database": "23.26.3.0.0",
+    "chrome": "155.0.8059.85"
+  },
+  "snapshotDownload": {
+    "bytes": 46353,
+    "filename": "apxtm-app-105-snapshot-126.zip",
+    "sha256": "1A240AEF66C061567C2C201DF175086A35C390A177D183E20605F83AD4B7F23A"
+  },
+  "proposalDownload": {
+    "bytes": 46363,
+    "filename": "apxtm-app-105-operation-66.zip",
+    "sha256": "3160D855405F3042B92C51C86BDE9CF3FBF96BA37FC66BE6BDE9DF2CB6580BF0"
+  },
+  "backupDownload": {
+    "bytes": 46350,
+    "filename": "apxtm-app-105-snapshot-133.zip",
+    "sha256": "38268AADA8946808377E5686EDB75CFEDF8F9F03A399312363FB5C9965FEE055"
+  },
+  "twoTabBinding": {
+    "operationA": 69,
+    "statusA": "VERIFIED",
+    "operationB": 70,
+    "statusB": "PREVIEW"
+  },
+  "finished": "2026-10-20T13:35:49.256Z",
+  "pageErrors": []
+}

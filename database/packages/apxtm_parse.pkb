@@ -13,7 +13,7 @@ create or replace package body apxtm_parse as
       or (p_kind='BUTTON' and p_property in ('p_grid_new_row','p_grid_new_column'))
     then return p_value in ('Y','N'); end if;
     if (p_kind='ITEM' and p_property in ('p_colspan','p_rowspan','p_grid_column','p_grid_label_column_span'))
-      or (p_kind='REGION' and p_property in ('p_plug_grid_column_span','p_grid_column','p_grid_column_span','p_grid_row_span'))
+      or (p_kind='REGION' and p_property in ('p_plug_grid_column_span','p_plug_display_column','p_grid_column','p_grid_column_span','p_grid_row_span'))
       or (p_kind='BUTTON' and p_property in ('p_grid_column','p_grid_column_span')) then
       if not regexp_like(p_value,'^[0-9]{1,3}$') then return false; end if;
       if p_property='p_grid_label_column_span' then l_min:=0; end if;
@@ -136,12 +136,12 @@ create or replace package body apxtm_parse as
 
     function wanted(p_name varchar2) return boolean is
     begin
-      return p_name in ('p_id','p_name','p_static_id','p_users','p_files_version','p_plug_name','p_button_name','p_plug_id','p_button_plug_id',
+      return p_name in ('p_id','p_name','p_static_id','p_users','p_files_version','p_plug_display_sequence','p_item_sequence','p_button_sequence','p_plug_name','p_button_name','p_plug_id','p_item_plug_id','p_button_plug_id',
         'p_parent_plug_id','p_theme_id','p_theme_name','p_theme_version','p_theme_class_id','p_internal_name','p_reference_id',
-        'p_template_id','p_css_classes','p_theme_internal_name','p_template','p_plug_template',
+        'p_template_id','p_template_name','p_page_plug_template_name','p_css_classes','p_theme_internal_name','p_template','p_plug_template',
         'p_step_template','p_page_template_options','p_template_options','p_field_template',
-        'p_item_template_options','p_button_template','p_button_template_options','p_button_position',
-        'p_plug_display_point','p_plug_display_column','p_begin_on_new_line','p_begin_on_new_field',
+        'p_item_template_options','p_region_template_options','p_button_template','p_button_template_id','p_button_template_options','p_button_position',
+        'p_plug_display_point','p_plug_item_display_point','p_plug_display_column','p_begin_on_new_line','p_begin_on_new_field',
         'p_colspan','p_rowspan','p_grid_column','p_grid_column_span','p_grid_row_span',
         'p_grid_label_column_span','p_plug_new_grid_row','p_plug_grid_column_span',
         'p_grid_new_row','p_grid_new_column','p_default_page_template','p_default_dialog_template',
@@ -152,6 +152,8 @@ create or replace package body apxtm_parse as
         'p_default_report_template','p_default_label_template','p_default_menu_template',
         'p_default_calendar_template','p_default_list_template','p_default_nav_list_template',
         'p_default_top_nav_list_temp','p_default_side_nav_list_temp','p_default_button_template',
+        'p_default_dialogbtnr_template','p_default_dialogr_template','p_default_navbar_list_template',
+        'p_default_option_label','p_default_required_label','p_current_theme_style_id',
         'p_dialog_template','p_nav_bar_list_template');
     end;
 
@@ -245,8 +247,8 @@ create or replace package body apxtm_parse as
             l_component.put('id',l_id);
             if l_kind in ('PAGE','REGION','ITEM','BUTTON') then l_component.put('page',l_page);
             else l_component.put('page',0); end if;
-            l_component.put('name',coalesce(l_attrs.get_string('p_name'),l_attrs.get_string('p_plug_name'),l_attrs.get_string('p_button_name'),l_attrs.get_string('p_theme_name'),l_id));
-            l_component.put('parent',coalesce(l_attrs.get_string('p_plug_id'),l_attrs.get_string('p_button_plug_id'),l_attrs.get_string('p_parent_plug_id'),'#NULL#'));
+            l_component.put('name',coalesce(l_attrs.get_string('p_name'),l_attrs.get_string('p_template_name'),l_attrs.get_string('p_page_plug_template_name'),l_attrs.get_string('p_plug_name'),l_attrs.get_string('p_button_name'),l_attrs.get_string('p_theme_name'),l_id));
+            l_component.put('parent',coalesce(l_attrs.get_string('p_item_plug_id'),l_attrs.get_string('p_plug_id'),l_attrs.get_string('p_button_plug_id'),l_attrs.get_string('p_parent_plug_id'),'#NULL#'));
             l_key:=l_kind||':'||l_component.get_number('page')||':'||l_id;
             if l_seen.exists(l_key) then reject('Duplicate component identity'); end if;
             l_seen(l_key):=true;
@@ -306,7 +308,9 @@ create or replace package body apxtm_parse as
   function patch(p_source clob,p_changes json_array_t) return clob is
     type t_edit is record(last_pos pls_integer,value varchar2(4000));
     type t_edits is table of t_edit index by pls_integer;
+    type t_groups is table of boolean index by varchar2(1000);
     l_edits t_edits;
+    l_groups t_groups;
     l_components json_array_t:=parse(p_source);
     l_component json_object_t;
     l_change json_object_t;
@@ -321,6 +325,97 @@ create or replace package body apxtm_parse as
     l_dest pls_integer:=1;
     l_amount pls_integer;
     l_result clob;
+
+    function grid_group(p_kind varchar2,p_page number,p_parent varchar2,p_position varchar2) return varchar2 is
+    begin
+      return p_kind||':'||p_page||':'||p_parent||':'||case when p_kind='BUTTON' then p_position end;
+    end;
+
+    procedure validate_grid(p_components json_array_t) is
+      type t_cells is table of varchar2(512) index by pls_integer;
+      cells t_cells;doc clob;group_id varchar2(1000);previous_group varchar2(1000);
+      column_no number;span_no number;known_row boolean:=true;
+    begin
+      doc:=p_components.to_clob;
+      -- BODY buttons share the item grid. This beta does not model arbitrary
+      -- interleaved mixed rows. Permit only known trailing button rows that
+      -- cannot share a row with an item; reject the remaining arrangements.
+      for mixed in (
+        select page_id,parent_id,
+          sum(case when not regexp_like(display_sequence,'^[0-9]{1,12}$') or display_sequence is null then 1 else 0 end) unknown_sequences,
+          max(case when kind='ITEM' and regexp_like(display_sequence,'^[0-9]{1,12}$') then to_number(display_sequence) end) last_item,
+          min(case when kind='BUTTON' and regexp_like(display_sequence,'^[0-9]{1,12}$') then to_number(display_sequence) end) first_button,
+          sum(case when kind='BUTTON' and (nvl(new_row,'Y') not in ('Y','TRUE') or nvl(new_column,'Y')!='Y') then 1 else 0 end) shared_button_rows
+        from (
+          select j.*,case kind when 'ITEM' then item_sequence else button_sequence end display_sequence
+          from json_table(doc,'$[*]' columns(
+            kind varchar2(30) path '$.kind',page_id number path '$.page',parent_id varchar2(256) path '$.parent',
+            button_position varchar2(256) path '$.attrs.p_button_position',item_sequence varchar2(128) path '$.attrs.p_item_sequence',
+            button_sequence varchar2(128) path '$.attrs.p_button_sequence',new_row varchar2(128) path '$.attrs.p_grid_new_row',
+            new_column varchar2(128) path '$.attrs.p_grid_new_column')) j
+          where kind='ITEM' or (kind='BUTTON' and nvl(button_position,'BODY')='BODY')
+        ) group by page_id,parent_id
+        having count(case when kind='ITEM' then 1 end)>0 and count(case when kind='BUTTON' then 1 end)>0
+      ) loop
+        if l_groups.exists(grid_group('ITEM',mixed.page_id,mixed.parent_id,null))
+          or l_groups.exists(grid_group('BUTTON',mixed.page_id,mixed.parent_id,null))
+          or l_groups.exists(grid_group('BUTTON',mixed.page_id,mixed.parent_id,'BODY')) then
+          if mixed.unknown_sequences>0 or mixed.first_button<=mixed.last_item or mixed.shared_button_rows>0 then
+            reject('Mixed item/BODY-button rows require manual review; only known trailing new-row buttons are supported.');
+          end if;
+        end if;
+      end loop;
+      for r in (
+        select j.*,
+          case kind when 'REGION' then coalesce(grid_column,plug_column) else grid_column end effective_column,
+          case kind when 'REGION' then coalesce(plug_span,grid_span) when 'ITEM' then item_span else grid_span end effective_span,
+          case kind when 'REGION' then nvl(plug_new_row,'TRUE') when 'ITEM' then nvl(item_new_row,'Y') else nvl(button_new_row,'Y') end new_row,
+          case kind when 'ITEM' then nvl(item_new_field,'Y') when 'BUTTON' then nvl(button_new_field,'Y') else 'Y' end new_field,
+          case kind when 'REGION' then plug_sequence when 'ITEM' then item_sequence else button_sequence end display_sequence
+        from json_table(doc,'$[*]' columns(
+          component_key varchar2(512) path '$.key',kind varchar2(30) path '$.kind',page_id number path '$.page',
+          parent_id varchar2(256) path '$.parent',button_position varchar2(256) path '$.attrs.p_button_position',
+          grid_column varchar2(128) path '$.attrs.p_grid_column',plug_column varchar2(128) path '$.attrs.p_plug_display_column',
+          plug_span varchar2(128) path '$.attrs.p_plug_grid_column_span',grid_span varchar2(128) path '$.attrs.p_grid_column_span',
+          item_span varchar2(128) path '$.attrs.p_colspan',plug_new_row varchar2(128) path '$.attrs.p_plug_new_grid_row',
+          item_new_row varchar2(128) path '$.attrs.p_begin_on_new_line',button_new_row varchar2(128) path '$.attrs.p_grid_new_row',
+          item_new_field varchar2(128) path '$.attrs.p_begin_on_new_field',button_new_field varchar2(128) path '$.attrs.p_grid_new_column',
+          plug_sequence varchar2(128) path '$.attrs.p_plug_display_sequence',item_sequence varchar2(128) path '$.attrs.p_item_sequence',
+          button_sequence varchar2(128) path '$.attrs.p_button_sequence')) j
+        where kind in ('REGION','ITEM','BUTTON')
+        order by kind,page_id,parent_id,button_position,
+          case when regexp_like(case kind when 'REGION' then plug_sequence when 'ITEM' then item_sequence else button_sequence end,'^[0-9]{1,12}$')
+            then to_number(case kind when 'REGION' then plug_sequence when 'ITEM' then item_sequence else button_sequence end) end,
+          component_key
+      ) loop
+        group_id:=grid_group(r.kind,r.page_id,r.parent_id,r.button_position);
+        if l_groups.exists(group_id) then
+          if previous_group is null or previous_group!=group_id then cells.delete;known_row:=true;end if;
+          previous_group:=group_id;
+          -- Omitted new-row defaults were independently observed as true on
+          -- the tested 26.2 export. This validates a plan; it inserts no default.
+          if r.new_row in ('Y','TRUE') then cells.delete;known_row:=true;
+          elsif r.new_row not in ('N','FALSE') then known_row:=false;end if;
+          if r.display_sequence is null or not regexp_like(r.display_sequence,'^[0-9]{1,12}$')
+            or r.new_field not in ('Y','N') then known_row:=false;end if;
+          if regexp_like(r.effective_column,'^[0-9]{1,2}$') and regexp_like(r.effective_span,'^[0-9]{1,2}$') then
+            column_no:=to_number(r.effective_column);span_no:=to_number(r.effective_span);
+            if column_no between 1 and 12 and span_no between 1 and 12 then
+              if column_no+span_no-1>12 then
+                reject('Selected changes exceed the twelve-column grid; include the related column/span corrections.');end if;
+              if known_row and r.new_field='Y' then
+                for pos in column_no..column_no+span_no-1 loop
+                  if cells.exists(pos) then reject('Selected changes overlap sibling grid columns; include the related column/span corrections.');end if;
+                  cells(pos):=r.component_key;
+                end loop;
+              end if;
+            else known_row:=false;end if;
+          else known_row:=false;end if;
+        end if;
+      end loop;
+      if dbms_lob.istemporary(doc)=1 then dbms_lob.freetemporary(doc);end if;
+    exception when others then if dbms_lob.istemporary(doc)=1 then dbms_lob.freetemporary(doc);end if;raise;
+    end;
   begin
     if p_changes is null or p_changes.get_size=0 then reject('Select at least one eligible change'); end if;
     if p_changes.get_size>10000 then reject('Selection exceeds supported batch size'); end if;
@@ -331,6 +426,7 @@ create or replace package body apxtm_parse as
         l_component:=treat(l_components.get(j) as json_object_t);
         if l_component.get_string('key')=l_change.get_string('key') then
           l_found:=true; l_attrs:=l_component.get_object('attrs');
+          l_groups(grid_group(l_component.get_string('kind'),l_component.get_number('page'),l_component.get_string('parent'),l_attrs.get_string('p_button_position'))):=true;
           if not l_attrs.has(l_property) or not is_recoverable(l_component.get_string('kind'),l_property,l_value) then
             reject('Property is not eligible for automatic recovery');
           end if;
@@ -359,6 +455,7 @@ create or replace package body apxtm_parse as
     l_amount:=dbms_lob.getlength(p_source)-l_from+1;
     if l_amount>0 then dbms_lob.copy(l_result,p_source,l_amount,l_dest,l_from); end if;
     l_components:=parse(l_result);
+    validate_grid(l_components);
     return l_result;
   exception when others then
     if dbms_lob.istemporary(l_result)=1 then dbms_lob.freetemporary(l_result); end if;

@@ -17,7 +17,7 @@
     ]},
     {"id":"comparison","title":"Meaning and eligibility","captions":[
       "Comparison identifies the component, property, baseline value and current value. It compares recognized definitions rather than SQL line numbers.",
-      "Ten explicit grid changes are eligible. Two row flags disappeared at their defaults and remain detection-only. All eligible never means every difference."
+      "Twelve explicit grid changes are eligible. Two row flags disappeared at their defaults and remain detection-only. All eligible never means every difference."
     ]},
     {"id":"preview","title":"Review one repair","captions":[
       "I select only the project field's column span. Preview records the exact selection and proposed definition without modifying the application.",

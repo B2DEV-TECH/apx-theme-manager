@@ -1,0 +1,91 @@
+1
+00:00:00,000 --> 00:00:10,000
+APEX Theme Manager captures application definitions, compares layout properties, and recovers a tested subset of compatible values.
+
+2
+00:00:10,000 --> 00:00:19,958
+This is an automated browser recording in a disposable APEX 26.2 laboratory. The pages and layout changes are synthetic.
+
+3
+00:00:19,958 --> 00:00:28,708
+Project Desk and Review Board are the original sample pages. Notice the six-column fields and side-by-side regions.
+
+4
+00:00:28,708 --> 00:00:39,166
+In the manager, I select the registered sample and capture a named baseline. The snapshot is persisted and its source and ZIP hashes are verified.
+
+5
+00:00:39,166 --> 00:00:49,124
+A snapshot contains an application definition. It is not a backup of table rows, workspace accounts or external dependencies.
+
+6
+00:00:49,124 --> 00:00:57,083
+The changed fixture is imported through the public installation API, retaining the sample's component identities.
+
+7
+00:00:57,083 --> 00:01:07,708
+The project field is wider, the contact region is narrower, and several columns have moved. These edits were deliberately authored in APEXlang.
+
+8
+00:01:07,708 --> 00:01:18,833
+Comparison identifies the component, property, baseline value and current value. It compares recognized definitions rather than SQL line numbers.
+
+9
+00:01:18,833 --> 00:01:30,208
+Twelve explicit grid changes are eligible. Two row flags disappeared at their defaults and remain detection-only. All eligible never means every difference.
+
+10
+00:01:30,208 --> 00:01:39,540
+I select only the project field's column span. Preview records the exact selection and proposed definition without modifying the application.
+
+11
+00:01:39,540 --> 00:01:50,499
+The operation belongs to this actor and this application state. A later edit invalidates it. The proposed ZIP can be downloaded for inspection.
+
+12
+00:01:50,499 --> 00:02:00,124
+An incorrect confirmation is rejected. The intended target must be confirmed explicitly before the engine can apply the reviewed operation.
+
+13
+00:02:00,124 --> 00:02:09,457
+Apply rechecks permission and freshness, acquires the public application lock, and persists a validated backup before importing.
+
+14
+00:02:09,457 --> 00:02:20,665
+A normal import return is not sufficient. The engine independently re-exports the application and requires the complete normalized definition fingerprint to match.
+
+15
+00:02:20,665 --> 00:02:28,873
+The selected field is back to six columns. Other changes remain because only one property was selected.
+
+16
+00:02:28,873 --> 00:02:42,123
+A fresh comparison lets me preview and apply the remaining eligible grid values. Each operation has its own verified backup and audit outcome.
+
+17
+00:02:42,123 --> 00:02:52,123
+The omitted row flags still require review. Template references, template options and theme defaults are also detection-only in this beta.
+
+18
+00:02:52,123 --> 00:03:03,457
+Full definition restore is separate. It requires stronger permission, identical exported ACL assignment state, and the exact restore confirmation.
+
+19
+00:03:03,457 --> 00:03:14,040
+This replaces the definition with the snapshot. It can replace unrelated application work too, so it is different from selected layout repair.
+
+20
+00:03:14,040 --> 00:03:23,540
+The restored sample is independently verified. Application imports are not advertised as atomic or transactionally reversible.
+
+21
+00:03:23,540 --> 00:03:33,748
+The repository contains the original source, portable installers, synthetic fixtures, security model and recorded test evidence.
+
+22
+00:03:33,748 --> 00:03:44,706
+Recovery starts disabled. The manager's Modify Other Applications authority is workspace-wide; use a dedicated trusted development workspace.
+
+23
+00:03:44,706 --> 00:03:59,664
+Only APEX 26.2.0 was tested. Modified SQL exports are not an Oracle-supported transformation contract. Read the limits before evaluating this independent B2DEV TECH beta.

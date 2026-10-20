@@ -33,7 +33,7 @@ page 1 (
         layout {
             sequence: 20
             slot: body
-            column: 7
+            column: 9
             columnSpan: 4
             startNewRow: false
         }
